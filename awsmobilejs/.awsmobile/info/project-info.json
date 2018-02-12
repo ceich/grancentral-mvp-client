@@ -1,0 +1,23 @@
+{
+	"ProjectName": "grancentral-mvp-client",
+	"ProjectPath": "/Users/chriseich/Desktop/otg/grancentral-mvp-client",
+	"SourceDir": "src",
+	"DistributionDir": "build",
+	"BuildCommand": "npm run-script build",
+	"StartCommand": "npm run-script start",
+	"InitializationTime": "2018-02-12-11-18-49",
+	"LastConfigurationTime": "2018-02-12-11-19-03",
+	"LastNPMInstallTime": "",
+	"FrontendLastBuildTime": "",
+	"LastPublishTime": "",
+	"BackendFormat": "yml",
+	"BackendLastSyncTime": "2018-02-12-11-59-27",
+	"BackendLastBuildTime": "",
+	"BackendLastPushTime": "",
+	"BackendLastPushSuccessful": false,
+	"BackendProjectID": "4eb8b899-bc2c-44b5-b8b7-f925fd26e269",
+	"BackendProjectName": "grancentral-mvp",
+	"BackendProjectConsoleUrl": "https://console.aws.amazon.com/mobilehub/home#/4eb8b899-bc2c-44b5-b8b7-f925fd26e269/build",
+	"BackendProjectCreationTime": "2018-02-12T19:13:02.854Z",
+	"BackendProjectLastUpdatedTime": "2018-02-12T19:28:33.401Z"
+}
