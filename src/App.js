@@ -36,12 +36,13 @@ const FederatedProps = {
 
 function Body(props) {
   // As a child of Authenticator it gets authState
-  if (['signIn', 'signedOut'].includes(props.authState)) {
-    return null;
-  }
-  return(
+  return (['signIn', 'signedOut'].includes(props.authState) ?
     <p className="App-intro">
-      To get started, edit <code>src/App.js</code> and save to reload.
+      Please sign in to GranCentral!
+    </p>
+    :
+    <p className="App-intro">
+      GC UI goes here. If user has no GC account, show demo data.
     </p>
   );
 }
