@@ -63,5 +63,3 @@ class App extends Component {
 }
 
 export default App;
-// export default withFacebook(App);
-// export default withAuthenticator(App, true);
