@@ -31,7 +31,11 @@ const AuthenticatorProps = {
 }
 
 const FederatedProps = {
-  federated: { facebook_app_id: '325521941271540' }
+  federated: {
+    amazon_client_id: 'amzn1.application-oa2-client.1b3a84b5d8f3430fa25244de70d08ab8',
+    facebook_app_id: '325521941271540',
+    google_client_id: '1062276029031-mu7ksht2e4e98ofg5o4r2tc6ohhtj6jt.apps.googleusercontent.com'
+  }
 }
 
 function Body(props) {
