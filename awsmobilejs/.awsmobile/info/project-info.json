@@ -7,11 +7,11 @@
 	"StartCommand": "npm run-script start",
 	"InitializationTime": "2018-02-12-11-18-49",
 	"LastConfigurationTime": "2018-02-12-11-19-03",
-	"LastNPMInstallTime": "2018-02-16-16-35-58",
-	"FrontendLastBuildTime": "2018-02-16-16-36-17",
-	"LastPublishTime": "2018-02-16-16-36-25",
+	"LastNPMInstallTime": "2018-02-26-16-29-17",
+	"FrontendLastBuildTime": "2018-02-26-16-29-32",
+	"LastPublishTime": "2018-02-26-16-29-44",
 	"BackendFormat": "yml",
-	"BackendLastSyncTime": "2018-02-12-11-59-27",
+	"BackendLastSyncTime": "2018-02-27-20-42-37",
 	"BackendLastBuildTime": "",
 	"BackendLastPushTime": "",
 	"BackendLastPushSuccessful": false,
@@ -19,5 +19,5 @@
 	"BackendProjectName": "grancentral-mvp",
 	"BackendProjectConsoleUrl": "https://console.aws.amazon.com/mobilehub/home#/4eb8b899-bc2c-44b5-b8b7-f925fd26e269/build",
 	"BackendProjectCreationTime": "2018-02-12T19:13:02.854Z",
-	"BackendProjectLastUpdatedTime": "2018-02-12T19:28:33.401Z"
+	"BackendProjectLastUpdatedTime": "2018-02-28T04:36:46.389Z"
 }

@@ -17,6 +17,7 @@ const awsmobile = {
     'aws_content_delivery_cloudfront_domain': 'dx8dxzpaxnpa0.cloudfront.net',
     'aws_facebook_app_id': '325521941271540',
     'aws_facebook_app_permissions': 'public_profile',
+    'aws_google_app_permissions': 'email,profile,openid',
     'aws_mandatory_sign_in': 'enable',
     'aws_mobile_analytics_app_id': '6f6e825d2c1f4fcb9063938d96ee02a1',
     'aws_mobile_analytics_app_region': 'us-east-1',
@@ -25,6 +26,10 @@ const awsmobile = {
     'aws_project_region': 'us-east-2',
     'aws_resource_name_prefix': 'grancentralmvp-mobilehub-1123545691',
     'aws_sign_in_enabled': 'enable',
+    'aws_user_pools': 'enable',
+    'aws_user_pools_id': 'us-east-2_BNiYyFDeD',
+    'aws_user_pools_mfa_type': 'OFF',
+    'aws_user_pools_web_client_id': '2gmaeoe97rv6o61006g3mp1hqu',
 }
 
 export default awsmobile;

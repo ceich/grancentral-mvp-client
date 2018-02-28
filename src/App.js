@@ -11,11 +11,16 @@ import {
   VerifyContact,
   ForgotPassword
  } from 'aws-amplify-react';
+
 import aws_exports from './aws-exports';
 import heart from './heart.svg';
 import './App.css';
 
 Amplify.configure(aws_exports);
+
+const logger = new Amplify.Logger('App');
+// Amplify.Logger.LOG_LEVEL = 'DEBUG';
+// logger.LOG_LEVEL = 'DEBUG';
 
 // Hide everything but Greetings in the Authenticator
 const AuthenticatorProps = {
@@ -30,6 +35,9 @@ const AuthenticatorProps = {
   ],
 }
 
+// See https://developers.google.com/identity/sign-in/ios/start-integrating and
+// https://developers.google.com/identity/sign-in/android/start when time to do
+// Google sign-in for mobile apps.
 const FederatedProps = {
   federated: {
     amazon_client_id: 'amzn1.application-oa2-client.1b3a84b5d8f3430fa25244de70d08ab8',
@@ -38,24 +46,37 @@ const FederatedProps = {
   }
 }
 
-function Body(props) {
-  // As a child of Authenticator it gets authState
-  return (['signIn', 'signedOut'].includes(props.authState) ?
-    <p className="App-intro">
-      Please sign in to GranCentral!
-    </p>
-    :
-    <p className="App-intro">
-      GC UI goes here. If user has no GC account, show demo data.
-    </p>
-  );
+class Body extends Component {
+  render() {
+    logger.debug('Body.render');
+    if (this.props.authState === 'signedIn') {
+      const user = this.props.authData;
+      return (
+        <div className="App-intro">
+          {user ?
+            ['id', 'email', 'name'].map((a) =>
+              <div key={a}>{[a, user[a]].join(': ')}</div>
+            ) :
+            'Loading'}
+        </div>
+      );
+    } else {
+      return null;
+      (
+        <p className="App-intro">
+          Please sign in to GranCentral!
+        </p>
+      );
+    }
+  }
 }
+
 class App extends Component {
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={heart} className="App-logo" alt="heart" />
+          <img className="App-logo" src={heart} alt="heart" />
           <h1 className="App-title">GranCentral</h1>
         </header>
         <Authenticator {...AuthenticatorProps}>

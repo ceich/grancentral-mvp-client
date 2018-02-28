@@ -20,5 +20,23 @@ features:
         attributes:
           provider-id: '325521941271540'
           provider-name: facebook
+      sign-in-google: !com.amazonaws.mobilehub.v0.OpenIDConnectIdentityProvider 
+        attributes:
+          open-id-connect-audience-android: ''
+          open-id-connect-audience-ios: 1062276029031-3nrfo49r12s6ld8qvjft4r3v5v1edd77.apps.googleusercontent.com
+          open-id-connect-audience-webapp: 1062276029031-mu7ksht2e4e98ofg5o4r2tc6ohhtj6jt.apps.googleusercontent.com
+          open-id-provider-url: 'https://accounts.google.com'
+      sign-in-user-pools: !com.amazonaws.mobilehub.v0.UserPoolsIdentityProvider 
+        attributes:
+          alias-attributes:
+            - email
+          mfa-configuration: OFF
+          name: userpool
+          password-policy: !com.amazonaws.mobilehub.ConvertibleMap 
+            min-length: '8'
+            require-lower-case: true
+            require-numbers: true
+            require-symbols: true
+            require-upper-case: true
 name: grancentral-mvp
 region: us-east-2
