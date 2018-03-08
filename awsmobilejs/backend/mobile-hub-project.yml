@@ -14,7 +14,7 @@ features:
   sign-in: !com.amazonaws.mobilehub.v0.SignIn 
     attributes:
       enabled: true
-      optional-sign-in: false
+      optional-sign-in: true
     components:
       sign-in-facebook: !com.amazonaws.mobilehub.v0.StandardIdentityProvider 
         attributes:
