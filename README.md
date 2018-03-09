@@ -1,6 +1,16 @@
 # GranCentral MVP Client
 
-This web app uses [AWS Amplify](https://github.com/aws/aws-amplify), with identity provided by [Facebook Login](https://developers.facebook.com/docs/facebook-login), to access the AWS Mobile Hub project [grancentral-mvp](https://console.aws.amazon.com/mobilehub/home?region=us-east-2#/4eb8b899-bc2c-44b5-b8b7-f925fd26e269/build).
+This web app uses [AWS Amplify](https://github.com/aws/aws-amplify) to access the AWS Mobile Hub project [grancentral-mvp](https://console.aws.amazon.com/mobilehub/home?region=us-east-2#/4eb8b899-bc2c-44b5-b8b7-f925fd26e269/build) and the AppSync project [GranCentral MVP](https://us-east-2.console.aws.amazon.com/appsync/home?region=us-east-2#/z6ilk6cmyrbinh4sbax7acdqjq/v1/home).
+
+## Build
+
+- Use `awsmobile pull` (`npm install -g awsmobile-cli`) to download `src/aws-exports.js`.
+- Use the AppSync console (link above) to download the `AppSync.js` file to `src` also.
+- Use `yarn install; yarn start` to run locally.
+
+## Publish
+
+- Use `awsmobile publish -f` to push the client to Cloudfront.
 
 ## React reference
 

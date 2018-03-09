@@ -1,7 +1,11 @@
 import React from 'react';
-import Amplify from 'aws-amplify';
+import { ApolloProvider } from 'react-apollo';
+import Amplify, { Auth } from 'aws-amplify';
 import { withAuthenticator } from 'aws-amplify-react';
+import AWSAppSyncClient from 'aws-appsync';
+import { Rehydrated } from 'aws-appsync-react';
 
+import appSyncConfig from './AppSync';
 import aws_exports from './aws-exports';
 import heart from './heart.svg';
 import './App.css';
@@ -25,20 +29,37 @@ Amplify.configure(aws_exports);
 //   }
 // }
 
-const Body = ({authData}) => (
-  <div className="App-intro">
-    {authData.username || authData.name}
-  </div>
-)
-
-const App = (props) => (
+const App = ({authData}) => (
   <div className="App">
     <header className="App-header">
       <img className="App-logo" src={heart} alt="heart" />
       <h1 className="App-title">GranCentral</h1>
     </header>
-    <Body {...props}/>
+    <div className="App-intro">
+      {authData.username || authData.name}
+    </div>
   </div>
 )
 
-export default withAuthenticator(App, true);
+const WithProvider = ({ authData }) => (
+  <ApolloProvider client={new AWSAppSyncClient({
+	  url: appSyncConfig.graphqlEndpoint,
+	  region: appSyncConfig.region,
+	  auth: {
+  		type: appSyncConfig.authenticationType,
+  		jwtToken: async () => (await Auth.currentSession()
+        .then(data => {
+          return data
+        })
+        .catch(err => {
+          return err
+        })).getIdToken().getJwtToken()
+	  }
+	})}>
+    <Rehydrated>
+      <App authData={authData} />
+    </Rehydrated>
+  </ApolloProvider>
+)
+
+export default withAuthenticator(WithProvider, { includeGreeting: true });
