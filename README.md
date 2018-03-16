@@ -1,6 +1,6 @@
 # GranCentral MVP Client
 
-This web app uses [AWS Amplify](https://github.com/aws/aws-amplify) to access the AWS Mobile Hub project [grancentral-mvp](https://console.aws.amazon.com/mobilehub/home?region=us-east-2#/4eb8b899-bc2c-44b5-b8b7-f925fd26e269/build) and the AppSync project [GranCentral MVP](https://us-east-2.console.aws.amazon.com/appsync/home?region=us-east-2#/z6ilk6cmyrbinh4sbax7acdqjq/v1/home).
+This web app uses [AWS Amplify](https://github.com/aws/aws-amplify) to access the AWS Mobile Hub project [grancentral-mvp](https://console.aws.amazon.com/mobilehub/home?region=us-east-2#/4eb8b899-bc2c-44b5-b8b7-f925fd26e269/build) and the AppSync project [GranCentral MVP](https://us-east-2.console.aws.amazon.com/appsync/home?region=us-east-2#/z6ilk6cmyrbinh4sbax7acdqjq/v1/home) (make sure you're looking at the **us-east-2 Ohio** region!).
 
 ## Authentication
 
@@ -9,17 +9,32 @@ and although the User Pool defined by Mobile Hub supports federated login,
 AWS Amplify does not. Please use the Sign Up feature of AWS Amplify to define
 a user for yourself in the User Pool.
 
+### Relation between Cognito User Pool and DynamoDB UserTable
+
+There are three possibilities when a user signs in, after first signing up
+(which creates a user in the User Pool). 
+1. First sign-in by account owner: no item exists in UserTable
+1. First sign-in by invited account member:
+   an item exists with a placeholder id and the user's email
+1. Subsequent sign-ins by all:
+   an item exists whose `id` matches the User Pool `sub` attribute
+
+In all cases, the app first calls the `me` query,
+whose job is to ensure a normalized item exists in UserTable.
+
 ## Schema
 
 Please review the schema in the AppSync project.
 
 ## To-do
 - Support federated logins to the user pool
-  - Requires waiting for [AWS Amplify support](https://github.com/aws/aws-amplify/issues/45)
+  - Requires waiting for
+    [AWS Amplify to support this](https://github.com/aws/aws-amplify/issues/45)
   - May also require freeing our stack from MobileHub's constraints,
-    which would suggest moving to CloudFormation for sanity's sake.
+    which would suggest moving to CloudFormation for sanity's sake
 - AppSync project
-  - Add business rules for queries and mutations
+  - Add business rules for queries and mutations,
+    including referential integrity and access control
   - Add subscription support
   - Pull the API definition out of the console, and into a GitHub project
 
