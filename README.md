@@ -24,19 +24,20 @@ there are three possible states of DynamoDB's *UserTable*:
 1. Subsequent sign-ins by all:
    an item exists whose `id` matches the User Pool `sub` attribute.
 
-To handle all the cases uniformly,
-the app first calls the `findOrCreateMe` mutation,
-which ensures that a normalized item exists in UserTable,
-and returns it.
-
-An account owner can invite an additional member by providing name and email.
+An account owner can invite additional users by providing name and email for each.
 Again there are three possibilities:
 1. There is no user in the UserTable with that email.
 1. The user with that email has already been invited,
 but has not yet signed in.
 1. The user with that email has already signed in.
 
-The app calls the `createUser` mutation to handle these cases.
+To handle all these cases uniformly,
+the app calls the `findOrCreateUser` mutation,
+passing as the `id` either the Cognito `sub` (at sign-in)
+or the email address (when inviting users).
+The mutation creates a User if necessary,
+else updates it if necessary,
+and in all cases returns it.
 
 ## Schema
 
