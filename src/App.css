@@ -3,12 +3,18 @@
 }
 
 .App-logo {
-  height: 80px;
+  height: 30px;
 }
 
 .App-header {
   background-color: #FFF;
-  height: 150px;
-  padding: 20px 0px 0px 0px;
+  height: 60px;
+  padding: 10px 0px 0px 0px;
   color: #39A6BD;
+}
+
+.member {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }

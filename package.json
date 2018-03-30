@@ -3,14 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "aws-amplify": "^0.2.7",
-    "aws-amplify-react": "^0.1.33",
-    "aws-appsync": "^1.0.12",
+    "apollo-cache-inmemory": "^1.1.12",
+    "apollo-client": "^2.2.8",
+    "apollo-link-http": "^1.5.3",
+    "aws-amplify": "^0.2.14",
+    "aws-amplify-react": "^0.1.38",
+    "aws-appsync": "^1.0.14",
     "aws-appsync-react": "^1.0.6",
+    "graphql": "^0.13.2",
+    "graphql-tag": "^2.8.0",
+    "moment": "^2.21.0",
     "react": "^16.2.0",
     "react-apollo": "^2.0.4",
     "react-dom": "^16.2.0",
-    "react-scripts": "1.1.1"
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.1.1",
+    "semantic-ui-css": "^2.3.1"
   },
   "scripts": {
     "start": "react-scripts start",

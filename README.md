@@ -19,7 +19,8 @@ Signing *up* creates a user in the Cognito *User Pool*.
 When a user signs *in*,
 there are three possible states of DynamoDB's *UserTable*:
 1. First sign-in by brand-new user: no item exists in UserTable.
-1. First sign-in by invited user:
+1. First sign-in by invited user, or a previously-signed-in user
+   changes User Pool `sub` value while retaining the same email:
    an item exists with a placeholder id equal to the user's email.
 1. Subsequent sign-ins by all:
    an item exists whose `id` matches the User Pool `sub` attribute.

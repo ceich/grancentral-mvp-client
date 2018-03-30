@@ -1,0 +1,138 @@
+{
+	"projectPath": "/Users/chriseich/Desktop/otg/grancentral-mvp-client",
+	"yesFlag": true,
+	"mobileProjectID": "4eb8b899-bc2c-44b5-b8b7-f925fd26e269",
+	"backupAWSMobileJSDirPath": "/Users/chriseich/Desktop/otg/grancentral-mvp-client/~awsmobilejs-2018-03-30-10-17-54",
+	"projectInfo": {
+		"ProjectName": "grancentral-mvp-client",
+		"ProjectPath": "/Users/chriseich/Desktop/otg/grancentral-mvp-client",
+		"InitializationTime": "2018-02-12-11-18-49",
+		"LastConfigurationTime": "2018-02-12-11-19-03",
+		"LastNPMInstallTime": "2018-02-28-11-06-28",
+		"FrontendLastBuildTime": "2018-03-30-10-03-02",
+		"LastPublishTime": "2018-02-28-11-06-55",
+		"BackendLastSyncTime": "2018-03-07-16-56-54",
+		"BackendLastBuildTime": "",
+		"BackendLastPushTime": "",
+		"BackendLastPushSuccessful": false,
+		"BackendProjectID": "4eb8b899-bc2c-44b5-b8b7-f925fd26e269",
+		"BackendProjectName": "grancentral-mvp",
+		"BackendProjectConsoleUrl": "https://console.aws.amazon.com/mobilehub/home#/4eb8b899-bc2c-44b5-b8b7-f925fd26e269/build",
+		"BackendProjectCreationTime": "2018-02-12T19:13:02.854Z",
+		"BackendProjectLastUpdatedTime": "2018-03-08T00:55:27.346Z",
+		"Framework": "react"
+	},
+	"projectConfig": {
+		"SourceDir": "src",
+		"DistributionDir": "build",
+		"BuildCommand": "npm run-script build",
+		"StartCommand": "npm run-script start"
+	},
+	"backendProject": {
+		"apps": {
+			"web": {
+				"backend-class": "AppDO"
+			}
+		},
+		"features": {
+			"content-delivery": {
+				"attributes": {
+					"enabled": true,
+					"visibility": "public-global"
+				},
+				"components": {
+					"release": {
+						"backend-class": "Bucket"
+					}
+				},
+				"backend-class": "ContentDelivery"
+			},
+			"mobile-analytics": {
+				"components": {
+					"analytics": {
+						"backend-class": "PinpointAnalytics"
+					}
+				},
+				"backend-class": "Pinpoint"
+			},
+			"sign-in": {
+				"attributes": {
+					"enabled": true,
+					"optional-sign-in": true
+				},
+				"components": {
+					"sign-in-facebook": {
+						"attributes": {
+							"provider-id": "325521941271540",
+							"provider-name": "facebook"
+						},
+						"backend-class": "StandardIdentityProvider"
+					},
+					"sign-in-google": {
+						"attributes": {
+							"open-id-connect-audience-android": "",
+							"open-id-connect-audience-ios": "1062276029031-3nrfo49r12s6ld8qvjft4r3v5v1edd77.apps.googleusercontent.com",
+							"open-id-connect-audience-webapp": "1062276029031-mu7ksht2e4e98ofg5o4r2tc6ohhtj6jt.apps.googleusercontent.com",
+							"open-id-provider-url": "https://accounts.google.com"
+						},
+						"backend-class": "OpenIDConnectIdentityProvider"
+					},
+					"sign-in-user-pools": {
+						"attributes": {
+							"alias-attributes": [
+								"email"
+							],
+							"mfa-configuration": "OFF",
+							"name": "userpool",
+							"password-policy": {
+								"min-length": "8",
+								"require-lower-case": true,
+								"require-numbers": true,
+								"require-symbols": true,
+								"require-upper-case": true,
+								"backend-class": "ConvertibleMap"
+							}
+						},
+						"backend-class": "UserPoolsIdentityProvider"
+					}
+				},
+				"backend-class": "SignIn"
+			}
+		},
+		"name": "grancentral-mvp",
+		"region": "us-east-2",
+		"backend-class": "Project"
+	},
+	"packageJson": {
+		"name": "grancentral-mvp-client",
+		"version": "0.1.0",
+		"private": true,
+		"dependencies": {
+			"apollo-cache-inmemory": "^1.1.12",
+			"apollo-client": "^2.2.8",
+			"apollo-link-http": "^1.5.3",
+			"aws-amplify": "^0.2.14",
+			"aws-amplify-react": "^0.1.38",
+			"aws-appsync": "^1.0.14",
+			"aws-appsync-react": "^1.0.6",
+			"graphql": "^0.13.2",
+			"graphql-tag": "^2.8.0",
+			"moment": "^2.21.0",
+			"react": "^16.2.0",
+			"react-apollo": "^2.0.4",
+			"react-dom": "^16.2.0",
+			"react-router-dom": "^4.2.2",
+			"react-scripts": "1.1.1",
+			"semantic-ui-css": "^2.3.1"
+		},
+		"scripts": {
+			"start": "react-scripts start",
+			"build": "react-scripts build",
+			"test": "react-scripts test --env=jsdom",
+			"eject": "react-scripts eject"
+		}
+	},
+	"framework": "react",
+	"initialStage": "valid",
+	"strategy": "conform"
+}
