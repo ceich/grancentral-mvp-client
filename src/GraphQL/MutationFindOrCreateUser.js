@@ -12,5 +12,6 @@ mutation FindOrCreateUser($id: ID! $name: String! $email: String!) {
     id
     name
     email
+    avatar
   }
 }`);
