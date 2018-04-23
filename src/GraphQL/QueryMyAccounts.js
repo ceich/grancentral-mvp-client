@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 export default gql(`
 query MyAccounts {
   me {
+    id
     members {
 			role
       account {
@@ -10,7 +11,6 @@ query MyAccounts {
         created_at
         name
         members {
-          user { id name email }
           role
         }
       }

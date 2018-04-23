@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { ApolloProvider, graphql } from 'react-apollo';
+import { ApolloProvider, Mutation } from 'react-apollo';
 import Amplify, { Auth } from 'aws-amplify';
 import { withAuthenticator } from 'aws-amplify-react';
 import AWSAppSyncClient from 'aws-appsync';
@@ -10,11 +10,15 @@ import appSyncConfig from './AppSync';
 import aws_exports from './aws-exports';
 import heart from './heart.svg';
 import './App.css';
+
+import QueryMe from "./GraphQL/QueryMe";
 import MutationFindOrCreateUser from './GraphQL/MutationFindOrCreateUser';
+
 import MyAccounts from './Components/MyAccounts';
 import ViewAccount from './Components/ViewAccount';
 import NewAccount from './Components/NewAccount';
 import NewMember from './Components/NewMember';
+import Profile from './Components/Profile';
 
 Amplify.configure(aws_exports);
 
@@ -36,17 +40,16 @@ Amplify.configure(aws_exports);
 // }
 
 class App extends React.Component {
-  static defaultProps = { findOrCreateUser: () => null }
-
-  state = { user: null };
-
   // Call the mutation when the user authenticates,
   // to bootstrap the GraphQL User from Cognito.
   async componentDidMount() {
     const {
+      authData: { signInUserSession: { idToken: { payload }}},
       findOrCreateUser,
-      authData: { signInUserSession: { idToken: { payload }}}
+      result: { loading, error, called }
     } = this.props;
+
+    if (loading || error || called) return;
 
     const input = {
       id: payload.sub,
@@ -54,11 +57,23 @@ class App extends React.Component {
       email: payload.email
     };
 
-    const result = await findOrCreateUser(input);
+    await findOrCreateUser({
+      variables: input,
+      optimisticResponse: {
+        // First approximation to server response
+        findOrCreateUser: {  __typename: 'User', ...input }
+      },
+      update: (proxy, { data: { findOrCreateUser } }) => {
+        // Write the response into the cache for "me" Query
+        proxy.writeQuery({ query: QueryMe, data: { me: findOrCreateUser } });
+        // Update the state with the server response
+        this.setState({ user: findOrCreateUser });
+      }
+    });
+  }
 
-    if (result.data && result.data.findOrCreateUser) {
-      this.setState({user: result.data.findOrCreateUser});
-    }
+  componentWillUnmount() {
+    this.setState({user: null});
   }
 
   render() {
@@ -77,29 +92,15 @@ class App extends React.Component {
                  render={(props) => <ViewAccount {...props} {...this.state} />} />
           <Route path="/account/:id/member/new"
                  render={(props) => <NewMember {...props} {...this.state} />} />
+          <Route path="/profile"
+                 render={(props) => <Profile {...props} {...this.state} />} />
         </div>
       </Router>
     );
   }
 }
 
-const WrappedApp = graphql(
-  MutationFindOrCreateUser,
-  {
-    props: (props) => ({
-      findOrCreateUser: (input) => {
-        return props.mutate({
-          variables: input,
-          optimisticResponse: {
-            findOrCreateUser: { ...input, __typename: 'User' }
-          }
-        });
-      }
-    })
-  }
-)(App);
-
-const WithProvider = ({ authData }) => (
+const WithProvider = (props) => (
   <ApolloProvider client={new AWSAppSyncClient(
     {
   	  url: appSyncConfig.graphqlEndpoint,
@@ -117,7 +118,11 @@ const WithProvider = ({ authData }) => (
   	}
   )}>
     <Rehydrated>
-      <WrappedApp authData={authData} />
+      <Mutation mutation={MutationFindOrCreateUser}>
+        {(findOrCreateUser, result) => (
+          <App {...props} findOrCreateUser={findOrCreateUser} result={result} />
+        )}
+      </Mutation>
     </Rehydrated>
   </ApolloProvider>
 )

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { compose, graphql } from "react-apollo";
 
+import Avatar from "./Avatar";
 import QueryGetAccount from "../GraphQL/QueryGetAccount";
 import MutationDeleteMember from "../GraphQL/MutationDeleteMember";
 // import SubscriptionAccountMembers from "../GraphQL/SubscriptionAccountMembers";
@@ -28,7 +29,7 @@ class AccountMembers extends Component {
   renderMember = (member) => {
     return (<div className="member" key={member.user.id}>
       <div className="avatar">
-        <i className="icon user circular"></i>
+        <Avatar user={member.user} />
       </div>
       <div className="content">
         <div className="text">

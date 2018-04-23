@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { graphql, compose } from "react-apollo";
+import { Query } from "react-apollo";
 import "semantic-ui-css/semantic.min.css";
 
+import Avatar from "./Avatar";
 import QueryMyAccounts from "../GraphQL/QueryMyAccounts";
 
 import moment from "moment";
@@ -47,7 +48,7 @@ class MyAccounts extends Component {
   );
 
   render() {
-    const {accounts} = this.props;
+    const { accounts, user } = this.props;
 
     return (
       <div className="ui link cards">
@@ -58,22 +59,28 @@ class MyAccounts extends Component {
           </Link>
         </div>
         {accounts.map(this.renderAccount)}
+        <div className="card green">
+          <Link to={`/profile`} className="card" key={user}>
+            <div className="content">
+              <div className="header">Edit Profile</div>
+              {user && user.avatar && <Avatar user={user} />}
+            </div>
+          </Link>
+        </div>
       </div>
     );
   }
-
 }
 
-export default compose(
-  graphql(QueryMyAccounts, {
-    alias: 'QueryMyAccounts',
-    options: { fetchPolicy: 'cache-and-network' },
-    props: ({ data: { me = { members: [] } } }) => {
-      return ({
-        accounts: me.members.map((m) =>
-          Object.assign({}, m.account, { mutable: m.role==='owner' })
-        )
-      })
-    }
-  }),
-)(MyAccounts);
+export default (props) => (
+  <Query query={QueryMyAccounts}>
+    {({ data: { me }, loading, error }) => {
+      if (loading) { return "Loading..."; }
+      if (error) { return "Error:" + error; }
+      const accounts = (me && me.members) ?
+        me.members.map(m => Object.assign({}, m.account, { mutable: m.role==='owner' })) :
+        [];
+      return <MyAccounts accounts={accounts} {...props} />
+    }}
+  </Query>
+);

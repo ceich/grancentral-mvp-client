@@ -38,5 +38,8 @@ features:
             require-numbers: true
             require-symbols: true
             require-upper-case: true
+  user-files: !com.amazonaws.mobilehub.v0.UserFiles 
+    attributes:
+      enabled: true
 name: grancentral-mvp
 region: us-east-2
