@@ -1,0 +1,10 @@
+{
+    "name": "GranCentral MVP",
+    "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+    "userPoolConfig": {
+        "userPoolId": "us-east-2_BNiYyFDeD",
+        "awsRegion": "us-east-2",
+        "defaultAction": "ALLOW",
+        "appIdClientRegex": null
+    }
+}

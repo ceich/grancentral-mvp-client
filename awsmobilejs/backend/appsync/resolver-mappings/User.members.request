@@ -1,0 +1,14 @@
+{
+    "version" : "2017-02-28",
+    "operation" : "Query",
+    "index" : "user_id-index",
+    "query" : {
+        ## Provide a query expression. **
+        "expression": "user_id = :id",
+        "expressionValues" : {
+            ":id" : {
+                "S" : "${ctx.source.id}"
+            }
+        }
+    }
+}

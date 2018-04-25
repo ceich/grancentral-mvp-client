@@ -1,0 +1,9 @@
+{
+    "version" : "2017-02-28",
+    "operation" : "GetItem",
+    "key" : {
+        ## If your table's hash key is not named 'id', change it here. **
+        "id" : { "S" : "${context.identity.sub}" }
+        ## If your table has a sort key, add it as an item here. **
+    }
+}

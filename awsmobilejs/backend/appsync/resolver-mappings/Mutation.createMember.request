@@ -1,0 +1,18 @@
+{
+    "version" : "2017-02-28",
+    "operation" : "PutItem",
+    "key" : {
+        ## If your table's hash key is not named 'id', change it here. **
+        "account_id" : { "S" : "${context.arguments.input.account_id}" },
+        ## If your table has a sort key, add it here. **
+        "user_id" : { "S" : "${context.arguments.input.user_id}" }
+    },
+    
+  	"condition": {
+    	"expression": "attribute_not_exists(account_id) AND attribute_not_exists(user_id)"
+  	},
+ 
+ 	"attributeValues" : {
+    	"role" : { "S" : "${context.arguments.input.role}" }
+    }
+}

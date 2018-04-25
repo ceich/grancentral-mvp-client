@@ -1,0 +1,11 @@
+{
+    "version" : "2017-02-28",
+    "operation" : "PutItem",
+    "key" : {
+        ## If your table's hash key is not named 'id', change it here. **
+        "account_id" : { "S" : "${ctx.args.input.account_id}" },
+        ## If your table has a sort key, add it here. **
+        "user_id" : { "S" : "${ctx.args.input.user_id}" }
+    },
+    "attributeValues" : $util.dynamodb.toMapValuesJson($util.map.copyAndRemoveAllKeys($ctx.args.input,["account_id","user_id"]))
+}

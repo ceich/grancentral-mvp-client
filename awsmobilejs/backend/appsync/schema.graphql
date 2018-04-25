@@ -1,0 +1,134 @@
+type Account
+{
+id: ID!
+created_at: String!
+name: String!
+members: [Member!]!
+}
+
+type AccountConnection
+{
+items: [Account!]!
+nextToken: String
+}
+
+input CreateAccountInput
+{
+name: String!
+owner_id: ID!}
+
+input CreateMemberInput
+{
+account_id: ID!
+user_id: ID!
+role: Role!}
+
+input DeleteMemberInput
+{
+account_id: ID!
+user_id: ID!}
+
+input FindOrCreateUserInput
+{
+id: ID!
+name: String!
+email: String!
+phone: String
+avatar: String
+pictures: [String!]}
+
+type Member
+{
+account: Account
+user: User
+role: Role
+}
+
+type Mutation
+{
+findOrCreateUser(input: FindOrCreateUserInput! ): User
+updateUser(input: UpdateUserInput! ): User
+createAccount(input: CreateAccountInput! ): Account
+updateAccount(input: UpdateAccountInput! ): Account
+createMember(input: CreateMemberInput! ): Member
+updateMember(input: UpdateMemberInput! ): Member
+deleteMember(input: DeleteMemberInput! ): Member
+}
+
+type Query
+{
+me: User
+getUser(id: ID! ): User
+listUsers(first: Int,after: String ): UserConnection!
+getAccount(id: ID! ): Account
+listAccounts(first: Int,after: String ): AccountConnection!
+}
+
+enum Role
+{
+owner
+elder
+family
+neighbor
+caregiver
+}
+
+type Subscription
+{
+onCreateUser(id: ID,created_at: String,name: String,email: String ): User
+@aws_subscribe(mutations: ["createUser"])
+onUpdateUser(id: ID,created_at: String,name: String,email: String ): User
+@aws_subscribe(mutations: ["updateUser"])
+onDeleteUser(id: ID,created_at: String,name: String,email: String ): User
+@aws_subscribe(mutations: ["deleteUser"])
+onCreateAccount(id: ID,created_at: String,name: String ): Account
+@aws_subscribe(mutations: ["createAccount"])
+onUpdateAccount(id: ID,created_at: String,name: String ): Account
+@aws_subscribe(mutations: ["updateAccount"])
+onDeleteAccount(id: ID,created_at: String,name: String ): Account
+@aws_subscribe(mutations: ["deleteAccount"])
+}
+
+input UpdateAccountInput
+{
+id: ID!
+name: String!}
+
+input UpdateMemberInput
+{
+account_id: ID!
+user_id: ID!
+role: Role!}
+
+input UpdateUserInput
+{
+id: ID!
+name: String
+email: String
+phone: String
+avatar: String
+pictures: [String!]}
+
+type User
+{
+id: ID!
+created_at: String!
+name: String!
+email: String!
+phone: String
+avatar: Boolean
+pictures: [String!]!
+members: [Member!]!
+}
+
+type UserConnection
+{
+items: [User!]!
+nextToken: String
+}
+
+schema 
+{
+query: Query
+mutation: Mutation
+}
