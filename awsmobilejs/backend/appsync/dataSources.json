@@ -1,174 +1,211 @@
 {
-    "dataSources": [
-        {
-            "name": "AccountTable",
-            "description": "DataSource for Amazon DynamoDB table AccountTable (arn:aws:dynamodb:us-east-2:123456789012:table/AccountTable)",
-            "type": "AMAZON_DYNAMODB",
-            "serviceRoleArn": "{managed-by-awsmobile-cli}",
-            "dynamodbConfig": {
-                "tableName": "AccountTable",
-                "awsRegion": "us-east-2",
-                "useCallerCredentials": false
-            }
-        },
-        {
-            "name": "DebugLambda",
-            "description": "Data source created by the console.",
-            "type": "AWS_LAMBDA",
-            "serviceRoleArn": "{managed-by-awsmobile-cli}",
-            "lambdaConfig": {
-                "lambdaFunctionArn": "arn:aws:lambda:us-east-2:305905853980:function:debugLambda"
-            }
-        },
-        {
-            "name": "MemberTable",
-            "description": "Data source created by the console.",
-            "type": "AMAZON_DYNAMODB",
-            "serviceRoleArn": "{managed-by-awsmobile-cli}",
-            "dynamodbConfig": {
-                "tableName": "MemberTable",
-                "awsRegion": "us-east-2",
-                "useCallerCredentials": false
-            }
-        },
-        {
-            "name": "UserTable",
-            "description": "DataSource for Amazon DynamoDB table UserTable (arn:aws:dynamodb:us-east-2:123456789012:table/UserTable)",
-            "type": "AMAZON_DYNAMODB",
-            "serviceRoleArn": "{managed-by-awsmobile-cli}",
-            "dynamodbConfig": {
-                "tableName": "UserTable",
-                "awsRegion": "us-east-2",
-                "useCallerCredentials": false
-            }
-        },
-        {
-            "name": "createAccount",
-            "description": "Data source created by the console.",
-            "type": "AWS_LAMBDA",
-            "serviceRoleArn": "{managed-by-awsmobile-cli}",
-            "lambdaConfig": {
-                "lambdaFunctionArn": "arn:aws:lambda:us-east-2:305905853980:function:AppSync-createAccount"
-            }
-        },
-        {
-            "name": "findOrCreateUser",
-            "description": "Data source created by the console.",
-            "type": "AWS_LAMBDA",
-            "serviceRoleArn": "{managed-by-awsmobile-cli}",
-            "lambdaConfig": {
-                "lambdaFunctionArn": "arn:aws:lambda:us-east-2:305905853980:function:AppSync-findOrCreateUser"
-            }
-        }
-    ],
-    "tables": [
-        {
-            "AttributeDefinitions": [
-                {
-                    "AttributeName": "id",
-                    "AttributeType": "S"
-                }
-            ],
-            "TableName": "AccountTable",
-            "KeySchema": [
-                {
-                    "AttributeName": "id",
-                    "KeyType": "HASH"
-                }
-            ],
-            "ProvisionedThroughput": {
-                "ReadCapacityUnits": 5,
-                "WriteCapacityUnits": 5
-            },
-            "Region": "us-east-2"
-        },
-        {
-            "AttributeDefinitions": [
-                {
-                    "AttributeName": "account_id",
-                    "AttributeType": "S"
-                },
-                {
-                    "AttributeName": "user_id",
-                    "AttributeType": "S"
-                }
-            ],
-            "TableName": "MemberTable",
-            "KeySchema": [
-                {
-                    "AttributeName": "account_id",
-                    "KeyType": "HASH"
-                },
-                {
-                    "AttributeName": "user_id",
-                    "KeyType": "RANGE"
-                }
-            ],
-            "ProvisionedThroughput": {
-                "ReadCapacityUnits": 5,
-                "WriteCapacityUnits": 5
-            },
-            "GlobalSecondaryIndexes": [
-                {
-                    "IndexName": "user_id-index",
-                    "KeySchema": [
-                        {
-                            "AttributeName": "user_id",
-                            "KeyType": "HASH"
-                        }
-                    ],
-                    "Projection": {
-                        "ProjectionType": "ALL"
-                    },
-                    "ProvisionedThroughput": {
-                        "ReadCapacityUnits": 5,
-                        "WriteCapacityUnits": 5
-                    }
-                }
-            ],
-            "Region": "us-east-2"
-        },
-        {
-            "AttributeDefinitions": [
-                {
-                    "AttributeName": "email",
-                    "AttributeType": "S"
-                },
-                {
-                    "AttributeName": "id",
-                    "AttributeType": "S"
-                }
-            ],
-            "TableName": "UserTable",
-            "KeySchema": [
-                {
-                    "AttributeName": "id",
-                    "KeyType": "HASH"
-                }
-            ],
-            "ProvisionedThroughput": {
-                "ReadCapacityUnits": 5,
-                "WriteCapacityUnits": 5
-            },
-            "GlobalSecondaryIndexes": [
-                {
-                    "IndexName": "email-index",
-                    "KeySchema": [
-                        {
-                            "AttributeName": "email",
-                            "KeyType": "HASH"
-                        }
-                    ],
-                    "Projection": {
-                        "ProjectionType": "ALL"
-                    },
-                    "ProvisionedThroughput": {
-                        "ReadCapacityUnits": 5,
-                        "WriteCapacityUnits": 5
-                    }
-                }
-            ],
-            "Region": "us-east-2"
-        }
-    ]
+	"dataSources": [
+		{
+			"dataSourceArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/datasources/AccountTable",
+			"name": "AccountTable",
+			"description": "DataSource for Amazon DynamoDB table AccountTable (arn:aws:dynamodb:us-east-2:123456789012:table/AccountTable)",
+			"type": "AMAZON_DYNAMODB",
+			"serviceRoleArn": "arn:aws:iam::305905853980:role/service-role/appsync-datasource-ddb-z6ilk6-AccountTable",
+			"dynamodbConfig": {
+				"tableName": "AccountTable",
+				"awsRegion": "us-east-2",
+				"useCallerCredentials": false
+			}
+		},
+		{
+			"dataSourceArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/datasources/DebugLambda",
+			"name": "DebugLambda",
+			"description": "Data source created by the console.",
+			"type": "AWS_LAMBDA",
+			"serviceRoleArn": "arn:aws:iam::305905853980:role/service-role/appsync-datasource-lam-z6ilk6-debugLambda",
+			"lambdaConfig": {
+				"lambdaFunctionArn": "arn:aws:lambda:us-east-2:305905853980:function:debugLambda"
+			}
+		},
+		{
+			"dataSourceArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/datasources/MemberTable",
+			"name": "MemberTable",
+			"description": "Data source created by the console.",
+			"type": "AMAZON_DYNAMODB",
+			"serviceRoleArn": "arn:aws:iam::305905853980:role/service-role/appsync-datasource-ddb-z6ilk6-MemberTable",
+			"dynamodbConfig": {
+				"tableName": "MemberTable",
+				"awsRegion": "us-east-2",
+				"useCallerCredentials": false
+			}
+		},
+		{
+			"dataSourceArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/datasources/UserTable",
+			"name": "UserTable",
+			"description": "DataSource for Amazon DynamoDB table UserTable (arn:aws:dynamodb:us-east-2:123456789012:table/UserTable)",
+			"type": "AMAZON_DYNAMODB",
+			"serviceRoleArn": "arn:aws:iam::305905853980:role/service-role/appsync-datasource-ddb-z6ilk6-UserTable",
+			"dynamodbConfig": {
+				"tableName": "UserTable",
+				"awsRegion": "us-east-2",
+				"useCallerCredentials": false
+			}
+		},
+		{
+			"dataSourceArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/datasources/createAccount",
+			"name": "createAccount",
+			"description": "Data source created by the console.",
+			"type": "AWS_LAMBDA",
+			"serviceRoleArn": "arn:aws:iam::305905853980:role/service-role/appsync-datasource-lam-z6ilk6-AppSync-createAccoun",
+			"lambdaConfig": {
+				"lambdaFunctionArn": "arn:aws:lambda:us-east-2:305905853980:function:AppSync-createAccount"
+			}
+		},
+		{
+			"dataSourceArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/datasources/findOrCreateUser",
+			"name": "findOrCreateUser",
+			"description": "Data source created by the console.",
+			"type": "AWS_LAMBDA",
+			"serviceRoleArn": "arn:aws:iam::305905853980:role/service-role/appsync-datasource-lam-z6ilk6-AppSync-findOrCreate",
+			"lambdaConfig": {
+				"lambdaFunctionArn": "arn:aws:lambda:us-east-2:305905853980:function:AppSync-findOrCreateUser"
+			}
+		}
+	],
+	"tables": [
+		{
+			"AttributeDefinitions": [
+				{
+					"AttributeName": "id",
+					"AttributeType": "S"
+				}
+			],
+			"TableName": "AccountTable",
+			"KeySchema": [
+				{
+					"AttributeName": "id",
+					"KeyType": "HASH"
+				}
+			],
+			"TableStatus": "ACTIVE",
+			"CreationDateTime": "2018-03-12T17:21:33.165Z",
+			"ProvisionedThroughput": {
+				"NumberOfDecreasesToday": 0,
+				"ReadCapacityUnits": 5,
+				"WriteCapacityUnits": 5
+			},
+			"TableSizeBytes": 376,
+			"ItemCount": 5,
+			"TableArn": "arn:aws:dynamodb:us-east-2:305905853980:table/AccountTable",
+			"TableId": "6838aca2-a25b-45c8-8f27-e1896e5d6ff5",
+			"Region": "us-east-2"
+		},
+		{
+			"AttributeDefinitions": [
+				{
+					"AttributeName": "account_id",
+					"AttributeType": "S"
+				},
+				{
+					"AttributeName": "user_id",
+					"AttributeType": "S"
+				}
+			],
+			"TableName": "MemberTable",
+			"KeySchema": [
+				{
+					"AttributeName": "account_id",
+					"KeyType": "HASH"
+				},
+				{
+					"AttributeName": "user_id",
+					"KeyType": "RANGE"
+				}
+			],
+			"TableStatus": "ACTIVE",
+			"CreationDateTime": "2018-03-12T20:52:29.297Z",
+			"ProvisionedThroughput": {
+				"NumberOfDecreasesToday": 0,
+				"ReadCapacityUnits": 5,
+				"WriteCapacityUnits": 5
+			},
+			"TableSizeBytes": 1203,
+			"ItemCount": 14,
+			"TableArn": "arn:aws:dynamodb:us-east-2:305905853980:table/MemberTable",
+			"TableId": "f12f1394-7089-4727-9599-13a611ea8df0",
+			"GlobalSecondaryIndexes": [
+				{
+					"IndexName": "user_id-index",
+					"KeySchema": [
+						{
+							"AttributeName": "user_id",
+							"KeyType": "HASH"
+						}
+					],
+					"Projection": {
+						"ProjectionType": "ALL"
+					},
+					"IndexStatus": "ACTIVE",
+					"ProvisionedThroughput": {
+						"NumberOfDecreasesToday": 0,
+						"ReadCapacityUnits": 5,
+						"WriteCapacityUnits": 5
+					},
+					"IndexSizeBytes": 1203,
+					"ItemCount": 14,
+					"IndexArn": "arn:aws:dynamodb:us-east-2:305905853980:table/MemberTable/index/user_id-index"
+				}
+			],
+			"Region": "us-east-2"
+		},
+		{
+			"AttributeDefinitions": [
+				{
+					"AttributeName": "email",
+					"AttributeType": "S"
+				},
+				{
+					"AttributeName": "id",
+					"AttributeType": "S"
+				}
+			],
+			"TableName": "UserTable",
+			"KeySchema": [
+				{
+					"AttributeName": "id",
+					"KeyType": "HASH"
+				}
+			],
+			"TableStatus": "ACTIVE",
+			"CreationDateTime": "2018-03-12T17:13:09.578Z",
+			"ProvisionedThroughput": {
+				"NumberOfDecreasesToday": 0,
+				"ReadCapacityUnits": 5,
+				"WriteCapacityUnits": 5
+			},
+			"TableSizeBytes": 1031,
+			"ItemCount": 13,
+			"TableArn": "arn:aws:dynamodb:us-east-2:305905853980:table/UserTable",
+			"TableId": "5e89c5c3-8601-4b3f-8aa4-048b2e6c0930",
+			"GlobalSecondaryIndexes": [
+				{
+					"IndexName": "email-index",
+					"KeySchema": [
+						{
+							"AttributeName": "email",
+							"KeyType": "HASH"
+						}
+					],
+					"Projection": {
+						"ProjectionType": "ALL"
+					},
+					"IndexStatus": "ACTIVE",
+					"ProvisionedThroughput": {
+						"NumberOfDecreasesToday": 0,
+						"ReadCapacityUnits": 5,
+						"WriteCapacityUnits": 5
+					},
+					"IndexSizeBytes": 1031,
+					"ItemCount": 13,
+					"IndexArn": "arn:aws:dynamodb:us-east-2:305905853980:table/UserTable/index/email-index"
+				}
+			],
+			"Region": "us-east-2"
+		}
+	]
 }

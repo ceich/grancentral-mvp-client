@@ -1,10 +1,15 @@
 {
-    "name": "GranCentral MVP",
-    "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-    "userPoolConfig": {
-        "userPoolId": "us-east-2_BNiYyFDeD",
-        "awsRegion": "us-east-2",
-        "defaultAction": "ALLOW",
-        "appIdClientRegex": null
-    }
+	"name": "GranCentral MVP",
+	"apiId": "z6ilk6cmyrbinh4sbax7acdqjq",
+	"authenticationType": "AMAZON_COGNITO_USER_POOLS",
+	"userPoolConfig": {
+		"userPoolId": "us-east-2_BNiYyFDeD",
+		"awsRegion": "us-east-2",
+		"defaultAction": "ALLOW",
+		"appIdClientRegex": null
+	},
+	"arn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq",
+	"uris": {
+		"GRAPHQL": "https://gvu3cpw3lrf2xfenp65mtekg2m.appsync-api.us-east-2.amazonaws.com/graphql"
+	}
 }
