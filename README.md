@@ -59,9 +59,7 @@ Please review the schema in the AppSync project.
 
 ## Build
 
-- Use `awsmobile pull` (`npm install -g awsmobile-cli`) to download `src/aws-exports.js`.
-- Use the AppSync console (link above) to download the `AppSync.js` file to `src` also.
-- Use `yarn install; yarn start` to run locally.
+- Use `yarn; yarn start` to run locally.
 
 ## Publish
 
