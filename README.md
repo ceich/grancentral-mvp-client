@@ -9,20 +9,22 @@ make sure you've selected the **us-east-2 Ohio** region in the upper right of th
 ## Authentication
 
 The AppSync API requires Cognito User Pool authentication,
-and although the User Pool defined by Mobile Hub supports federated login,
-AWS Amplify does not.
-For now, use the **Sign Up** link to define a user for yourself.
+and AWS Amplify supports federated login,
+using Facebook, Google or Amazon as identity providers.
+The app must use the Cognito [hosted login UI](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-app-integration.html) to create a User Pool entry; app-side federated login creates only an [identity pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html) entry which is not persistent.
 
 ### Relation between Cognito User Pool and DynamoDB UserTable
 
-Signing *up* creates a user in the Cognito *User Pool*.
+Signing *up*, or federated login, creates a user in the Cognito *User Pool*.
 When a user signs *in*,
 there are three possible states of DynamoDB's *UserTable*:
-1. First sign-in by brand-new user: no item exists in UserTable.
-1. First sign-in by invited user, or a previously-signed-in user
-   changes User Pool `sub` value while retaining the same email:
-   an item exists with a placeholder id equal to the user's email.
-1. Subsequent sign-ins by all:
+1. First sign-in by a brand-new user: no item exists in UserTable
+   with either an `id` matching the Cognito `sub`, or a matching `email`.
+1. First sign-in by an invited user, or by a previously-signed-in user
+   who changed User Pool `sub` value while retaining the same email
+   (e.g. by changing social identity providers):
+   no item has a matching `id`, but an item exists with a matching `email`.
+1. Subsequent sign-ins:
    an item exists whose `id` matches the User Pool `sub` attribute.
 
 An account owner can invite additional users by providing name and email for each.
@@ -45,17 +47,12 @@ and in all cases returns it.
 Please review the schema in the AppSync project.
 
 ## To-do
-- Support federated logins to the user pool
-  - Blocked by
-    [AWS Amplify](https://github.com/aws/aws-amplify/issues/45)
-  - May also require freeing our stack from MobileHub's constraints,
-    which would suggest moving to CloudFormation to define the stack
 - AppSync project
   - Add business rules for queries and mutations,
     including referential integrity and access control
   - Add subscription support
-  - Pull the API definition out of the console, and into a GitHub project
-    (see above re: CloudFormation)
+  - Pull the API definition out of this repo, and into its own repo
+    (built via CloudFormation, perhaps)
 
 ## Build
 
