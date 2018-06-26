@@ -1,12 +1,4 @@
 {
-    "apiId": "z6ilk6cmyrbinh4sbax7acdqjq",
-    "region": "us-east-2",
-    "name": "GranCentral MVP",
-    "graphqlEndpoint": "https://gvu3cpw3lrf2xfenp65mtekg2m.appsync-api.us-east-2.amazonaws.com/graphql",
-    "authenticationType": "AMAZON_COGNITO_USER_POOLS",
     "freshLocalEnableDisableFlag": "enable",
-    "lastPushSuccessful": false,
-    "lastSyncTime": "2018-04-27-11-28-22",
-    "AppSyncConsoleUrl": "https://console.aws.amazon.com/appsync/home?region=us-east-2#/z6ilk6cmyrbinh4sbax7acdqjq/v1/home",
-    "lastSyncToDevTime": "2018-04-25-12-05-51"
+    "lastPushSuccessful": false
 }

@@ -1,6 +1,4 @@
 --- !com.amazonaws.mobilehub.v0.Project 
-apps:
-  web: !com.amazonaws.mobilehub.v0.AppDO {}
 features:
   content-delivery: !com.amazonaws.mobilehub.v0.ContentDelivery 
     attributes:
@@ -41,5 +39,5 @@ features:
   user-files: !com.amazonaws.mobilehub.v0.UserFiles 
     attributes:
       enabled: true
-name: grancentral-mvp
-region: us-east-2
+name: grancentral-mvp-2018-06-13
+region: us-west-2

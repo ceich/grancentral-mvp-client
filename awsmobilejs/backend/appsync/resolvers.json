@@ -1,130 +1,114 @@
 [
-	{
-		"typeName": "Account",
-		"fieldName": "members",
-		"dataSourceName": "MemberTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Account/resolvers/members",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Account.members.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Account.members.response"
-	},
-	{
-		"typeName": "Member",
-		"fieldName": "account",
-		"dataSourceName": "AccountTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Member/resolvers/account",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Member.account.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Member.account.response"
-	},
-	{
-		"typeName": "Member",
-		"fieldName": "user",
-		"dataSourceName": "UserTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Member/resolvers/user",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Member.user.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Member.user.response"
-	},
-	{
-		"typeName": "Mutation",
-		"fieldName": "createAccount",
-		"dataSourceName": "createAccount",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Mutation/resolvers/createAccount",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.createAccount.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.createAccount.response"
-	},
-	{
-		"typeName": "Mutation",
-		"fieldName": "createMember",
-		"dataSourceName": "MemberTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Mutation/resolvers/createMember",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.createMember.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.createMember.response"
-	},
-	{
-		"typeName": "Mutation",
-		"fieldName": "deleteMember",
-		"dataSourceName": "MemberTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Mutation/resolvers/deleteMember",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.deleteMember.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.deleteMember.response"
-	},
-	{
-		"typeName": "Mutation",
-		"fieldName": "findOrCreateUser",
-		"dataSourceName": "findOrCreateUser",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Mutation/resolvers/findOrCreateUser",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.findOrCreateUser.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.findOrCreateUser.response"
-	},
-	{
-		"typeName": "Mutation",
-		"fieldName": "updateAccount",
-		"dataSourceName": "AccountTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Mutation/resolvers/updateAccount",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateAccount.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateAccount.response"
-	},
-	{
-		"typeName": "Mutation",
-		"fieldName": "updateMember",
-		"dataSourceName": "MemberTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Mutation/resolvers/updateMember",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateMember.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateMember.response"
-	},
-	{
-		"typeName": "Mutation",
-		"fieldName": "updateUser",
-		"dataSourceName": "UserTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Mutation/resolvers/updateUser",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateUser.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateUser.response"
-	},
-	{
-		"typeName": "Query",
-		"fieldName": "getAccount",
-		"dataSourceName": "AccountTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Query/resolvers/getAccount",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.getAccount.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.getAccount.response"
-	},
-	{
-		"typeName": "Query",
-		"fieldName": "getUser",
-		"dataSourceName": "UserTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Query/resolvers/getUser",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.getUser.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.getUser.response"
-	},
-	{
-		"typeName": "Query",
-		"fieldName": "listAccounts",
-		"dataSourceName": "AccountTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Query/resolvers/listAccounts",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.listAccounts.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.listAccounts.response"
-	},
-	{
-		"typeName": "Query",
-		"fieldName": "listUsers",
-		"dataSourceName": "UserTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Query/resolvers/listUsers",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.listUsers.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.listUsers.response"
-	},
-	{
-		"typeName": "Query",
-		"fieldName": "me",
-		"dataSourceName": "UserTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/Query/resolvers/me",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.me.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.me.response"
-	},
-	{
-		"typeName": "User",
-		"fieldName": "members",
-		"dataSourceName": "MemberTable",
-		"resolverArn": "arn:aws:appsync:us-east-2:305905853980:apis/z6ilk6cmyrbinh4sbax7acdqjq/types/User/resolvers/members",
-		"requestMappingTemplate": "{managed-by-awsmobile-cli}:User.members.request",
-		"responseMappingTemplate": "{managed-by-awsmobile-cli}:User.members.response"
-	}
+    {
+        "typeName": "Account",
+        "fieldName": "members",
+        "dataSourceName": "MemberTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Account.members.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Account.members.response"
+    },
+    {
+        "typeName": "Member",
+        "fieldName": "account",
+        "dataSourceName": "AccountTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Member.account.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Member.account.response"
+    },
+    {
+        "typeName": "Member",
+        "fieldName": "user",
+        "dataSourceName": "UserTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Member.user.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Member.user.response"
+    },
+    {
+        "typeName": "Mutation",
+        "fieldName": "createAccount",
+        "dataSourceName": "createAccount",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.createAccount.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.createAccount.response"
+    },
+    {
+        "typeName": "Mutation",
+        "fieldName": "createMember",
+        "dataSourceName": "MemberTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.createMember.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.createMember.response"
+    },
+    {
+        "typeName": "Mutation",
+        "fieldName": "deleteMember",
+        "dataSourceName": "MemberTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.deleteMember.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.deleteMember.response"
+    },
+    {
+        "typeName": "Mutation",
+        "fieldName": "findOrCreateUser",
+        "dataSourceName": "findOrCreateUser",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.findOrCreateUser.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.findOrCreateUser.response"
+    },
+    {
+        "typeName": "Mutation",
+        "fieldName": "updateAccount",
+        "dataSourceName": "AccountTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateAccount.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateAccount.response"
+    },
+    {
+        "typeName": "Mutation",
+        "fieldName": "updateMember",
+        "dataSourceName": "MemberTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateMember.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateMember.response"
+    },
+    {
+        "typeName": "Mutation",
+        "fieldName": "updateUser",
+        "dataSourceName": "UserTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateUser.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateUser.response"
+    },
+    {
+        "typeName": "Query",
+        "fieldName": "getAccount",
+        "dataSourceName": "AccountTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.getAccount.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.getAccount.response"
+    },
+    {
+        "typeName": "Query",
+        "fieldName": "getUser",
+        "dataSourceName": "UserTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.getUser.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.getUser.response"
+    },
+    {
+        "typeName": "Query",
+        "fieldName": "listAccounts",
+        "dataSourceName": "AccountTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.listAccounts.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.listAccounts.response"
+    },
+    {
+        "typeName": "Query",
+        "fieldName": "listUsers",
+        "dataSourceName": "UserTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.listUsers.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.listUsers.response"
+    },
+    {
+        "typeName": "Query",
+        "fieldName": "me",
+        "dataSourceName": "UserTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.me.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.me.response"
+    },
+    {
+        "typeName": "User",
+        "fieldName": "members",
+        "dataSourceName": "MemberTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:User.members.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:User.members.response"
+    }
 ]
