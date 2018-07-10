@@ -64,6 +64,7 @@ class App extends React.Component {
         findOrCreateUser: {  __typename: 'User', ...input }
       },
       update: (proxy, { data: { findOrCreateUser } }) => {
+        if (!findOrCreateUser) return;
         // Write the response into the cache for "me" Query
         proxy.writeQuery({ query: QueryMe, data: { me: findOrCreateUser } });
         // Update the state with the server response
