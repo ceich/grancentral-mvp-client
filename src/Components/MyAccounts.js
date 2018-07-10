@@ -37,7 +37,7 @@ class MyAccounts extends Component {
       </div>
       <div className="content">
         <div className="description">
-          <i className="icon info circle"></i>Member count: {account.members.length}</div>
+          <i className="icon info circle"></i>Member count: {account.members ? account.members.length : 0}</div>
       </div>
       {/* {account.mutable && account.members.length===0 &&
       <button className="ui bottom attached button" onClick={this.handleDeleteClick.bind(this, account)}>
