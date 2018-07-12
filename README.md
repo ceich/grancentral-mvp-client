@@ -1,10 +1,11 @@
 # GranCentral MVP Client
 
 This web app uses [AWS Amplify](https://github.com/aws/aws-amplify) to access
-the AWS Mobile Hub project [grancentral-mvp](https://console.aws.amazon.com/mobilehub/home?region=us-east-2#/4eb8b899-bc2c-44b5-b8b7-f925fd26e269/build) and
-the AppSync project [GranCentral MVP](https://us-east-2.console.aws.amazon.com/appsync/home?region=us-east-2#/z6ilk6cmyrbinh4sbax7acdqjq/v1/home)
+the AWS Mobile Hub project [grancentral-mvp](https://console.aws.amazon.com/mobilehub/home?region=us-east-2#/3bfcbdb3-45fc-4cf9-a3f2-8ec61282ed89/build) and
+the AppSync project [GranCentral MVP](https://us-west-2.console.aws.amazon.com/appsync/home?region=us-west-2#/eqsy3qtavnhuxkwcnvunhwzvyq/v1/home)
 (if you don't see this project when you click the link,
-make sure you've selected the **us-east-2 Ohio** region in the upper right of the AWS page).
+make sure you've selected the **us-west-2 Oregon** region
+in the upper right of the AWS page).
 
 ## Authentication
 
@@ -12,6 +13,11 @@ The AppSync API requires Cognito User Pool authentication,
 and AWS Amplify supports federated login,
 using Facebook, Google or Amazon as identity providers.
 The app must use the Cognito [hosted login UI](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-app-integration.html) to create a User Pool entry; app-side federated login creates only an [identity pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html) entry which is not persistent.
+
+The Cognito hosted login screens are defined by settings in the User Pool.
+The UI was customized in two ways:
+- Logo: `hosted-logo.jpg` (in this folder)
+- Banner background color: white
 
 ### Relation between Cognito User Pool and DynamoDB UserTable
 
@@ -54,13 +60,22 @@ Please review the schema in the AppSync project.
   - Pull the API definition out of this repo, and into its own repo
     (built via CloudFormation, perhaps)
 
-## Build
+## Development
 
-- Use `yarn; yarn start` to run locally.
+- Use `env HTTPS=true yarn start` to run locally. You'll have to
+acknowledge the browser's complaints about the unsafe certificate.
 
 ## Publish
 
-- Use `awsmobile publish -f` to push the client to Cloudfront.
+- Use `awsmobile publish -f` to publish the client to S3,
+which is the source for a CloudFront distribution that serves
+https://app.grancentral.ai.
+This also opens a browser directly to the S3 hosting bucket,
+but that uses HTTP and is not compatible with the hosted auth,
+so you'll see an error.
+- To force an update of the CF distribution:
+  - Use the CloudFront console to create a new invalidation for `index.html`
+  - Wait a few minutes for the new code to appear at the above URL.
 
 ## React reference
 

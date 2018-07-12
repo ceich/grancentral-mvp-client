@@ -14,7 +14,7 @@ const awsmobile = {
     'aws_content_delivery_bucket': 'grancentralmvp-hosting-mobilehub-806911104',
     'aws_content_delivery_bucket_region': 'us-west-2',
     'aws_content_delivery_cloudfront': 'enable',
-    'aws_content_delivery_cloudfront_domain': 'd6yqy850wdwfa.cloudfront.net',
+    'aws_content_delivery_cloudfront_domain': 'd2v1ux23gykpi7.cloudfront.net',
     'aws_facebook_app_id': '325521941271540',
     'aws_facebook_app_permissions': 'public_profile',
     'aws_google_app_permissions': 'email,profile,openid',
@@ -32,6 +32,9 @@ const awsmobile = {
     'aws_user_pools_id': 'us-west-2_qDb9rfpvJ',
     'aws_user_pools_mfa_type': 'OFF',
     'aws_user_pools_web_client_id': '55bu2e2l3df1dnsgbokckehanp',
+    'aws_appsync_graphqlEndpoint': 'https://ieegfdmqwbfuppypusfrivcxye.appsync-api.us-west-2.amazonaws.com/graphql',
+    'aws_appsync_region': 'us-west-2',
+    'aws_appsync_authenticationType': 'AMAZON_COGNITO_USER_POOLS',
 }
 
 export default awsmobile;
