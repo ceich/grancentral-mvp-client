@@ -24,7 +24,7 @@ import Signin from './Components/Signin';
 Amplify.configure(aws_exports);
 
 const oauth = {
-  domain: 'auth.grancentral.ai',
+  domain: 'grancentral-mvp.auth.us-west-2.amazoncognito.com', // 'auth.grancentral.ai',
   label: 'Hosted Login',  // default label for OAuthButton (unused)
   redirectSignIn: window.location.origin + '/signin',
   redirectSignOut: window.location.origin + '/signout', // unused AFAICT
