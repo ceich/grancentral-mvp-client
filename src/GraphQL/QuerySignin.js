@@ -5,7 +5,7 @@ query Signin {
   me {
     id
     name
-    avatar
+    avatar { region bucket key }
     members {
       role
       account { id }
