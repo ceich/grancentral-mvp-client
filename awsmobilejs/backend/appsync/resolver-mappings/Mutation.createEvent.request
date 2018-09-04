@@ -5,7 +5,7 @@
     "accountId": $util.dynamodb.toDynamoDBJson($ctx.args.input.accountId),
     "createdAt": $util.dynamodb.toStringJson("${util.time.nowEpochMilliSeconds()}"),
   },
-#set( $myArgs = $util.dynamodb.toMapValues($ctx.args) )
+#set( $myArgs = $util.dynamodb.toMapValues($ctx.args.input) )
 #set( $myArgs.id = $util.dynamodb.toDynamoDB($util.autoId()) )
   "attributeValues": $util.toJson($myArgs),
   "condition": {
