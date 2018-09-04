@@ -20,7 +20,7 @@ class ViewAccount extends Component {
               <div className="header">{account.name}</div>
               <div className="extra">
                 <i className="icon calendar"></i>
-                Created: {moment(account.created_at, 'x').format('l LTS')}
+                Created: {moment(account.createdAt, 'x').format('l LTS')}
               </div>
               <div className="card blue">
                 <Link to={"/account/"+account.id+"/member/new"} className="new-member content center aligned">

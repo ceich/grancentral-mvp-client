@@ -24,7 +24,7 @@ import Signin from './Components/Signin';
 Amplify.configure(aws_exports);
 
 const oauth = {
-  domain: 'grancentral-mvp.auth.us-west-2.amazoncognito.com', // 'auth.grancentral.ai',
+  domain: 'auth.grancentral.ai',
   label: 'Hosted Login',  // default label for OAuthButton (unused)
   redirectSignIn: window.location.origin + '/signin',
   redirectSignOut: window.location.origin + '/signout', // unused AFAICT
@@ -76,7 +76,7 @@ class App extends React.Component {
     } = this.props;
     if (loading || error || called) return;
 
-    const { idToken: { payload } } = await Auth.currentSession();
+    const { accessToken: { payload } } = await Auth.currentSession();
 
     const input = {
       id: payload.sub,
@@ -88,14 +88,14 @@ class App extends React.Component {
       variables: input,
       optimisticResponse: {
         // First approximation to server response
-        findOrCreateUser: {  __typename: 'User', ...input }
+        findOrCreateUser: { user: {  __typename: 'User', ...input } }
       },
-      update: (proxy, { data: { findOrCreateUser } }) => {
-        if (!findOrCreateUser) return;
+      update: (proxy, { data: { findOrCreateUser: { user } } }) => {
+        if (!user) return;
         // Write the response into the cache for "me" Query
-        proxy.writeQuery({ query: QueryMe, data: { me: findOrCreateUser } });
+        proxy.writeQuery({ query: QueryMe, data: { me: user } });
         // Update the state with the server response
-        this.setState({ user: findOrCreateUser });
+        this.setState({ user });
       }
     });
   }
@@ -138,8 +138,9 @@ const WithProvider = (props) => (
     		jwtToken: async () => (await Auth.currentSession()
           .then(data => { return data })
           .catch(err => { props.OAuthSignIn() })
-          ).getIdToken().getJwtToken()
-  	  }
+        ).getAccessToken().getJwtToken()
+  	  },
+      complexObjectsCredentials: () => Auth.currentCredentials()
   	}
   )}>
     <Rehydrated>

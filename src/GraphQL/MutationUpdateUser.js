@@ -9,9 +9,11 @@ mutation UpdateUser($id: ID! $name: String! $avatar: String) {
       avatar: $avatar
     }
   ) {
-    id
-    name
-    email
-    avatar
+    user {
+      id
+      name
+      email
+      avatar
+    }
   }
 }`);

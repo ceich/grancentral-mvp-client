@@ -29,6 +29,13 @@
     },
     {
         "typeName": "Mutation",
+        "fieldName": "createEvent",
+        "dataSourceName": "AccountTable",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.createEvent.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.createEvent.response"
+    },
+    {
+        "typeName": "Mutation",
         "fieldName": "createMember",
         "dataSourceName": "MemberTable",
         "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.createMember.request",
@@ -47,13 +54,6 @@
         "dataSourceName": "findOrCreateUser",
         "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.findOrCreateUser.request",
         "responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.findOrCreateUser.response"
-    },
-    {
-        "typeName": "Mutation",
-        "fieldName": "updateAccount",
-        "dataSourceName": "AccountTable",
-        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateAccount.request",
-        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateAccount.response"
     },
     {
         "typeName": "Mutation",
@@ -78,24 +78,17 @@
     },
     {
         "typeName": "Query",
-        "fieldName": "getUser",
+        "fieldName": "getEvent",
         "dataSourceName": "UserTable",
-        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.getUser.request",
-        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.getUser.response"
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.getEvent.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.getEvent.response"
     },
     {
         "typeName": "Query",
-        "fieldName": "listAccounts",
+        "fieldName": "listEvents",
         "dataSourceName": "AccountTable",
-        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.listAccounts.request",
-        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.listAccounts.response"
-    },
-    {
-        "typeName": "Query",
-        "fieldName": "listUsers",
-        "dataSourceName": "UserTable",
-        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.listUsers.request",
-        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.listUsers.response"
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.listEvents.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.listEvents.response"
     },
     {
         "typeName": "Query",

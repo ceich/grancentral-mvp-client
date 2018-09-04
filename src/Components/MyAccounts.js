@@ -32,7 +32,7 @@ class MyAccounts extends Component {
       <div className="content">
         <p>
           <i className="icon calendar"></i>
-          {moment(account.created_at, 'x').format('l LTS')}
+          {moment(account.createdAt, 'x').format('l LTS')}
         </p>
       </div>
       <div className="content">

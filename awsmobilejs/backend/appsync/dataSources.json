@@ -2,7 +2,7 @@
     "dataSources": [
         {
             "name": "AccountTable",
-            "description": "DataSource for Amazon DynamoDB table AccountTable (arn:aws:dynamodb:us-west-2:123456789012:table/AccountTable)",
+            "description": "DataSource for Amazon DynamoDB table AccountTable (arn:aws:dynamodb:us-west-2:305905853980:table/AccountTable)",
             "type": "AMAZON_DYNAMODB",
             "serviceRoleArn": "{managed-by-awsmobile-cli}",
             "dynamodbConfig": {
@@ -12,17 +12,19 @@
             }
         },
         {
-            "name": "DebugLambda",
-            "description": "Data source created by the console.",
-            "type": "AWS_LAMBDA",
+            "name": "EventTable",
+            "description": "DataSource for Amazon DynamoDB table EventTable (arn:aws:dynamodb:us-west-2:305905853980:table/EventTable)",
+            "type": "AMAZON_DYNAMODB",
             "serviceRoleArn": "{managed-by-awsmobile-cli}",
-            "lambdaConfig": {
-                "lambdaFunctionArn": "arn:aws:lambda:us-west-2:305905853980:function:debugLambda"
+            "dynamodbConfig": {
+                "tableName": "EventTable",
+                "awsRegion": "us-west-2",
+                "useCallerCredentials": false
             }
         },
         {
             "name": "MemberTable",
-            "description": "Data source created by the console.",
+            "description": "DataSource for Amazon DynamoDB table MemberTable (arn:aws:dynamodb:us-west-2:305905853980:table/MemberTable)",
             "type": "AMAZON_DYNAMODB",
             "serviceRoleArn": "{managed-by-awsmobile-cli}",
             "dynamodbConfig": {
@@ -33,7 +35,7 @@
         },
         {
             "name": "UserTable",
-            "description": "DataSource for Amazon DynamoDB table UserTable (arn:aws:dynamodb:us-west-2:123456789012:table/UserTable)",
+            "description": "DataSource for Amazon DynamoDB table UserTable (arn:aws:dynamodb:us-west-2:305905853980:table/UserTable)",
             "type": "AMAZON_DYNAMODB",
             "serviceRoleArn": "{managed-by-awsmobile-cli}",
             "dynamodbConfig": {
@@ -85,22 +87,22 @@
         {
             "AttributeDefinitions": [
                 {
-                    "AttributeName": "account_id",
+                    "AttributeName": "accountId",
                     "AttributeType": "S"
                 },
                 {
-                    "AttributeName": "user_id",
+                    "AttributeName": "createdAt",
                     "AttributeType": "S"
                 }
             ],
-            "TableName": "MemberTable",
+            "TableName": "EventTable",
             "KeySchema": [
                 {
-                    "AttributeName": "account_id",
+                    "AttributeName": "accountId",
                     "KeyType": "HASH"
                 },
                 {
-                    "AttributeName": "user_id",
+                    "AttributeName": "createdAt",
                     "KeyType": "RANGE"
                 }
             ],
@@ -110,10 +112,56 @@
             },
             "GlobalSecondaryIndexes": [
                 {
-                    "IndexName": "user_id-index",
+                    "IndexName": "id-index",
                     "KeySchema": [
                         {
-                            "AttributeName": "user_id",
+                            "AttributeName": "id",
+                            "KeyType": "HASH"
+                        }
+                    ],
+                    "Projection": {
+                        "ProjectionType": "ALL"
+                    },
+                    "ProvisionedThroughput": {
+                        "ReadCapacityUnits": 5,
+                        "WriteCapacityUnits": 5
+                    }
+                }
+            ],
+            "Region": "us-west-2"
+        },
+        {
+            "AttributeDefinitions": [
+                {
+                    "AttributeName": "accountId",
+                    "AttributeType": "S"
+                },
+                {
+                    "AttributeName": "userId",
+                    "AttributeType": "S"
+                }
+            ],
+            "TableName": "MemberTable",
+            "KeySchema": [
+                {
+                    "AttributeName": "accountId",
+                    "KeyType": "HASH"
+                },
+                {
+                    "AttributeName": "userId",
+                    "KeyType": "RANGE"
+                }
+            ],
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": 5,
+                "WriteCapacityUnits": 5
+            },
+            "GlobalSecondaryIndexes": [
+                {
+                    "IndexName": "userId-index",
+                    "KeySchema": [
+                        {
+                            "AttributeName": "userId",
                             "KeyType": "HASH"
                         }
                     ],

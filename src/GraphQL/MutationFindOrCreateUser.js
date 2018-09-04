@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 export default gql(`
-mutation FindOrCreateUser($id: ID! $name: String! $email: String!) {
+mutation FindOrCreateUser($id: ID! $name: String! $email: AWSEmail!) {
   findOrCreateUser(
     input: {
       id: $id
@@ -9,9 +9,11 @@ mutation FindOrCreateUser($id: ID! $name: String! $email: String!) {
       email: $email    
     }
   ) {
-    id
-    name
-    email
-    avatar
+    user {
+      id
+      name
+      email
+      avatar
+    }
   }
 }`);

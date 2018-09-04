@@ -1,0 +1,14 @@
+{
+  "version": "2017-02-28",
+  "operation": "PutItem",
+  "key": {
+    "accountId": $util.dynamodb.toDynamoDBJson($ctx.args.input.accountId),
+    "createdAt": $util.dynamodb.toStringJson("${util.time.nowEpochMilliSeconds()}"),
+  },
+#set( $myArgs = $util.dynamodb.toMapValues($ctx.args) )
+#set( $myArgs.id = $util.dynamodb.toDynamoDB($util.autoId()) )
+  "attributeValues": $util.toJson($myArgs),
+  "condition": {
+    "expression": "attribute_not_exists(accountId) AND attribute_not_exists(createdAt)",
+  },
+}

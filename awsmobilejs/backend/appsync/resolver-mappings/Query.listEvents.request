@@ -1,0 +1,15 @@
+{
+    "version" : "2017-02-28",
+    "operation" : "Query",
+    "query" : {
+        "expression": "accountId = :accountId",
+        "expressionValues" : {
+            ":accountId" : {
+                "S" : "${ctx.args.accountId}"
+            }
+        }
+    },
+    "limit": $util.defaultIfNull(${ctx.args.limit}, 20),
+    "nextToken": $util.toJson($util.defaultIfNullOrBlank($ctx.args.nextToken, null)),
+    "scanIndexForward": false
+}

@@ -8,7 +8,7 @@ query MyAccounts {
 			role
       account {
         id
-        created_at
+        createdAt
         name
         members {
           role

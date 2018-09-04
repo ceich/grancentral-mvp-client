@@ -3,9 +3,9 @@
     "operation" : "PutItem",
     "key" : {
         ## If your table's hash key is not named 'id', change it here. **
-        "account_id" : { "S" : "${ctx.args.input.account_id}" },
+        "accountId" : { "S" : "${ctx.args.input.accountId}" },
         ## If your table has a sort key, add it here. **
-        "user_id" : { "S" : "${ctx.args.input.user_id}" }
+        "userId" : { "S" : "${ctx.args.input.userId}" }
     },
-    "attributeValues" : $util.dynamodb.toMapValuesJson($util.map.copyAndRemoveAllKeys($ctx.args.input,["account_id","user_id"]))
+    "attributeValues" : $util.dynamodb.toMapValuesJson($util.map.copyAndRemoveAllKeys($ctx.args.input,["accountId","userId"]))
 }

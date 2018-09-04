@@ -3,16 +3,14 @@
     "operation" : "PutItem",
     "key" : {
         ## If your table's hash key is not named 'id', change it here. **
-        "account_id" : { "S" : "${context.arguments.input.account_id}" },
+        "accountId" : { "S" : "${context.arguments.input.accountId}" },
         ## If your table has a sort key, add it here. **
-        "user_id" : { "S" : "${context.arguments.input.user_id}" }
+        "userId" : { "S" : "${context.arguments.input.userId}" }
     },
     
   	"condition": {
-    	"expression": "attribute_not_exists(account_id) AND attribute_not_exists(user_id)"
+    	"expression": "attribute_not_exists(accountId) AND attribute_not_exists(userId)"
   	},
  
- 	"attributeValues" : {
-    	"role" : { "S" : "${context.arguments.input.role}" }
-    }
+    "attributeValues" : $util.dynamodb.toMapValuesJson($util.map.copyAndRemoveAllKeys($ctx.args.input,["accountId","userId"]))
 }

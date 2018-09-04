@@ -38,7 +38,7 @@ class NewMember extends Component {
     }
 
     // In-app user creation uses a placeholder id === email
-    const { data: { findOrCreateUser: user } } = await findOrCreateUser({
+    const { data: { findOrCreateUser: { user } } } = await findOrCreateUser({
       id: email,
       name,
       email
@@ -48,8 +48,8 @@ class NewMember extends Component {
       const member = {
         name,
         email,
-        account_id: account.id,
-        user_id: user.id,
+        accountId: account.id,
+        userId: user.id,
         role: role
       }
 
@@ -113,7 +113,7 @@ export default compose(
           [{ query: QueryGetAccount, variables: { id } }]
         ),
         update: (proxy, { data: { createMember } }) => {
-          const { account: { id }, user: { id: user_id } } = createMember;
+          const { account: { id }, user: { id: userId } } = createMember;
           const query = QueryGetAccount;
           const variables = { id };
           const data = proxy.readQuery({ query, variables });
@@ -122,7 +122,7 @@ export default compose(
           // Guard against multiple calls with optimisticResponse:
           // https://github.com/awslabs/aws-mobile-appsync-sdk-js/issues/65
           if (members.length === 0 ||
-              members[members.length-1].user.id !== user_id) {
+              members[members.length-1].user.id !== userId) {
             members.push(createMember);
           }
 
@@ -135,18 +135,20 @@ export default compose(
             variables: input,
             optimisticResponse: {
               createMember: {
-                __typename: 'Member',
-                account: {
-                  __typename: 'Account',
-                  id: input.account_id
-                },
-                user: {
-                  __typename: 'User',
-                  id: input.user_id,
-                  name,
-                  email
-                },
-                role: input.role
+                member: {
+                  __typename: 'Member',
+                  account: {
+                    __typename: 'Account',
+                    id: input.accountId
+                  },
+                  user: {
+                    __typename: 'User',
+                    id: input.userId,
+                    name,
+                    email
+                  },
+                  role: input.role
+                }
               }
             }
           })
@@ -162,7 +164,7 @@ export default compose(
           return props.mutate({
             variables: input,
             optimisticResponse: {
-              findOrCreateUser: { ...input, __typename: 'User' }
+              findOrCreateUser: { user: { ...input, __typename: 'User' } }
             }
           });
         }

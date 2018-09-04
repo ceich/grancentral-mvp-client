@@ -1,10 +1,10 @@
 {
     "version" : "2017-02-28",
     "operation" : "Query",
-    "index" : "user_id-index",
+    "index" : "userId-index",
     "query" : {
         ## Provide a query expression. **
-        "expression": "user_id = :id",
+        "expression": "userId = :id",
         "expressionValues" : {
             ":id" : {
                 "S" : "${ctx.source.id}"

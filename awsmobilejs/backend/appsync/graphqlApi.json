@@ -2,7 +2,7 @@
     "name": "GranCentral MVP",
     "authenticationType": "AMAZON_COGNITO_USER_POOLS",
     "userPoolConfig": {
-        "userPoolId": "us-west-2_qDb9rfpvJ",
+        "userPoolId": "us-west-2_z4KafjehR",
         "awsRegion": "us-west-2",
         "defaultAction": "ALLOW",
         "appIdClientRegex": null

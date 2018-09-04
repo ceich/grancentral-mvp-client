@@ -1,16 +1,18 @@
 import gql from "graphql-tag";
 
 export default gql(`
-mutation($name: String! $owner_id: ID!) {
+mutation($name: String! $ownerId: ID!) {
   createAccount(
     input: {
       name: $name
-      owner_id: $owner_id
+      ownerId: $ownerId
     }
   ) {
-    id
-    created_at
-    name
-    members { role user { id } }
+    account {
+      id
+      createdAt
+      name
+      members { role user { id } }
+    }
   }
 }`);

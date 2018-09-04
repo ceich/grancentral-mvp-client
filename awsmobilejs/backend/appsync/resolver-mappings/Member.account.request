@@ -3,7 +3,7 @@
     "operation" : "GetItem",
     "key" : {
         ## If your table's hash key is not named 'id', change it here. **
-        "id" : { "S" : "${ctx.source.account_id}" }
+        "id" : { "S" : "${ctx.source.accountId}" }
         ## If your table has a sort key, add it as an item here. **
     }
 }

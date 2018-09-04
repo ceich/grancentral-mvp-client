@@ -3,8 +3,8 @@
     "operation" : "DeleteItem",
     "key" : {
         ## If your table's hash key is not named 'id', update it here. **
-        "account_id" : { "S" : "${ctx.args.input.account_id}" },
+        "accountId" : { "S" : "${ctx.args.input.accountId}" },
         ## If your table has a sort key, add it as an item here. **
-        "user_id" : { "S" : "${ctx.args.input.user_id}" }
+        "userId" : { "S" : "${ctx.args.input.userId}" }
     }
 }

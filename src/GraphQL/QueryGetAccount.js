@@ -6,11 +6,10 @@ query($id: ID!) {
     id: $id
   ) {
     id
-    created_at
+    createdAt
     name
     members {
       role
-      account { id }
       user {
         id
         name

@@ -23,7 +23,7 @@ class NewAccount extends Component {
 
     const { createAccount, history, user } = this.props;
     const { account} = this.state;
-    account.owner_id = user.id;
+    account.ownerId = user.id;
 
     await createAccount(account);
 
@@ -37,7 +37,7 @@ class NewAccount extends Component {
       <h1 className="ui header">Create an account</h1>
       <div className="ui form">
         <div className="field required eight wide">
-          <label htmlFor="name">Account Name</label>
+          <label htmlFor="name">Elder's Name</label>
           <input type="text" id="name" value={account.name} onChange={this.handleChange.bind(this, 'name')}/>
         </div>
         <div className="ui buttons">
@@ -54,18 +54,18 @@ export default graphql(
   MutationCreateAccount, {
     options: {
       refetchQueries: [{ query: QueryMyAccounts }],
-      update: (proxy, { data: { createAccount } }) => {
+      update: (proxy, { data: { createAccount: { account } } }) => {
         const query = QueryMyAccounts;
         const data = proxy.readQuery({ query });
         var members = data.me.members;
         // Guard against multiple calls with optimisticResponse:
         // https://github.com/awslabs/aws-mobile-appsync-sdk-js/issues/65
         if (members.length === 0 ||
-            members[members.length-1].account.id !== createAccount.id) {
+            members[members.length-1].account.id !== account.id) {
           members.push({
             __typename: 'Member',
             role: 'owner',
-            account: createAccount
+            account: account
           });
         }
 
@@ -78,18 +78,20 @@ export default graphql(
           variables: account,
           optimisticResponse: () => ({
             createAccount: {
-              __typename: 'Account',
-              id: uuid(),
-              created_at: Date.now(),
-              name: account.name,
-              members: [{
-                __typename: 'Member',
-                user: {
-                  __typename: 'User',
-                  id: account.owner_id
-                },
-                role: 'owner'
-              }]
+              account: {
+                __typename: 'Account',
+                id: uuid(),
+                createdAt: Date.now(),
+                name: account.name,
+                members: [{
+                  __typename: 'Member',
+                  user: {
+                    __typename: 'User',
+                    id: account.ownerId
+                  },
+                  role: 'owner'
+                }]
+              }
             }
           })
         })

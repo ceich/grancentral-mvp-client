@@ -110,14 +110,14 @@ export default compose(
   graphql(MutationDeleteMember, {
     alias: 'MutationDeleteMember',
     options: {
-      refetchQueries: ({ data: { deleteMember: { account: { id } } } }) => (
+      refetchQueries: ({ data: { deleteMember: { member: { account: { id } } } } }) => (
         [{ query: QueryGetAccount, variables: { id } }]
       ),
-      update: (proxy, { data: { deleteMember } }) => {
+      update: (proxy, { data: { deleteMember: { member } } }) => {
         const query = QueryGetAccount;
-        const variables = { id: deleteMember.account.id };
+        const variables = { id: member.account.id };
         const data = proxy.readQuery({ query, variables });
-        data.getAccount.members = data.getAccount.members.filter(m => m.user.id !== deleteMember.user.id);
+        data.getAccount.members = data.getAccount.members.filter(m => m.user.id !== member.user.id);
         proxy.writeQuery({ query, data });
       }
     },
@@ -125,13 +125,15 @@ export default compose(
       deleteMember: (member) => {
         return props.mutate({
           variables: {
-            account_id: member.account.id,
-            user_id: member.user.id
+            accountId: member.account.id,
+            userId: member.user.id
           },
           optimisticResponse: () => ({
             deleteMember: {
-              __typename: 'Member',
-              ...member
+              member: {
+                __typename: 'Member',
+                ...member
+              }
             }
           })
         })

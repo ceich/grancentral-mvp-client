@@ -1,16 +1,18 @@
 import gql from "graphql-tag";
 
 export default gql(`
-mutation($account_id: ID! $user_id: ID! $role: Role!) {
+mutation($accountId: ID! $userId: ID! $role: Role!) {
   createMember(
     input: {
-      account_id: $account_id
-      user_id: $user_id
+      accountId: $accountId
+      userId: $userId
       role: $role
     }
   ) {
-    account { id }
-    user { id name email }
-    role
+    member {
+      account { id }
+      user { id name email }
+      role
+    }
   }
 }`);

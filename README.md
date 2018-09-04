@@ -1,7 +1,7 @@
 # GranCentral MVP Client
 
-This web app uses [AWS Amplify](https://github.com/aws/aws-amplify) to access
-the AWS Mobile Hub project [grancentral-mvp](https://console.aws.amazon.com/mobilehub/home?region=us-east-2#/3bfcbdb3-45fc-4cf9-a3f2-8ec61282ed89/build) and
+This web app uses [AWS Amplify](https://github.com/aws-amplify/amplify-js) to access
+the AWS Mobile Hub project [grancentral-mvp-2018-06-13](https://console.aws.amazon.com/mobilehub/home?region=us-east-2#/3bfcbdb3-45fc-4cf9-a3f2-8ec61282ed89/build) and
 the AppSync project [GranCentral MVP](https://us-west-2.console.aws.amazon.com/appsync/home?region=us-west-2#/eqsy3qtavnhuxkwcnvunhwzvyq/v1/home)
 (if you don't see this project when you click the link,
 make sure you've selected the **us-west-2 Oregon** region
@@ -12,7 +12,7 @@ in the upper right of the AWS page).
 The AppSync API requires Cognito User Pool authentication,
 and AWS Amplify supports federated login,
 using Facebook, Google or Amazon as identity providers.
-The app must use the Cognito [hosted login UI](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-app-integration.html) to create a User Pool entry; app-side federated login creates only an [identity pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html) entry which is not persistent.
+The app must use the Cognito [hosted login UI](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-app-integration.html) to create a User Pool entry; app-local federated login creates only an [identity pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html) entry, which is not persistent.
 
 The Cognito hosted login screens are defined by settings in the User Pool.
 The UI was customized in two ways:
@@ -26,10 +26,11 @@ When a user signs *in*,
 there are three possible states of DynamoDB's *UserTable*:
 1. First sign-in by a brand-new user: no item exists in UserTable
    with either an `id` matching the Cognito `sub`, or a matching `email`.
-1. First sign-in by an invited user, or by a previously-signed-in user
-   who changed User Pool `sub` value while retaining the same email
-   (e.g. by changing social identity providers):
+1. First sign-in by an invited user:
    no item has a matching `id`, but an item exists with a matching `email`.
+   - Note, that this case also occurs when a previously-signed-in user
+     changes social identity providers, thus changing User Pool `sub`
+     value while retaining the same email. Ignore this for now....
 1. Subsequent sign-ins:
    an item exists whose `id` matches the User Pool `sub` attribute.
 
@@ -53,12 +54,13 @@ and in all cases returns it.
 Please review the schema in the AppSync project.
 
 ## To-do
-- AppSync project
+- AppSync API
   - Add business rules for queries and mutations,
     including referential integrity and access control
-  - Add subscription support
-  - Pull the API definition out of this repo, and into its own repo
-    (built via CloudFormation, perhaps)
+  - Add subscription support for changes to accounts and new events
+  - Use [amplify-cli](https://github.com/aws-amplify/amplify-cli)
+    to define the API in this repo and build it via CloudFormation;
+    `amplify-cli` was released on 2018-08-27 and needs to mature.
 
 ## Development
 
