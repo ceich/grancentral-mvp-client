@@ -46,7 +46,10 @@ class Profile extends React.Component {
 
     await updateUser({
       variables: { ...profile },
-      optimisticResponse: { updateUser: { user: { __typename: 'User', ...profile } } },
+      optimisticResponse: { updateUser: {
+        __typename: 'UpdateUserResult',
+        user: { __typename: 'User', ...profile }
+      } },
       update: (proxy, { data: { updateUser: { user } }}) => {
         const query = QueryMe;
         const data = proxy.readQuery({ query });

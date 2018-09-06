@@ -130,6 +130,7 @@ export default compose(
           },
           optimisticResponse: () => ({
             deleteMember: {
+              __typename: 'DeleteMemberResult',
               member: {
                 __typename: 'Member',
                 ...member

@@ -80,6 +80,7 @@ export default graphql(
           variables: account,
           optimisticResponse: () => ({
             createAccount: {
+              __typename: 'CreateAccountResult',
               account: {
                 __typename: 'Account',
                 id: uuid(),

@@ -135,6 +135,7 @@ export default compose(
             variables: input,
             optimisticResponse: {
               createMember: {
+                __typename: 'CreateMemberResult',
                 member: {
                   __typename: 'Member',
                   account: {
@@ -164,7 +165,10 @@ export default compose(
           return props.mutate({
             variables: input,
             optimisticResponse: {
-              findOrCreateUser: { user: { ...input, __typename: 'User' } }
+              findOrCreateUser: {
+                __typename: 'FindOrCreateUserResult',
+                user: { ...input, __typename: 'User' }
+              }
             }
           });
         }

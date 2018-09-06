@@ -88,7 +88,10 @@ class App extends React.Component {
       variables: input,
       optimisticResponse: {
         // First approximation to server response
-        findOrCreateUser: { user: { __typename: 'User', ...input } }
+        findOrCreateUser: {
+          __typename: 'FindOrCreateUserResult',
+          user: { __typename: 'User', ...input }
+        }
       },
       update: (proxy, { data: { findOrCreateUser: { user } } }) => {
         if (!user) return;
