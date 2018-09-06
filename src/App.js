@@ -88,10 +88,11 @@ class App extends React.Component {
       variables: input,
       optimisticResponse: {
         // First approximation to server response
-        findOrCreateUser: { user: {  __typename: 'User', ...input } }
+        findOrCreateUser: { user: { __typename: 'User', ...input } }
       },
       update: (proxy, { data: { findOrCreateUser: { user } } }) => {
         if (!user) return;
+        console.log('Setting user to:', user);
         // Write the response into the cache for "me" Query
         proxy.writeQuery({ query: QueryMe, data: { me: user } });
         // Update the state with the server response
