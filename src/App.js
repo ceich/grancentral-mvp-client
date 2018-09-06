@@ -56,6 +56,7 @@ class App extends React.Component {
 
   checkUser() {
     Auth.currentAuthenticatedUser().catch(err => {
+      console.log('checkUser: no current authenticated user');
       this.props.OAuthSignIn();
     });
   }
@@ -95,7 +96,7 @@ class App extends React.Component {
       },
       update: (proxy, { data: { findOrCreateUser: { user } } }) => {
         if (!user) return;
-        console.log('Setting user to:', user);
+        // console.log('Setting user to:', user);
         // Write the response into the cache for "me" Query
         proxy.writeQuery({ query: QueryMe, data: { me: user } });
         // Update the state with the server response
@@ -124,7 +125,10 @@ class App extends React.Component {
                  render={(props) => <Profile {...props} {...this.state} />} />
           <Route path="/signin"
                  render={(props) => <Signin {...props} {...this.state} />} />
-          <Route path="/signout" render={this.props.OAuthSignIn} />
+          <Route path="/signout" render={() => {
+            console.log('signout: going to hosted UI');
+            this.props.OAuthSignIn();
+          } />
           <Greetings />
         </div>
       </Router>
@@ -141,7 +145,10 @@ const WithProvider = (props) => (
     		type: appSyncConfig.authenticationType,
     		jwtToken: async () => (await Auth.currentSession()
           .then(data => { return data })
-          .catch(err => { props.OAuthSignIn() })
+          .catch(err => {
+            console.log('while getting jwtToken: no current session')
+            props.OAuthSignIn();
+          })
         ).getAccessToken().getJwtToken()
   	  },
       complexObjectsCredentials: () => Auth.currentCredentials()
