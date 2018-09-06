@@ -23,6 +23,7 @@ type Query {
 input CreateAccountInput {
   name: String!
   ownerId: ID!
+  elders: [ElderInput!]!
   role: String!
 }
 type CreateAccountResult { account: Account }
@@ -48,6 +49,11 @@ input DeleteMemberInput {
   userId: ID!
 }
 type DeleteMemberResult { member: Member }
+
+input ElderInput {
+  name: String!
+  birthday: AWSDate!
+}
 
 input FindOrCreateUserInput {
   id: ID!
@@ -78,7 +84,13 @@ type Account {
   createdAt: String!
   name: String!
   ownerId: ID!
+  elders: [Elder!]!
   members: [Member!]!
+}
+
+type Elder {
+  name: String!
+  birthday: AWSDate!
 }
 
 type Event {

@@ -24,6 +24,8 @@ class NewAccount extends Component {
     const { createAccount, history, user } = this.props;
     const { account} = this.state;
     account.ownerId = user.id;
+    account.role = 'son-in-law';    // TODO: add UI for owner's relation to elder
+    account.birthday = '1948-12-23'; // TODO: add UI for birthday selection
 
     await createAccount(account);
 
@@ -64,7 +66,7 @@ export default graphql(
             members[members.length-1].account.id !== account.id) {
           members.push({
             __typename: 'Member',
-            role: 'owner',
+            role: 'owner', // TODO: should not be hardcoded
             account: account
           });
         }
@@ -83,13 +85,19 @@ export default graphql(
                 id: uuid(),
                 createdAt: Date.now(),
                 name: account.name,
+                ownerId: account.ownerId,
+                elders: [{
+                  __typename: 'Elder',
+                  name: account.name,
+                  birthday: account.birthday
+                }],
                 members: [{
                   __typename: 'Member',
                   user: {
                     __typename: 'User',
                     id: account.ownerId
                   },
-                  role: 'owner'
+                  role: account.role
                 }]
               }
             }
