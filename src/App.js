@@ -76,7 +76,7 @@ class App extends React.Component {
     } = this.props;
     if (loading || error || called) return;
 
-    const { accessToken: { payload } } = await Auth.currentSession();
+    const { idToken: { payload } } = await Auth.currentSession();
 
     const input = {
       id: payload.sub,
