@@ -128,7 +128,7 @@ class App extends React.Component {
           <Route path="/signout" render={() => {
             console.log('signout: going to hosted UI');
             this.props.OAuthSignIn();
-          } />
+          }} />
           <Greetings />
         </div>
       </Router>
