@@ -1,0 +1,106 @@
+query me { me { id email } }
+
+query listEvents($accountId:ID! $first:Int $before:String) {
+  listEvents(accountId:$accountId limit:$first nextToken:$before) {
+    items { accountId createdAt } nextToken
+  }
+}
+
+query getAccount($accountId:ID!) {
+  getAccount(id:$accountId) {
+    id
+    name
+    ownerId
+    members {
+      role
+      user { id name pictures { region bucket key } }
+    }
+    elders { name birthday }
+  }
+}
+
+query Signin {
+  me {
+    id
+    name
+    email
+    avatar { region bucket key }
+    members {
+			role
+      account {id name}
+    }
+  }
+}
+
+mutation createAccount($account_name:String! $ceich_id:ID! $role:String! $birthday:AWSDate!) {
+  createAccount(input:{
+  	name:$account_name
+  	ownerId:$ceich_id
+    role:$role
+    elders: [ { name:$account_name birthday:$birthday } ]
+  }) { account {
+    id
+    createdAt
+    name
+    ownerId
+    elders { name birthday }
+    members { role user { name } }
+  }}
+}
+
+mutation FindOrCreateUser($ceich_id:ID! $ceich_name:String! $ceich_email:AWSEmail!) {
+  findOrCreateUser(input:{
+    id:$ceich_id
+    name:$ceich_name
+    email:$ceich_email
+  }) { user {
+    id
+    createdAt
+    name
+    avatar { region bucket key }
+    members {
+      role
+      account {
+        id
+        name
+        ownerId
+        elders { name birthday }
+      }
+    }
+  } }
+}
+
+mutation UpdateUserAva($ceich_id:ID! $avatar:S3ObjectInput!) {
+  updateUser(input: {id:$ceich_id avatar:$avatar }) { user {
+    id
+    name
+    avatar { region bucket key }
+  }}
+}
+mutation UpdateUserPics($ceich_id:ID! $pictures:[S3ObjectInput!]!) {
+  updateUser(input: {id:$ceich_id pictures:$pictures }) { user {
+    id
+    name
+    pictures { region bucket key }
+  }}
+}
+
+mutation CreateEvent($accountId:ID! $text:String $media:S3ObjectInput) {
+  createEvent(input:{accountId:$accountId text:$text media:$media}) { event {
+    accountId
+    createdAt
+    id
+    text
+    media { region bucket key }
+  }}
+}
+
+query GetEvent($eventId:ID!) {
+  getEvent(id:$eventId) {
+    accountId
+    createdAt
+    id
+    text
+    media { region bucket key }
+  }
+}

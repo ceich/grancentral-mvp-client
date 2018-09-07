@@ -1,0 +1,37 @@
+{
+  "account_name":"Abe Simpson",
+  "avatar": {
+    "region": "us-west-2", "bucket": "buck-1", "key": "key0",
+    "localUri": "image.jpg", "mimeType": "image/jpg"
+  },
+  "birthday": "1937-08-09",
+  "bob_id":"4304cb59-78e0-49af-b1d5-b2a22b8fb241",
+  "bob_name":"Bob DiMarco",
+  "bob_email":"bob@dimarco.com",
+  "accountId":"fd4054cb-57b6-44d6-a419-b257c274c35a",
+  "name": "Homer Simpson",
+  "email": "homer@simpson.com",
+  "role":"family",
+  "ceich_id":"3405fffb-edeb-4e39-a10d-7ef2a31f9a6c",
+  "ceich_name": "Chris Eich",
+  "ceich_email": "ceich62@gmail.com",
+  "del_acct_id": "e3200e33-4f34-48ed-95e5-cff1e524b28c",
+  "del_user_id": "homer@simpson.com",
+  "eventId": "9a431d74-2f12-4ff5-8740-3fa5091b9ebb",
+  "media": {
+    "region": "us-east-1", "bucket": "tokbox-1", "key": "20180907T111842Z",
+    "localUri": "video.mp4", "mimeType": "image/mpeg"
+  },
+  "pictures": [
+    {
+    	"region": "us-west-2", "bucket": "buck-1", "key": "key1",
+    	"localUri": "foo.jpg", "mimeType": "image/jpg"
+    },
+    {
+    	"region": "us-west-2", "bucket": "buck-1", "key": "key2",
+    	"localUri": "bar.jpg", "mimeType": "image/jpg"
+    }
+  ],
+  "role": "neighbor",
+  "text": "morning checkin"
+}
