@@ -1,154 +1,136 @@
-schema  {
-  mutation: Mutation
-  query: Query
-}
-
-type Mutation {
-  createAccount(input: CreateAccountInput! ): CreateAccountResult
-  createEvent(input: CreateEventInput!): CreateEventResult
-  createMember(input: CreateMemberInput! ): CreateMemberResult
-  deleteMember(input: DeleteMemberInput! ): DeleteMemberResult
-  findOrCreateUser(input: FindOrCreateUserInput! ): FindOrCreateUserResult
-  updateMember(input: UpdateMemberInput! ): UpdateMemberResult
-  updateUser(input: UpdateUserInput! ): UpdateUserResult
-}
-
-type Query {
-  getAccount(id: ID!): Account
-  getEvent(id: ID!): Event
-  listEvents(accountId: ID!, limit: Int, nextToken: String): EventConnection
-  me: User
+type Account {
+	id: ID!
+	createdAt: String!
+	name: String!
+	ownerId: ID!
+	elders: [Elder!]!
+	members: [Member!]!
 }
 
 input CreateAccountInput {
-  name: String!
-  ownerId: ID!
-  elders: [ElderInput!]!
-  role: String!
+	name: String!
+	ownerId: ID!
+	elders: [ElderInput!]!
+	role: String!
 }
-type CreateAccountResult { account: Account }
+
+type CreateAccountResult {
+	account: Account
+}
 
 input CreateEventInput {
-  accountId: ID!
-  text: String
-  userId: ID
-  referenceId: ID
-  media: S3ObjectInput
+	accountId: ID!
+	text: String
+	userId: ID
+	referenceId: ID
+	media: S3ObjectInput
 }
-type CreateEventResult { event: Event }
+
+type CreateEventResult {
+	event: Event
+}
 
 input CreateMemberInput {
-  accountId: ID!
-  userId: ID!
-  role: String!
+	accountId: ID!
+	userId: ID!
+	role: String!
 }
-type CreateMemberResult { member: Member }
+
+type CreateMemberResult {
+	member: Member
+}
 
 input DeleteMemberInput {
-  accountId: ID!
-  userId: ID!
-}
-type DeleteMemberResult { member: Member }
-
-input ElderInput {
-  name: String!
-  birthday: AWSDate!
+	accountId: ID!
+	userId: ID!
 }
 
-input FindOrCreateUserInput {
-  id: ID!
-  name: String!
-  email: AWSEmail!
-}
-type FindOrCreateUserResult { user: User }
-
-input UpdateMemberInput {
-  accountId: ID!
-  userId: ID!
-  role: String!
-}
-type UpdateMemberResult { member: Member }
-
-input UpdateUserInput {
-  id: ID!
-  name: String
-  email: AWSEmail
-  phone: AWSPhone
-  avatar: S3ObjectInput
-  pictures: [S3ObjectInput!]
-}
-type UpdateUserResult { user: User }
-
-type Account {
-  id: ID!
-  createdAt: String!
-  name: String!
-  ownerId: ID!
-  elders: [Elder!]!
-  members: [Member!]!
+type DeleteMemberResult {
+	member: Member
 }
 
 type Elder {
-  name: String!
-  birthday: AWSDate!
+	name: String!
+	birthday: AWSDate!
+}
+
+input ElderInput {
+	name: String!
+	birthday: AWSDate!
 }
 
 type Event {
-  accountId: ID!
-  createdAt: String!
-  id: ID!
-  text: String
-  userId: ID
-  referenceId: ID
-  media: S3Object
+	accountId: ID!
+	createdAt: String!
+	id: ID!
+	text: String
+	userId: ID
+	referenceId: ID
+	media: S3Object
 }
 
 type EventConnection {
-  items: [Event]
-  nextToken: String
+	items: [Event]
+	nextToken: String
+}
+
+input FindOrCreateUserInput {
+	id: ID!
+	name: String!
+	email: AWSEmail!
+}
+
+type FindOrCreateUserResult {
+	user: User
 }
 
 type Member {
-  account: Account
-  user: User
-  role: String
+	account: Account
+	user: User
+	role: String
+}
+
+type Mutation {
+	createAccount(input: CreateAccountInput!): CreateAccountResult
+	createEvent(input: CreateEventInput!): CreateEventResult
+	createMember(input: CreateMemberInput!): CreateMemberResult
+	deleteMember(input: DeleteMemberInput!): DeleteMemberResult
+	findOrCreateUser(input: FindOrCreateUserInput!): FindOrCreateUserResult
+	updateMember(input: UpdateMemberInput!): UpdateMemberResult
+	updateUser(input: UpdateUserInput!): UpdateUserResult
+}
+
+type Query {
+	getAccount(id: ID!): Account
+	getEvent(id: ID!): Event
+	listEvents(accountId: ID!, limit: Int, nextToken: String): EventConnection
+	me: User
 }
 
 # Not used directly in schema, but see "role" field in type Member above. The
-# UI should transform each value to lowercase, change underscores to hyphens,
-# and then present the list to the user for choice. The selected choice,
-# if not "other", should be used as the role for the account member.
-# Choice of "other" should cause the UI to prompt for a custom role string.
+## UI should transform each value to lowercase, change underscores to hyphens,
+## and then present the list to the user for choice. The selected choice,
+## if not "other", should be used as the role for the account member.
+## Choice of "other" should cause the UI to prompt for a custom role string.
 enum Role {
-  SON
-  DAUGHTER
-  SON_IN_LAW
-  DAUGHTER_IN_LAW
-  SISTER
-  BROTHER
-  SPOUSE
-  PARTNER
-  NIECE
-  NEPHEW
-  COUSIN
-  FRIEND
-  CAREGIVER
-  OTHER
-}
-
-type User {
-  id: ID!
-  createdAt: String!
-  name: String!
-  email: AWSEmail!
-  phone: AWSPhone
-  avatar: S3Object
-  pictures: [S3Object!]
-  members: [Member!]
+	SON
+	DAUGHTER
+	SON_IN_LAW
+	DAUGHTER_IN_LAW
+	SISTER
+	BROTHER
+	SPOUSE
+	PARTNER
+	NIECE
+	NEPHEW
+	COUSIN
+	FRIEND
+	CAREGIVER
+	OTHER
 }
 
 # AWS AppSync has special support for S3 objects; see the documentation here:
-# https://docs.aws.amazon.com/appsync/latest/devguide/building-a-client-app-react.html#complex-objects
+## https://docs.aws.amazon.com/appsync/latest/devguide/building-a-client-app-react.html#complex-objects
 type S3Object {
 	bucket: String!
 	region: String!
@@ -156,12 +138,51 @@ type S3Object {
 }
 
 # S3ObjectInput is used for two purposes: uploading new objects and
-# re-specifying existing objects.
-# For the latter case, localUri and mimeType will be null.
+## re-specifying existing objects.
+## For the latter case, localUri and mimeType will be null.
 input S3ObjectInput {
 	bucket: String!
 	region: String!
-  key: String!
+	key: String!
 	localUri: String
 	mimeType: String
+}
+
+input UpdateMemberInput {
+	accountId: ID!
+	userId: ID!
+	role: String!
+}
+
+type UpdateMemberResult {
+	member: Member
+}
+
+input UpdateUserInput {
+	id: ID!
+	name: String
+	email: AWSEmail
+	phone: AWSPhone
+	avatar: S3ObjectInput
+	pictures: [S3ObjectInput!]
+}
+
+type UpdateUserResult {
+	user: User
+}
+
+type User {
+	id: ID!
+	createdAt: String!
+	name: String!
+	email: AWSEmail!
+	phone: AWSPhone
+	avatar: S3Object
+	pictures: [S3Object!]
+	members: [Member!]
+}
+
+schema {
+	query: Query
+	mutation: Mutation
 }
