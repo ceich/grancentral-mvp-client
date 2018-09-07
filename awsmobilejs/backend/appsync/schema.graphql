@@ -159,6 +159,6 @@ input S3ObjectInput {
 	bucket: String!
 	region: String!
   key: String!
-	localUri: String!
-	mimeType: String!
+	localUri: String
+	mimeType: String
 }
