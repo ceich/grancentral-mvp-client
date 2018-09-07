@@ -155,6 +155,9 @@ type S3Object {
 	key: String!
 }
 
+# S3ObjectInput is used for two purposes: uploading new objects and
+# re-specifying existing objects.
+# For the latter case, localUri and mimeType will be null.
 input S3ObjectInput {
 	bucket: String!
 	region: String!
