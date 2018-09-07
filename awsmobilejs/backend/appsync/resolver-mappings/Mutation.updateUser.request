@@ -9,7 +9,6 @@
   #set( $expNames  = {} )
   #set( $expValues = {} )
   #set( $expSet = {} )
-  #set( $expAdd = {} )
   #set( $expRemove = [] )
 
   ## Iterate through each argument, skipping keys **
@@ -24,7 +23,17 @@
 
       $!{expSet.put("#${entry.key}", ":${entry.key}")}
       $!{expNames.put("#${entry.key}", "${entry.key}")}
-      $!{expValues.put(":${entry.key}", $util.dynamodb.toDynamoDB($entry.value))}
+      #if ( $entry.key == "avatar" )
+        $!{expValues.put(":${entry.key}", $util.dynamodb.toS3Object($entry.value.key, $entry.value.bucket, $entry.value.region))}
+      #elseif ( $entry.key == "pictures" )
+        #set( $s3Pics = [] )
+        #foreach( $pic in $entry.value )
+        	#set( $discard = $s3Pics.add($util.dynamodb.toS3Object($pic.key, $pic.bucket, $pic.region)))
+        #end
+        $!{expValues.put(":${entry.key}", { "L": $s3Pics })}
+      #else
+        $!{expValues.put(":${entry.key}", $util.dynamodb.toDynamoDB($entry.value))}
+      #end
     #end
   #end
 
@@ -34,17 +43,6 @@
     #set( $expression = "SET" )
     #foreach( $entry in $expSet.entrySet() )
       #set( $expression = "${expression} ${entry.key} = ${entry.value}" )
-      #if ( $foreach.hasNext )
-        #set( $expression = "${expression}," )
-      #end
-    #end
-  #end
-
-  ## Continue building the update expression, adding attributes we're going to ADD **
-  #if( !${expAdd.isEmpty()} )
-    #set( $expression = "${expression} ADD" )
-    #foreach( $entry in $expAdd.entrySet() )
-      #set( $expression = "${expression} ${entry.key} ${entry.value}" )
       #if ( $foreach.hasNext )
         #set( $expression = "${expression}," )
       #end

@@ -1,0 +1,5 @@
+#set( $s3Pics = [] )
+#foreach( $pic in $ctx.source.pictures )
+  #set( $discard = $s3Pics.add($util.dynamodb.fromS3ObjectJson($pic)))
+#end
+$util.toJson($s3Pics)

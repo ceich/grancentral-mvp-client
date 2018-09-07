@@ -5,8 +5,11 @@
     "accountId": $util.dynamodb.toDynamoDBJson($ctx.args.input.accountId),
     "createdAt": $util.dynamodb.toStringJson("${util.time.nowEpochMilliSeconds()}"),
   },
-#set( $myArgs = $util.dynamodb.toMapValues($ctx.args.input) )
-#set( $myArgs.id = $util.dynamodb.toDynamoDB($util.autoId()) )
+  #set( $myArgs = $util.dynamodb.toMapValues($ctx.args.input) )
+  #set( $myArgs.id = $util.dynamodb.toDynamoDB($util.autoId()) )
+  #if( ! $util.isNull($ctx.args.input.media) )
+    #set( $myArgs.media = $util.dynamodb.toS3Object($ctx.args.input.media.key, $ctx.args.input.media.bucket, $ctx.args.input.media.region))
+  #end
   "attributeValues": $util.toJson($myArgs),
   "condition": {
     "expression": "attribute_not_exists(accountId) AND attribute_not_exists(createdAt)",
