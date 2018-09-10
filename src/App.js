@@ -9,7 +9,7 @@ import { Rehydrated } from 'aws-appsync-react';
 import appSyncConfig from './AppSync';
 import aws_exports from './aws-exports';
 import heart from './heart.svg';
-import './App.css';
+import './CSS/App.css';
 
 import QueryMe from "./GraphQL/QueryMe";
 import MutationFindOrCreateUser from './GraphQL/MutationFindOrCreateUser';
@@ -20,6 +20,7 @@ import NewAccount from './Components/NewAccount';
 import NewMember from './Components/NewMember';
 import Profile from './Components/Profile';
 import Signin from './Components/Signin';
+import FamilyAlbum from './Components/FamilyAlbum';
 
 Amplify.configure(aws_exports);
 
@@ -111,7 +112,6 @@ class App extends React.Component {
         <div className="App">
           <header className="App-header">
             <img className="App-logo" src={heart} alt="heart" />
-            <h1 className="App-title">GranCentral</h1>
           </header>
           <Route exact={true} path="/"
                  render={(props) => <MyAccounts {...props} {...this.state} />} />
@@ -125,6 +125,8 @@ class App extends React.Component {
                  render={(props) => <Profile {...props} {...this.state} />} />
           <Route path="/signin"
                  render={(props) => <Signin {...props} {...this.state} />} />
+          <Route path="/familyAlbum"
+                 render={(props) => <FamilyAlbum {...props} {...this.state} />} />
           <Route path="/signout" render={() => {
             console.log('signout: going to hosted UI');
             this.props.OAuthSignIn();

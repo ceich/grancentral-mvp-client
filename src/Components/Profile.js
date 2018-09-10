@@ -1,6 +1,7 @@
 import React from "react";
 import { Query, Mutation } from "react-apollo";
 import "semantic-ui-css/semantic.min.css";
+import './../CSS/Profile.css';
 
 import Avatar, { deleteAvatar } from "./Avatar";
 import QueryMe from "../GraphQL/QueryMe";
@@ -65,26 +66,33 @@ class Profile extends React.Component {
     const { history, result } = this.props;
     const { profile, imageLoaded } = this.state;
 
+    console.log('profile : ' + JSON.stringify(profile));
+
     if (result.loading) return('Loading...');
     if (result.error) return('Error: ' + result.error);
 
     return profile && (
-    <div className="ui container raised very padded segment">
-      <h1 className="ui header">Update your profile</h1>
+    <div className="ui container raised very padded segment containerClass">
+      <h1 className="ui header">About you...</h1>
       <div className="ui form">
-        <div className="field twelve wide">
-          <label htmlFor="name">Name</label>
-          <input type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
-        </div>
-        <div className="field twelve wide">
+        <div className="field twelve wide avatar">
           <Avatar user={profile} picker onLoad={this.onImageLoad} />
         </div>
-        <div className="field twelve wide">
-          <label htmlFor="deleteAvatar">Delete Image</label>
+        <div className="field twelve wide deleteImage">
           <input type="checkbox" id="deleteAvatar" disabled={!imageLoaded}
             value={profile.deleteAvatar}
             onChange={this.handleChange.bind(this, 'deleteAvatar')}
           />
+          <label for="deleteAvatar">Delete Image</label>
+        </div>
+        <div className="field twelve wide">
+          <label htmlFor="name">Name</label>
+          <input placeholder="Your Name" type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
+        </div>
+        <div className="field twelve wide">
+          <select placeholder="Relationship to Elder" type="text" id="relationship" >
+            <option></option>
+          </select>
         </div>
         <div className="ui buttons">
           <button className="ui button" onClick={history.goBack}>Cancel</button>

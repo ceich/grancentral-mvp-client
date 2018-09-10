@@ -5,7 +5,7 @@ query Me {
   me {
     id
     name
-    email
-    avatar
+    #email
+    #avatar
   }
 }`);

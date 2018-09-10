@@ -6,6 +6,9 @@ import { v4 as uuid } from "uuid";
 import QueryMyAccounts from "../GraphQL/QueryMyAccounts";
 import MutationCreateAccount from "../GraphQL/MutationCreateAccount";
 
+import './../CSS/Profile.css';
+import imgvoice from './../img/imgvoice.png';
+
 class NewAccount extends Component {
   static defaultProps = { createAccount: () => null }
 
@@ -15,6 +18,10 @@ class NewAccount extends Component {
     const {account} = this.state;
     account[field] = value;
     this.setState({account});
+  }
+
+  handleClick() {
+    alert("Sound Right ?");
   }
 
   handleSave = async (e) => {
@@ -29,18 +36,27 @@ class NewAccount extends Component {
 
     await createAccount(account);
 
-    history.push('/');
+    //history.push('/');
+    history.push('/familyAlbum');
   }
 
   render() {
     const {account} = this.state;
 
     return (<div className="ui container raised very padded segment">
-      <h1 className="ui header">Create an account</h1>
+      <h1 className="ui header">About your elder...</h1>
       <div className="ui form">
-        <div className="field required eight wide">
+        <div className="field twelve wide">
           <label htmlFor="name">Elder's Name</label>
-          <input type="text" id="name" value={account.name} onChange={this.handleChange.bind(this, 'name')}/>
+          <input type="text" placeholder="Enter Elder's Full Name" id="name" value={account.name} onChange={this.handleChange.bind(this, 'name')}/>
+        </div>
+        <div className="field twelve wide">
+          <input id="nameSound" className="nameSound" type="image" alt="Name Pronunciation" src={imgvoice} onClick={this.handleClick.bind(this)}/>
+          <label htmlFor="nameSound">Tap to hear how GranCentral will say ""</label>
+        </div>
+        <div className="field twelve wide">
+          <label htmlFor="name">Birthday</label>
+          <input placeholder="Select Date" type="text" id="birthday" />
         </div>
         <div className="ui buttons">
           <Link to="/" className="ui button">Cancel</Link>
