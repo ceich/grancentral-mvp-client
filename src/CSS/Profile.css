@@ -1,0 +1,106 @@
+.App-logo{
+  float: left;
+  margin-left: 1em;
+  margin-top: 0.8em;
+}
+
+.ui.segment{
+  padding-left: 1em !important;
+  padding-right: 1em !important;
+}
+
+.ui.header{
+  margin-top: -3.5em !important;
+  margin-bottom: 1.5em;
+}
+
+.ui.form {
+  width:100%;
+}
+
+.ui.form .twelve.wide.field {
+  margin-top: 2em;
+  width:100% !important;
+}
+
+.twelve.wide.field label{
+  float:left;
+}
+
+.deleteImage{
+  line-height: 1em;
+  text-align: left;
+}
+
+.deleteImage label{
+  display: inline !important;
+  margin-left: 10px !important;
+  float: none !important;
+}
+
+.field.twelve.wide #name{
+  width: 100%;
+}
+
+.avatar div{
+  width: 100%;
+}
+
+.avatar button{
+  border : 0px !important;
+}
+
+.avatar>div>div:first-of-type {
+  max-width:120px;
+  max-height:120px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.avatar>div>div>img {
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.buttons{
+  margin-top: 35px !important;
+}
+
+.nameSound{
+  border:0px;
+  border-radius:50%;
+}
+
+.nameSound:focus{
+  outline:none;
+}
+
+.nameSound+label{
+  float : none !important;
+}
+
+.amplify-nav-button{
+  margin-top:-6px !important;
+}
+
+.amplify-nav-item{
+  margin-top:-18px !important;
+  vertical-align: middle;
+}
+
+.backToAcc{
+  padding: 6px !important;
+  height: 50px;
+}
+
+.intro{
+  text-align : left;
+  padding-left:1.2em;
+}
+
+.field.twelve.wide.link{
+  margin-top:15em !important;
+}
