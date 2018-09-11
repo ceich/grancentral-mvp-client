@@ -21,6 +21,7 @@ import NewMember from './Components/NewMember';
 import Profile from './Components/Profile';
 import Signin from './Components/Signin';
 import FamilyAlbum from './Components/FamilyAlbum';
+import Invite from './Components/Invite';
 
 Amplify.configure(aws_exports);
 
@@ -127,6 +128,8 @@ class App extends React.Component {
                  render={(props) => <Signin {...props} {...this.state} />} />
           <Route path="/familyAlbum"
                  render={(props) => <FamilyAlbum {...props} {...this.state} />} />
+          <Route path="/InviteOthers"
+                 render={(props) => <Invite {...props} {...this.state} />} />
           <Route path="/signout" render={() => {
             console.log('signout: going to hosted UI');
             this.props.OAuthSignIn();

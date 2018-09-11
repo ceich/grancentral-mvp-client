@@ -104,3 +104,38 @@
 .field.twelve.wide.link{
   margin-top:15em !important;
 }
+
+.btnNext{
+  max-width:100%;
+  opacity:1;
+}
+
+.btnNext:disabled
+{
+    opacity:0.5;
+}
+
+
+.btnSubmit{
+  width: 100%;
+  opacity: 1;
+  background-color: #20a5be;
+  color: white;
+  font-weight: bold;
+  border: 0px;
+  border-radius: 10px;
+}
+
+.btnSubmit:focus{
+  outline : none;
+}
+
+.btnSubmit:disabled{
+  opacity: 0.5;
+}
+
+.ui.buttons{
+  width:100%;
+  height:45px;
+  font-size:15px;
+}

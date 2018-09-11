@@ -6,13 +6,21 @@ import { v4 as uuid } from "uuid";
 import QueryMyAccounts from "../GraphQL/QueryMyAccounts";
 import MutationCreateAccount from "../GraphQL/MutationCreateAccount";
 
-import './../CSS/Profile.css';
+import Moment from 'moment'
+import momentLocalizer from 'react-widgets-moment';
+import DateTimePicker from 'react-widgets/lib/DateTimePicker';
+import 'react-widgets/dist/css/react-widgets.css'
+import './../CSS/Style.css';
 import imgvoice from './../img/imgvoice.png';
+import BtnSubmit from './BtnSubmit';
+
+Moment.locale('en');
+momentLocalizer();
 
 class NewAccount extends Component {
   static defaultProps = { createAccount: () => null }
 
-  state = { account: { name: '' } }
+  state = { account: { name: '' }, isDisabled : 'disabled' }
 
   handleChange(field, {target: { value }}) {
     const {account} = this.state;
@@ -41,7 +49,14 @@ class NewAccount extends Component {
   }
 
   render() {
-    const {account} = this.state;
+    const {account, isDisabled} = this.state;
+
+    const maxYears = 65;
+    let currentDate = new Date();
+    let defaultDate = (currentDate.getMonth() + 1) + '/' + currentDate.getDate() + '/' + (currentDate.getFullYear() - maxYears);
+    let newDate = new Date((currentDate.getFullYear() - maxYears), (currentDate.getMonth()), currentDate.getDate());
+
+    console.log('defaultDate : ' + defaultDate);
 
     return (<div className="ui container raised very padded segment">
       <h1 className="ui header">About your elder...</h1>
@@ -52,16 +67,19 @@ class NewAccount extends Component {
         </div>
         <div className="field twelve wide">
           <input id="nameSound" className="nameSound" type="image" alt="Name Pronunciation" src={imgvoice} onClick={this.handleClick.bind(this)}/>
-          <label htmlFor="nameSound">Tap to hear how GranCentral will say ""</label>
+          <label htmlFor="nameSound">Tap to hear how GranCentral will say "{this.state.account.name}"</label>
         </div>
         <div className="field twelve wide">
           <label htmlFor="name">Birthday</label>
-          <input placeholder="Select Date" type="text" id="birthday" />
+          <DateTimePicker
+            placeholder={defaultDate}
+            currentDate={newDate}
+            format="MM/DD/YYYY"
+            time={false}
+          />
         </div>
         <div className="ui buttons">
-          <Link to="/" className="ui button">Cancel</Link>
-          <div className="or"></div>
-          <button className="ui positive button" onClick={this.handleSave}>Save</button>
+          <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
         </div>
       </div>
     </div>);

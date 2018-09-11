@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import {graphql} from "react-apollo";
 
-import './../CSS/Profile.css';
+import './../CSS/Style.css';
 import imgupload from './../img/imgupload.png';
 
 class FamilyAlbum extends Component {

@@ -1,11 +1,15 @@
 import React from "react";
 import { Query, Mutation } from "react-apollo";
 import "semantic-ui-css/semantic.min.css";
-import './../CSS/Profile.css';
 
 import Avatar, { deleteAvatar } from "./Avatar";
 import QueryMe from "../GraphQL/QueryMe";
+import QueryGetRole from "../GraphQL/QueryGetRole";
 import MutationUpdateUser from "../GraphQL/MutationUpdateUser";
+
+import RelationshipToElderDropdown from './RelationshipToElderDropdown';
+import './../CSS/Style.css';
+import BtnSubmit from './BtnSubmit';
 
 class Profile extends React.Component {
   static defaultProps = {
@@ -17,19 +21,36 @@ class Profile extends React.Component {
     super(props);
     this.onImageLoad = this.onImageLoad.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleRoleChange = this.handleRoleChange.bind(this);
+    this.checkAllInput = this.checkAllInput.bind(this);
   }
 
   componentWillMount() {
-    const profile = Object.assign({ deleteAvatar: false }, this.props.me);
-    this.setState({profile});
+    const profile = Object.assign({ deleteAvatar: false, role : '' }, this.props.me);
+    this.setState({
+        profile,
+        isDisabled : 'disabled'
+    });
   }
 
   onImageLoad(url) {
     this.setState({ imageLoaded: url.startsWith('https://') });
+    this.checkAllInput();
   }
 
   handleChange(field, {target: { value }}) {
     this.setState(state => ({profile: { ...state.profile, [field]: value }}));
+    this.checkAllInput();
+  }
+
+  handleRoleChange(event) {
+    this.handleChange('role', event);
+  }
+
+  checkAllInput() {
+    const {role, name} = this.state.profile;
+    const isDisabled = (role === "" || name === "" || this.state.imageLoaded === null) ? 'disabled' : '';
+    this.setState({isDisabled : isDisabled});
   }
 
   async handleSave(e) {
@@ -64,7 +85,7 @@ class Profile extends React.Component {
 
   render() {
     const { history, result } = this.props;
-    const { profile, imageLoaded } = this.state;
+    const { profile, imageLoaded, isDisabled } = this.state;
 
     console.log('profile : ' + JSON.stringify(profile));
 
@@ -83,32 +104,29 @@ class Profile extends React.Component {
             value={profile.deleteAvatar}
             onChange={this.handleChange.bind(this, 'deleteAvatar')}
           />
-          <label for="deleteAvatar">Delete Image</label>
+          <label htmlFor="deleteAvatar">Delete Image</label>
         </div>
         <div className="field twelve wide">
           <label htmlFor="name">Name</label>
           <input placeholder="Your Name" type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
         </div>
         <div className="field twelve wide">
-          <select placeholder="Relationship to Elder" type="text" id="relationship" >
-            <option></option>
-          </select>
+          <RelationshipToElderDropdown queryProps={QueryGetRole} onChange={this.handleRoleChange} />
         </div>
         <div className="ui buttons">
-          <button className="ui button" onClick={history.goBack}>Cancel</button>
-          <div className="or"></div>
-          <button className="ui positive button" onClick={this.handleSave}>Save</button>
+          <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
         </div>
       </div>
     </div>);
+
   }
 }
 
 export default (props) => (
   <Query query={QueryMe}>
     {({ data, loading, error }) => (
-      loading ? "Loading..." :
-      error ? "Error" :
+      //loading ? "Loading..." :
+      //error ? "Error" :
       <Mutation mutation={MutationUpdateUser} ignoreResults={true}>
         {(updateUser, result) => (
           <Profile {...props} me={data.me} updateUser={updateUser} result={result} />
