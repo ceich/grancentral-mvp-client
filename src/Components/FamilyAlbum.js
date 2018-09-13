@@ -1,6 +1,4 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
-import {graphql} from "react-apollo";
 
 import './../CSS/Style.css';
 import imgupload from './../img/imgupload.png';
@@ -25,7 +23,7 @@ class FamilyAlbum extends Component {
           <label htmlFor="imgUpload">Upload a few images now to get started</label>
         </div>
         <div className="field twelve wide link">
-          <a href="javascript:none">skip this step</a>
+          <a href="">skip this step</a>
         </div>
       </div>
     </div>);

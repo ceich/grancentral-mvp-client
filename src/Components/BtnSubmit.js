@@ -3,10 +3,6 @@ import './../CSS/Style.css';
 
 
 class BtnSubmit extends React.Component{
-  constructor(props) {
-    super(props);
-  }
-
 
   render() {
     const{ text, disabled, onClick } = this.props;
