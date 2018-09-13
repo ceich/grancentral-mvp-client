@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
 import {graphql} from "react-apollo";
 import { v4 as uuid } from "uuid";
 

@@ -128,7 +128,7 @@ class App extends React.Component {
                  render={(props) => <Signin {...props} {...this.state} />} />
           <Route path="/familyAlbum"
                  render={(props) => <FamilyAlbum {...props} {...this.state} />} />
-          <Route path="/InviteOthers"
+          <Route path="/inviteOthers"
                  render={(props) => <Invite {...props} {...this.state} />} />
           <Route path="/signout" render={() => {
             console.log('signout: going to hosted UI');
@@ -151,12 +151,14 @@ const WithProvider = (props) => (
     		jwtToken: async () => (await Auth.currentSession()
           .then(data => { return data })
           .catch(err => {
-            console.log('while getting jwtToken: no current session')
+            console.log('while getting jwtToken: no current session');
+            console.log('err : ' + err);
             props.OAuthSignIn();
           })
         ).getAccessToken().getJwtToken()
   	  },
-      complexObjectsCredentials: () => Auth.currentCredentials()
+      complexObjectsCredentials: () => Auth.currentCredentials(),
+      disableOffline : true
   	}
   )}>
     <Rehydrated>

@@ -1,9 +1,6 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
-import {graphql} from "react-apollo";
 
 import QueryGetRole from "../GraphQL/QueryGetRole";
-import btnNext from './../img/btnNext.png';
 import BtnSubmit from './BtnSubmit';
 import './../CSS/Style.css';
 import RelationshipToElderDropdown from './RelationshipToElderDropdown';
