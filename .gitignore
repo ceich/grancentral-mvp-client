@@ -30,3 +30,9 @@ awsmobilejs/\#current-backend-info
 
 # AppSync
 #AppSync.js
+
+# intellIJ
+.idea/
+
+#grancentral
+package-lock.json*

@@ -18,6 +18,8 @@
     "react-dom": "^16.4.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
+    "react-widgets": "^4.4.4",
+    "react-widgets-moment": "^4.0.20",
     "semantic-ui-css": "^2.3.2",
     "spark-md5": "^3.0.0"
   },

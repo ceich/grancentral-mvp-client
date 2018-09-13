@@ -12,7 +12,7 @@ class ViewAccount extends Component {
     const { account, loading } = this.props;
 
     return (
-      <div className={`ui container raised very padded segment ${loading ? 'loading' : ''}`}>
+      <div className={`ui container raised very padded segment backToAcc ${loading ? 'loading' : ''}`}>
         <Link to="/" className="ui button">Back to accounts</Link>
         <div className="ui items">
           <div className="item">

@@ -4,7 +4,12 @@ import "semantic-ui-css/semantic.min.css";
 
 import Avatar, { deleteAvatar } from "./Avatar";
 import QueryMe from "../GraphQL/QueryMe";
+import QueryGetRole from "../GraphQL/QueryGetRole";
 import MutationUpdateUser from "../GraphQL/MutationUpdateUser";
+
+import RelationshipToElderDropdown from './RelationshipToElderDropdown';
+import './../CSS/Style.css';
+import BtnSubmit from './BtnSubmit';
 
 class Profile extends React.Component {
   static defaultProps = {
@@ -14,21 +19,43 @@ class Profile extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.onImageLoad = this.onImageLoad.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleRoleChange = this.handleRoleChange.bind(this);
+    this.checkAllInput = this.checkAllInput.bind(this);
   }
 
   componentWillMount() {
-    const profile = Object.assign({ deleteAvatar: false }, this.props.me);
-    this.setState({profile});
+    console.log('componentWillMount got called');
+    const profile = Object.assign({ deleteAvatar: false, role : '' }, this.props.me);
+    this.setState({
+        profile,
+        isDisabled : 'disabled'
+    });
+
   }
 
   onImageLoad(url) {
-    this.setState({ imageLoaded: url.startsWith('https://') });
+    console.log('onImageLoad got called');
+    this.setState({ imageLoaded: url.startsWith('https://') }, () => this.checkAllInput());
   }
 
   handleChange(field, {target: { value }}) {
-    this.setState(state => ({profile: { ...state.profile, [field]: value }}));
+    console.log('handleChange got called');
+    this.setState(state => ({profile: { ...state.profile, [field]: value }}), () => this.checkAllInput());
+  }
+
+  handleRoleChange(event) {
+    console.log('handleRoleChange got called');
+    this.handleChange('role', event);
+  }
+
+  checkAllInput() {
+    console.log('checkAllInput got called');
+    const {role, name} = this.state.profile;
+    const isDisabled = (role === "" || name === "" || this.state.imageLoaded === null) ? 'disabled' : '';
+    this.setState({isDisabled : isDisabled});
   }
 
   async handleSave(e) {
@@ -62,37 +89,43 @@ class Profile extends React.Component {
   }
 
   render() {
-    const { history, result } = this.props;
-    const { profile, imageLoaded } = this.state;
+    const { result } = this.props;
+    const { profile, imageLoaded, isDisabled } = this.state;
+
+    console.log('profile.render() got called');
+    console.log('profile : ' + JSON.stringify(profile));
 
     if (result.loading) return('Loading...');
     if (result.error) return('Error: ' + result.error);
 
     return profile && (
-    <div className="ui container raised very padded segment">
-      <h1 className="ui header">Update your profile</h1>
-      <div className="ui form">
-        <div className="field twelve wide">
-          <label htmlFor="name">Name</label>
-          <input type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
-        </div>
-        <div className="field twelve wide">
-          <Avatar user={profile} picker onLoad={this.onImageLoad} />
-        </div>
-        <div className="field twelve wide">
-          <label htmlFor="deleteAvatar">Delete Image</label>
-          <input type="checkbox" id="deleteAvatar" disabled={!imageLoaded}
-            value={profile.deleteAvatar}
-            onChange={this.handleChange.bind(this, 'deleteAvatar')}
-          />
-        </div>
-        <div className="ui buttons">
-          <button className="ui button" onClick={history.goBack}>Cancel</button>
-          <div className="or"></div>
-          <button className="ui positive button" onClick={this.handleSave}>Save</button>
+      <div className="ui container raised very padded segment containerClass">
+        <h1 className="ui header">About you...</h1>
+        <div className="ui form">
+          <div className="field twelve wide avatar">
+            <Avatar user={profile} picker onLoad={this.onImageLoad} />
+          </div>
+          <div className="field twelve wide deleteImage">
+            <input type="checkbox" id="deleteAvatar" disabled={!imageLoaded}
+              value={profile.deleteAvatar}
+              onChange={this.handleChange.bind(this, 'deleteAvatar')}
+            />
+            <label htmlFor="deleteAvatar">Delete Image</label>
+          </div>
+          <div className="field twelve wide">
+            <label htmlFor="name">Name</label>
+            <input placeholder="Your Name" type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
+          </div>
+          <div className="field twelve wide">
+            <RelationshipToElderDropdown queryProps={QueryGetRole} onChange={this.handleRoleChange} />
+          </div>
+          <div className="ui buttons">
+            <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
+          </div>
         </div>
       </div>
-    </div>);
+    );
+
   }
 }
 
