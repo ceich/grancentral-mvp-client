@@ -134,8 +134,20 @@
   opacity: 0.5;
 }
 
+.btnSubmit.link{
+  border:0;
+  background-color:white;
+  color: #56bace;
+  font-size: 13px;
+}
+
 .ui.buttons{
   width:100%;
   height:45px;
   font-size:15px;
 }
+
+.ui.buttons.medium{
+  margin-top:8.5em !important;
+}
+

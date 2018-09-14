@@ -19,16 +19,54 @@ momentLocalizer();
 class NewAccount extends Component {
   static defaultProps = { createAccount: () => null }
 
-  state = { account: { name: '' }, isDisabled : 'disabled' }
+  //state = { account: { name: '', birthday: '' }, isDisabled : 'disabled' }
+
+  constructor(props) {
+    super(props);
+
+    const maxYears = 65;
+
+    let currentDate = new Date();
+    let newDateStr = (currentDate.getMonth() + 1) + '/' + currentDate.getDate() + '/' + (currentDate.getFullYear() - maxYears);
+    let newDate = new Date((currentDate.getFullYear() - maxYears), (currentDate.getMonth()), currentDate.getDate());
+
+    console.log('defaultDate : ' + newDateStr);
+
+    this.state = {
+      account: { name: '', birthday: newDateStr },
+      isDisabled : 'disabled',
+      birthdayDate : newDate
+    }
+
+    this.handleBirthdayChange = this.handleBirthdayChange.bind(this);
+  }
 
   handleChange(field, {target: { value }}) {
     const {account} = this.state;
     account[field] = value;
-    this.setState({account});
+    this.setState({account}, () => console.log('changing on account : ' + JSON.stringify(this.state.account)));
   }
 
   handleClick() {
     alert("Sound Right ?");
+  }
+
+  handleBirthdayChange(value) {
+    //console.log('date changed : ' + value);
+    //const newDate = Date.parse(value);
+    const tmpDate = new Date(value);
+    const newDate = (tmpDate.getFullYear() + '-' + (tmpDate.getMonth() + 1) + '-' + tmpDate.getDate())
+
+
+
+    //let currentDate = new Date(value);
+    //let newDateStr = (currentDate.getMonth() + 1) + '/' + currentDate.getDate() + '/' + (currentDate.getFullYear() - maxYears);
+    //let newDate = new Date((currentDate.getFullYear() - maxYears), (currentDate.getMonth()), currentDate.getDate());
+
+
+    //console.log('new Date : ' + newDate);
+    //console.log('date changed : ' + (newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate()));
+    this.setState({account: {birthday: newDate}, birthdayDate: null}, () => console.log('state new date : ' + this.state.account.birthday));
   }
 
   handleSave = async (e) => {
@@ -38,7 +76,8 @@ class NewAccount extends Component {
     const { createAccount, history, user } = this.props;
     const { account} = this.state;
     account.ownerId = user.id;
-    account.role = 'son-in-law';    // TODO: add UI for owner's relation to elder
+    //account.role = 'son-in-law';    // TODO: add UI for owner's relation to elder
+    account.role = user.role;    // TODO: add UI for owner's relation to elder
     account.birthday = '1948-12-23'; // TODO: add UI for birthday selection
 
     await createAccount(account);
@@ -48,14 +87,9 @@ class NewAccount extends Component {
   }
 
   render() {
-    const {account, isDisabled} = this.state;
+    const {account, isDisabled, birthdayDate} = this.state;
 
-    const maxYears = 65;
-    let currentDate = new Date();
-    let defaultDate = (currentDate.getMonth() + 1) + '/' + currentDate.getDate() + '/' + (currentDate.getFullYear() - maxYears);
-    let newDate = new Date((currentDate.getFullYear() - maxYears), (currentDate.getMonth()), currentDate.getDate());
-
-    console.log('defaultDate : ' + defaultDate);
+    console.log('account on render : ' + JSON.stringify(account));
 
     return (<div className="ui container raised very padded segment">
       <h1 className="ui header">About your elder...</h1>
@@ -71,8 +105,9 @@ class NewAccount extends Component {
         <div className="field twelve wide">
           <label htmlFor="name">Birthday</label>
           <DateTimePicker
-            placeholder={defaultDate}
-            currentDate={newDate}
+            placeholder={account.birthday}
+            currentDate={birthdayDate}
+            onCurrentDateChange={(value) => this.handleBirthdayChange(value)}
             format="MM/DD/YYYY"
             time={false}
           />

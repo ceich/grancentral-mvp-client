@@ -47,6 +47,8 @@ class Invite extends Component {
   render() {
     const { profile, isDisabled } = this.state;
 
+    console.log('profile : ' + JSON.stringify(profile));
+
     return (<div className="ui container raised very padded segment">
       <h1 className="ui header">Create a Caring Circle</h1>
       <div className="ui form">
@@ -57,16 +59,16 @@ class Invite extends Component {
         </div>
         <div className="field twelve wide">
           <label htmlFor="name">Name</label>
-          <input placeholder="Your Name" type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
+          <input placeholder="Name" type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
         </div>
         <div className="field twelve wide">
-          <label htmlFor="name">Name</label>
-          <input placeholder="Your Name" type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
+          <label htmlFor="name">Email Address</label>
+          <input placeholder="Email Address" type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
         </div>
         <div className="field twelve wide">
           <RelationshipToElderDropdown queryProps={QueryGetRole} onChange={this.handleRoleChange} />
         </div>
-        <div className="ui buttons">
+        <div className="ui buttons medium">
           <BtnSubmit text="Invite" disabled={isDisabled} onClick={this.handleSave}/>
         </div>
       </div>
