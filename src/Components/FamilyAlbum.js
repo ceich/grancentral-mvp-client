@@ -2,11 +2,22 @@ import React, {Component} from "react";
 
 import './../CSS/Style.css';
 import imgupload from './../img/imgupload.png';
+import BtnSubmit from './BtnSubmit';
 
 class FamilyAlbum extends Component {
+  constructor(props) {
+    super(props);
 
+    this.handleSave = this.handleSave.bind(this);
+  }
   handleClick() {
     alert("clicked detected...");
+  }
+
+  handleSave() {
+    const { history } = this.props;
+    history.push('/inviteOthers');
+    //alert("clicked detected...");
   }
 
   render() {
@@ -23,7 +34,7 @@ class FamilyAlbum extends Component {
           <label htmlFor="imgUpload">Upload a few images now to get started</label>
         </div>
         <div className="field twelve wide link">
-          <a href="">skip this step</a>
+          <BtnSubmit text="skip this step" disabled='' customClass='link' onClick={this.handleSave}/>
         </div>
       </div>
     </div>);
