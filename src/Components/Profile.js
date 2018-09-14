@@ -84,7 +84,8 @@ class Profile extends React.Component {
         proxy.writeQuery({ query, data });
       }
     })
-    .then(() => history.goBack())
+    .then(() => history.push('/account/new'))
+    //.then(() => history.goBack())
     .catch(err => console.log(err));
   }
 
@@ -92,8 +93,8 @@ class Profile extends React.Component {
     const { result } = this.props;
     const { profile, imageLoaded, isDisabled } = this.state;
 
-    console.log('profile.render() got called');
-    console.log('profile : ' + JSON.stringify(profile));
+    //console.log('profile.render() got called');
+    //console.log('profile : ' + JSON.stringify(profile));
 
     if (result.loading) return('Loading...');
     if (result.error) return('Error: ' + result.error);
@@ -131,14 +132,18 @@ class Profile extends React.Component {
 
 export default (props) => (
   <Query query={QueryMe}>
-    {({ data, loading, error }) => (
-      loading ? "Loading..." :
-      error ? "Error" :
-      <Mutation mutation={MutationUpdateUser} ignoreResults={true}>
-        {(updateUser, result) => (
-          <Profile {...props} me={data.me} updateUser={updateUser} result={result} />
-        )}
-      </Mutation>
-    )}
+    {({ data, loading, error }) => {
+      //console.log('data at profile : ' + JSON.stringify(data));
+      console.log('error at profile : ' + JSON.stringify(error));
+      return (
+        loading ? "Loading..." :
+        error ? "Error" :
+        <Mutation mutation={MutationUpdateUser} ignoreResults={true}>
+          {(updateUser, result) => (
+            <Profile {...props} me={data.me} updateUser={updateUser} result={result} />
+          )}
+        </Mutation>
+      )
+    }}
   </Query>
 );
