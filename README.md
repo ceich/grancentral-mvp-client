@@ -64,6 +64,7 @@ Please review the schema in the AppSync project.
 
 ## Development
 
+- Use `yarn` to install packages, not `npm`.
 - Use `env HTTPS=true yarn start` to run locally. You'll have to
 acknowledge the browser's complaints about the unsafe certificate.
 
