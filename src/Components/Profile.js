@@ -20,6 +20,8 @@ class Profile extends React.Component {
   constructor(props) {
     super(props);
 
+    //console.log('me : ' + JSON.stringify(this.props.me));
+
     this.onImageLoad = this.onImageLoad.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleRoleChange = this.handleRoleChange.bind(this);
@@ -27,7 +29,7 @@ class Profile extends React.Component {
   }
 
   componentWillMount() {
-    console.log('componentWillMount got called');
+    //console.log('componentWillMount got called');
     const profile = Object.assign({ deleteAvatar: false, role : '' }, this.props.me);
     this.setState({
         profile,
@@ -37,22 +39,25 @@ class Profile extends React.Component {
   }
 
   onImageLoad(url) {
-    console.log('onImageLoad got called');
+    //console.log('onImageLoad got called');
     this.setState({ imageLoaded: url.startsWith('https://') }, () => this.checkAllInput());
   }
 
   handleChange(field, {target: { value }}) {
-    console.log('handleChange got called');
-    this.setState(state => ({profile: { ...state.profile, [field]: value }}), () => this.checkAllInput());
+    //console.log('handleChange got called');
+
+    const tmpvalue = (field === 'role' && value === "please select") ? '' : value;
+
+    this.setState(state => ({profile: { ...state.profile, [field]: tmpvalue }}), () => this.checkAllInput());
   }
 
   handleRoleChange(event) {
-    console.log('handleRoleChange got called');
+    //console.log('handleRoleChange got called');
     this.handleChange('role', event);
   }
 
   checkAllInput() {
-    console.log('checkAllInput got called');
+    //console.log('checkAllInput got called');
     const {role, name} = this.state.profile;
     const isDisabled = (role === "" || name === "" || this.state.imageLoaded === null) ? 'disabled' : '';
     this.setState({isDisabled : isDisabled});
@@ -84,7 +89,7 @@ class Profile extends React.Component {
         proxy.writeQuery({ query, data });
       }
     })
-    .then(() => history.push('/account/new'))
+    .then(() => history.push({pathname : '/account/new', state : {role : profile.role}}))
     //.then(() => history.goBack())
     .catch(err => console.log(err));
   }
@@ -118,6 +123,7 @@ class Profile extends React.Component {
             <input placeholder="Your Name" type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
           </div>
           <div className="field twelve wide">
+            <label htmlFor="relationship">Relationship To Elder</label>
             <RelationshipToElderDropdown queryProps={QueryGetRole} onChange={this.handleRoleChange} />
           </div>
           <div className="ui buttons">
@@ -134,7 +140,7 @@ export default (props) => (
   <Query query={QueryMe}>
     {({ data, loading, error }) => {
       //console.log('data at profile : ' + JSON.stringify(data));
-      console.log('error at profile : ' + JSON.stringify(error));
+      //console.log('error at profile : ' + JSON.stringify(error));
       return (
         loading ? "Loading..." :
         error ? "Error" :

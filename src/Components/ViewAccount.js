@@ -10,7 +10,7 @@ import AccountMembers from "./AccountMembers";
 class ViewAccount extends Component {
   render() {
     const { account, loading } = this.props;
-
+    console.log('viewaccount.render');
     return (
       <div className={`ui container raised very padded segment backToAcc ${loading ? 'loading' : ''}`}>
         <Link to="/" className="ui button">Back to accounts</Link>
