@@ -38,12 +38,12 @@ class RelationshipToElderDropdown extends React.Component {
 
                 return(
                   <div>
-                    <select placeholder="Relationship to Elder" id="relationship" onChange={(event) => onChange(event)}>
-                      <option></option>
+                    <select placeholder="please select" id="relationship" onChange={(event) => onChange(event)}>
+                      <option>please select</option>
                       {
                         __type.enumValues.map((mydata) =>
                           <option key={mydata.name}>
-                            {mydata.name}
+                            {mydata.name.toLowerCase().replace(/_/g, "-")}
                           </option>
                         )
                       }
