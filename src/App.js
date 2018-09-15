@@ -21,7 +21,6 @@ import NewMember from './Components/NewMember';
 import Profile from './Components/Profile';
 import Signin from './Components/Signin';
 import FamilyAlbum from './Components/FamilyAlbum';
-import Invite from './Components/Invite';
 import Devtrial from './Components/Devtrial';
 
 Amplify.configure(aws_exports);
@@ -136,8 +135,6 @@ class App extends React.Component {
                  render={(props) => <Signin {...props} {...this.state} />} />
           <Route path="/familyAlbum"
                  render={(props) => <FamilyAlbum {...props} {...this.state} />} />
-          <Route path="/inviteOthers"
-                 render={(props) => <Invite {...props} {...this.state} />} />
           <Route path="/devtrial"
                  render={(props) => <Devtrial {...props} {...this.state} />} />
           <Route path="/signout" render={() => {

@@ -5,6 +5,7 @@ import "semantic-ui-css/semantic.min.css";
 import Avatar, { deleteAvatar } from "./Avatar";
 import QueryMe from "../GraphQL/QueryMe";
 import QueryGetRole from "../GraphQL/QueryGetRole";
+import QueryMyAccounts from "../GraphQL/QueryMyAccounts";
 import MutationUpdateUser from "../GraphQL/MutationUpdateUser";
 
 import RelationshipToElderDropdown from './RelationshipToElderDropdown';
@@ -20,7 +21,7 @@ class Profile extends React.Component {
   constructor(props) {
     super(props);
 
-    //console.log('me : ' + JSON.stringify(this.props.me));
+    console.log('me : ' + JSON.stringify(this.props.me));
 
     this.onImageLoad = this.onImageLoad.bind(this);
     this.handleSave = this.handleSave.bind(this);
@@ -30,7 +31,7 @@ class Profile extends React.Component {
 
   componentWillMount() {
     //console.log('componentWillMount got called');
-    const profile = Object.assign({ deleteAvatar: false, role : '' }, this.props.me);
+    const profile = Object.assign({ deleteAvatar: false, role : this.props.me.members[0].role }, this.props.me);
     this.setState({
         profile,
         isDisabled : 'disabled'
@@ -99,7 +100,7 @@ class Profile extends React.Component {
     const { profile, imageLoaded, isDisabled } = this.state;
 
     //console.log('profile.render() got called');
-    //console.log('profile : ' + JSON.stringify(profile));
+    //console.log('profile on profile.render : ' + JSON.stringify(profile, null, 4));
 
     if (result.loading) return('Loading...');
     if (result.error) return('Error: ' + result.error);
@@ -124,7 +125,7 @@ class Profile extends React.Component {
           </div>
           <div className="field twelve wide">
             <label htmlFor="relationship">Relationship To Elder</label>
-            <RelationshipToElderDropdown queryProps={QueryGetRole} onChange={this.handleRoleChange} />
+            <RelationshipToElderDropdown valueSelect={profile.role} queryProps={QueryGetRole} onChange={this.handleRoleChange} />
           </div>
           <div className="ui buttons">
             <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
@@ -137,7 +138,7 @@ class Profile extends React.Component {
 }
 
 export default (props) => (
-  <Query query={QueryMe}>
+  <Query query={QueryMyAccounts}>
     {({ data, loading, error }) => {
       //console.log('data at profile : ' + JSON.stringify(data));
       //console.log('error at profile : ' + JSON.stringify(error));

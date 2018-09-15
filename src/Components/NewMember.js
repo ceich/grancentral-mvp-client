@@ -5,18 +5,51 @@ import QueryGetAccount from "../GraphQL/QueryGetAccount";
 import MutationFindOrCreateUser from '../GraphQL/MutationFindOrCreateUser';
 import MutationCreateMember from "../GraphQL/MutationCreateMember";
 
+import './../CSS/Style.css';
+import BtnSubmit from './BtnSubmit';
+import QueryGetRole from "../GraphQL/QueryGetRole";
+import RelationshipToElderDropdown from './RelationshipToElderDropdown';
+
 class NewMember extends Component {
   static defaultProps = {
     findOrCreateUser: () => null,
     createMember: () => null
   }
 
-  state = { member: { name: '', email: '', role: 'family' } }
+  //state = { member: { name: '', email: '', role: 'family' } }
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+        member: {
+          name: '',
+          email: '',
+          role: ''
+        },
+        isDisabled : 'disabled'
+    };
+
+    this.handleRoleChange = this.handleRoleChange.bind(this);
+    this.checkAllInput = this.checkAllInput.bind(this);
+  }
 
   handleChange(field, {target: { value }}) {
     const {member} = this.state;
     member[field] = value;
-    this.setState({member});
+    this.setState({member}, () => this.checkAllInput());
+  }
+
+  handleRoleChange(event) {
+    //console.log('handleRoleChange got called');
+    this.handleChange('role', event);
+  }
+
+  checkAllInput() {
+    //console.log('checkAllInput got called');
+    const {email, role, name} = this.state.member;
+    const isDisabled = (role === "" || name === "" || email === "") ? 'disabled' : '';
+    this.setState({isDisabled : isDisabled});
   }
 
   handleSave = async (e) => {
@@ -61,31 +94,37 @@ class NewMember extends Component {
 
   render() {
     const { history } = this.props;
-    const { member } = this.state;
+    const { member, isDisabled } = this.state;
 
-    return (<div className="ui container raised very padded segment">
-      <h1 className="ui header">Create a member</h1>
-      <div className="ui form">
-        <div className="field required eight wide">
-          <label htmlFor="name">Name</label>
-          <input type="text" id="name" value={member.name} onChange={this.handleChange.bind(this, 'name')}/>
-        </div>
-        <div className="field required eight wide">
-          <label htmlFor="email">Email</label>
-          <input type="text" id="email" value={member.email} onChange={this.handleChange.bind(this, 'email')}/>
-        </div>
-        <div className="field required eight wide">
-          <label htmlFor="role">Role</label>
+    /*
           <select id="role" value={member.role} onChange={this.handleChange.bind(this, 'role')}>
             {'owner elder family neighbor caregiver'.split(' ').map((r,i) => (
               <option value={r} key={i}>{r}</option>
             ))}
           </select>
+    */
+    return (<div className="ui container raised very padded segment">
+      <h1 className="ui header">Create a Caring Circle</h1>
+      <div className="ui form">
+        <div className="field twelve wide">
+          <div className="intro">
+            Invite family members, friends, and caregivers who want to share updates about Yvonne
+          </div>
         </div>
-        <div className="ui buttons">
-          <button className="ui button" onClick={history.goBack}>Cancel</button>
-          <div className="or"></div>
-          <button className="ui positive button" onClick={this.handleSave}>Save</button>
+        <div className="field twelve wide">
+          <label htmlFor="name">Name</label>
+          <input type="text" id="name" value={member.name} onChange={this.handleChange.bind(this, 'name')}/>
+        </div>
+        <div className="field twelve wide">
+          <label htmlFor="email">Email</label>
+          <input type="text" id="email" value={member.email} onChange={this.handleChange.bind(this, 'email')}/>
+        </div>
+        <div className="field twelve wide">
+          <label htmlFor="relationship">Relationship To Elder</label>
+          <RelationshipToElderDropdown valueSelect={member.role} queryProps={QueryGetRole} onChange={this.handleRoleChange} />
+        </div>
+        <div className="ui buttons medium">
+          <BtnSubmit text="Invite" disabled={isDisabled} onClick={this.handleSave}/>
         </div>
       </div>
     </div>);
