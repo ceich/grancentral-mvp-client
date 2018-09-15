@@ -17,6 +17,8 @@ import BtnSubmit from './BtnSubmit';
 Moment.locale('en');
 momentLocalizer();
 
+const myaccount = [];
+
 class NewAccount extends Component {
   static defaultProps = { createAccount: () => null }
 
@@ -87,8 +89,13 @@ class NewAccount extends Component {
 
     await createAccount(account);
 
+    console.log('account after create new account : ' + JSON.stringify(account));
+    console.log('myaccount after create new account : ' + JSON.stringify(myaccount));
+
+    //console.log('id : ' + account.members[0].id);
+
     //history.push('/');
-    history.push('/familyAlbum');
+    history.push({pathname : '/familyAlbum', state : {account : myaccount[1].members[0].account}});
   }
 
   render() {
@@ -173,7 +180,9 @@ export default graphql(
           }
 
         }
-
+        myaccount.push({
+          members : data.me.members
+        });
         proxy.writeQuery({ query, data });
         console.log('proses update finished');
       }
@@ -181,6 +190,7 @@ export default graphql(
     props: (props) => ({
       createAccount: (account) => {
         console.log('create account executed... ');
+        console.log('original account : ' + JSON.stringify(account, null, 4));
         return props.mutate({
           variables: account,
           optimisticResponse: () => {
