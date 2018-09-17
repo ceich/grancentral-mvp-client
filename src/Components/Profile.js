@@ -31,9 +31,21 @@ class Profile extends React.Component {
 
   componentWillMount() {
     //console.log('componentWillMount got called');
-    const profile = Object.assign({ deleteAvatar: false, role : this.props.me.members[0].role }, this.props.me);
+    //OTHER_aa
+
+    let origRole = '';
+    let tmpRole = '';
+    let tmpRoleOther = '';
+    if ((this.props.me.members) && (this.props.me.members.length > 0)) {
+      origRole = this.props.me.members[0].role;
+      tmpRole = (origRole.substring(0,5) === 'OTHER') ? 'OTHER' : origRole;
+      tmpRoleOther = (tmpRole === 'OTHER') ? origRole.substring(6,origRole.length) : '';
+    }
+
+    const profile = Object.assign({ deleteAvatar: false, role : tmpRole }, this.props.me);
     this.setState({
         profile,
+        roleOther : tmpRoleOther,
         isDisabled : 'disabled'
     });
 
@@ -49,18 +61,32 @@ class Profile extends React.Component {
 
     const tmpvalue = (field === 'role' && value === "please select") ? '' : value;
 
+    if ((field === 'role') && (value !== "OTHER")) {
+      this.setState({roleOther : ""});
+    }
+
     this.setState(state => ({profile: { ...state.profile, [field]: tmpvalue }}), () => this.checkAllInput());
   }
 
-  handleRoleChange(event) {
+  handleRoleChange(field, event) {
     //console.log('handleRoleChange got called');
-    this.handleChange('role', event);
+    if (field === 'role') {
+      this.handleChange('role', event);
+    } else {
+      this.setState({roleOther : event.target.value}, () => this.checkAllInput());
+    }
   }
 
   checkAllInput() {
     //console.log('checkAllInput got called');
     const {role, name} = this.state.profile;
-    const isDisabled = (role === "" || name === "" || this.state.imageLoaded === null) ? 'disabled' : '';
+    const {roleOther, imageLoaded} = this.state;
+    const isDisabled = (role === "" || (role === 'OTHER' && roleOther === "") || name === "" || imageLoaded === null) ? 'disabled' : '';
+
+    //console.log('isDisabled : ' + isDisabled);
+    //console.log('role : ' + role);
+    //console.log('roleOther : ' + roleOther);
+
     this.setState({isDisabled : isDisabled});
   }
 
@@ -68,7 +94,9 @@ class Profile extends React.Component {
     e.preventDefault();
 
     const { updateUser, history } = this.props;
-    const { profile, imageLoaded } = this.state;
+    const { profile, imageLoaded, roleOther } = this.state;
+
+    const finalRole = (profile.role === 'OTHER') ? profile.role + "_" + roleOther : profile.role;
 
     if (profile.deleteAvatar) {
       deleteAvatar(profile);
@@ -90,14 +118,14 @@ class Profile extends React.Component {
         proxy.writeQuery({ query, data });
       }
     })
-    .then(() => history.push({pathname : '/account/new', state : {role : profile.role}}))
+    .then(() => history.push({pathname : '/account/new', state : {role : finalRole}}))
     //.then(() => history.goBack())
     .catch(err => console.log(err));
   }
 
   render() {
     const { result } = this.props;
-    const { profile, imageLoaded, isDisabled } = this.state;
+    const { profile, roleOther, imageLoaded, isDisabled } = this.state;
 
     //console.log('profile.render() got called');
     //console.log('profile on profile.render : ' + JSON.stringify(profile, null, 4));
@@ -125,7 +153,11 @@ class Profile extends React.Component {
           </div>
           <div className="field twelve wide">
             <label htmlFor="relationship">Relationship To Elder</label>
-            <RelationshipToElderDropdown valueSelect={profile.role} queryProps={QueryGetRole} onChange={this.handleRoleChange} />
+            <RelationshipToElderDropdown
+                valueRoleOther={roleOther}
+                valueSelect={profile.role}
+                queryProps={QueryGetRole}
+                onChange={this.handleRoleChange} />
           </div>
           <div className="ui buttons">
             <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>

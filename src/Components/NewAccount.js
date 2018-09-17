@@ -35,6 +35,8 @@ class NewAccount extends Component {
 
     //console.log('defaultDate : ' + newDate);
 
+    console.log('props : ' + JSON.stringify(this.props, null, 4));
+
     this.state = {
       account: { name: '', birthday: '' },
       isDisabled : 'disabled',
@@ -90,12 +92,12 @@ class NewAccount extends Component {
     await createAccount(account);
 
     console.log('account after create new account : ' + JSON.stringify(account));
-    console.log('myaccount after create new account : ' + JSON.stringify(myaccount));
+    console.log('myaccount after create new account : ' + JSON.stringify(myaccount, null, 4));
 
-    //console.log('id : ' + account.members[0].id);
+    //console.log('id before push history to family album : ' + account.members[0].id);
 
     //history.push('/');
-    history.push({pathname : '/familyAlbum', state : {account : myaccount[1].members[0].account}});
+    history.push({pathname : '/familyAlbum', state : {account : myaccount[1].members}});
   }
 
   render() {
@@ -180,8 +182,9 @@ export default graphql(
           }
 
         }
+        //members : data.me.members
         myaccount.push({
-          members : data.me.members
+          members : account
         });
         proxy.writeQuery({ query, data });
         console.log('proses update finished');

@@ -21,34 +21,50 @@ class NewMember extends Component {
   constructor(props) {
     super(props);
 
+
+
+
     this.state = {
         member: {
           name: '',
           email: '',
-          role: ''
+          role: '',
+          roleOther: ''
         },
         isDisabled : 'disabled'
     };
+
+    console.log('props on NewMember : ' + JSON.stringify(this.props, null, 4));
 
     this.handleRoleChange = this.handleRoleChange.bind(this);
     this.checkAllInput = this.checkAllInput.bind(this);
   }
 
   handleChange(field, {target: { value }}) {
+    const tmpvalue = (field === 'role' && value === "please select") ? '' : value;
+
     const {member} = this.state;
-    member[field] = value;
+    member[field] = tmpvalue;
+
+    if ((field === 'role') && (value !== "OTHER")) {
+      member["roleOther"] = "";
+    }
+
     this.setState({member}, () => this.checkAllInput());
   }
 
-  handleRoleChange(event) {
+  handleRoleChange(field, event) {
     //console.log('handleRoleChange got called');
-    this.handleChange('role', event);
+    this.handleChange(field, event);
   }
 
   checkAllInput() {
     //console.log('checkAllInput got called');
-    const {email, role, name} = this.state.member;
-    const isDisabled = (role === "" || name === "" || email === "") ? 'disabled' : '';
+    const {email, role, name, roleOther} = this.state.member;
+
+    console.log("state : " + JSON.stringify(this.state.member, null, 4));
+
+    const isDisabled = (role === "" || (role === 'OTHER' && roleOther === "") || name === "" || email === "") ? 'disabled' : '';
     this.setState({isDisabled : isDisabled});
   }
 
