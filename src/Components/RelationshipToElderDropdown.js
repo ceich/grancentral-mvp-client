@@ -3,7 +3,7 @@ import { Query } from "react-apollo";
 
 class RelationshipToElderDropdown extends React.Component {
   render() {
-      const {queryProps, onChange} = this.props;
+      const {queryProps, onChange, valueSelect, valueRoleOther} = this.props;
       console.log('RelationshipToElderDropdown got called');
 
       return (
@@ -38,16 +38,25 @@ class RelationshipToElderDropdown extends React.Component {
 
                 return(
                   <div>
-                    <select placeholder="Relationship to Elder" id="relationship" onChange={(event) => onChange(event)}>
-                      <option></option>
+                    <select placeholder="please select" id="relationship" value={valueSelect} onChange={(event) => onChange('role', event)}>
+                      <option>please select</option>
                       {
-                        __type.enumValues.map((mydata) =>
-                          <option key={mydata.name}>
-                            {mydata.name}
-                          </option>
+                        __type.enumValues.map((mydata) =>{
+                            //console.log('key : ' + mydata.name);
+                            return(
+                              <option value={mydata.name}>
+                                {mydata.name.toLowerCase().replace(/_/g, "-")}
+                              </option>
+                            );
+                          }
                         )
                       }
                     </select>
+                    {
+                    (valueSelect == 'OTHER') ?
+                        <input placeholder="Role" type="text" id="roleOther" value={valueRoleOther} onChange={(event) => onChange('roleOther', event)}/> :
+                        ''
+                    }
                   </div>
                 );
               }

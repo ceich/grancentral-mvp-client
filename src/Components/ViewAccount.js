@@ -10,6 +10,9 @@ import AccountMembers from "./AccountMembers";
 class ViewAccount extends Component {
   render() {
     const { account, loading } = this.props;
+    console.log('viewaccount.render');
+
+    console.log('account : ' + JSON.stringify(account, null, 4));
 
     return (
       <div className={`ui container raised very padded segment backToAcc ${loading ? 'loading' : ''}`}>
