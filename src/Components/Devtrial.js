@@ -20,7 +20,7 @@ class Devtrial extends React.Component{
     const {deleteMember, result} = this.props;
 
     const input = {
-      accountId: '2f22667f-56e3-4c88-b116-542bca8ab0d3',
+      accountId: '9dfb22a4-171a-4bbd-af6d-09f10f21d5c4',
       userId: '75405c2a-a5ec-49f1-baf4-bf6a521077ba'
     }
 
@@ -33,9 +33,9 @@ class Devtrial extends React.Component{
   render() {
 
     //<Query query={QueryTrial} variables={{ id : 'a14a91fd-e492-446b-9bb2-a91575af3f99' }}>
-
+    //<Query query={QueryMyAccounts}>
     return(
-      <Query query={QueryMyAccounts}>
+      <Query query={QueryTrial} variables={{ id : 'a14a91fd-e492-446b-9bb2-a91575af3f99' }}>
       {
         ({ data, loading, error }) => {
           if(loading) {

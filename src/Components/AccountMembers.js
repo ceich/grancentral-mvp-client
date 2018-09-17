@@ -27,18 +27,21 @@ class AccountMembers extends Component {
   }
 
   renderMember = (member) => {
+    console.log('member on renderMember : ' + JSON.stringify(member, null, 4));
     return (<div className="member" key={member.user.id}>
       <div className="avatar">
         <Avatar user={member.user} />
       </div>
-      <div className="content">
-        <div className="text">
-          {member.user.name}
+      <div className="contentData">
+        <div className="content">
+          <div className="text">
+            <b>{member.user.name}</b>
+          </div>
         </div>
-      </div>
-      <div className="content">
-        <div className="text">
-          {member.role}
+        <div className="content">
+          <div className="text">
+            {member.role}
+          </div>
         </div>
       </div>
       <button className="ui bottom attached button" onClick={this.handleDeleteClick.bind(this, member)}>
@@ -53,7 +56,6 @@ class AccountMembers extends Component {
     return (<div className="ui items">
       <div className="item">
         <div className="ui members">
-          <h4 className="ui dividing header">Members</h4>
           {members.map(this.renderMember)}
           {/* <NewMember accountId={accountId} members={members} /> */}
         </div>
