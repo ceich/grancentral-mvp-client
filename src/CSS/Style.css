@@ -155,3 +155,28 @@ pre{
   vertical-align:left !important;
   text-align: left !important;
 }
+
+
+.member{
+  padding-bottom: 30px;
+}
+
+.content > .ui.header {
+  margin-top : -5.4em !important;
+  margin-bottom : 3em !important;
+}
+
+.contentData {
+  width: 100%;
+  text-align: left;
+  margin-left : 10px;
+}
+
+.text{
+  font-size :13px;
+}
+
+.member .avatar img{
+  width:65px;
+  height:65px;
+}

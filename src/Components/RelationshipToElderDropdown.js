@@ -44,7 +44,7 @@ class RelationshipToElderDropdown extends React.Component {
                         __type.enumValues.map((mydata) =>{
                             //console.log('key : ' + mydata.name);
                             return(
-                              <option value={mydata.name}>
+                              <option key={mydata.name} value={mydata.name}>
                                 {mydata.name.toLowerCase().replace(/_/g, "-")}
                               </option>
                             );

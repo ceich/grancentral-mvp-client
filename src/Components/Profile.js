@@ -21,7 +21,7 @@ class Profile extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log('me : ' + JSON.stringify(this.props.me));
+    console.log('me : ' + JSON.stringify(this.props.me, null, 4));
 
     this.onImageLoad = this.onImageLoad.bind(this);
     this.handleSave = this.handleSave.bind(this);
@@ -30,7 +30,7 @@ class Profile extends React.Component {
   }
 
   componentWillMount() {
-    //console.log('componentWillMount got called');
+    console.log('componentWillMount got called, me : ' + JSON.stringify(this.props.me, null, 4));
     //OTHER_aa
 
     let origRole = '';
