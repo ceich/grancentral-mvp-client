@@ -9,7 +9,7 @@ class FamilyAlbum extends Component {
     super(props);
 
     //console.log('name elder : ' + this.props.location.state.name);
-    console.log('props : ' + JSON.stringify(this.props, null, 4));
+    console.log('props on familyAlbum : ' + JSON.stringify(this.props, null, 4));
 
     this.handleSave = this.handleSave.bind(this);
   }
