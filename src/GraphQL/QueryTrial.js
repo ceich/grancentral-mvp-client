@@ -1,19 +1,16 @@
 import gql from "graphql-tag";
 
 export default gql(`
-query MyAccounts {
+query MeTrial {
   me {
     id
     name
     members {
-			role
+      role
       account {
         id
-        createdAt
         name
-        members {
-          role
-        }
+        createdAt
       }
     }
   }

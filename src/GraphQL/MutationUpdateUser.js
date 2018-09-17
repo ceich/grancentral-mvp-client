@@ -11,7 +11,7 @@ mutation UpdateUser($id: ID! $name: String!) {
     user {
       id
       name
-      email
+      #email
     }
   }
 }`);

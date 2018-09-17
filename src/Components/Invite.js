@@ -66,7 +66,8 @@ class Invite extends Component {
           <input placeholder="Email Address" type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
         </div>
         <div className="field twelve wide">
-          <RelationshipToElderDropdown queryProps={QueryGetRole} onChange={this.handleRoleChange} />
+          <label htmlFor="relationship">Relationship To Elder</label>
+          <RelationshipToElderDropdown valueSelect='' queryProps={QueryGetRole} onChange={this.handleRoleChange} />
         </div>
         <div className="ui buttons medium">
           <BtnSubmit text="Invite" disabled={isDisabled} onClick={this.handleSave}/>

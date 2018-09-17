@@ -8,6 +8,9 @@ class FamilyAlbum extends Component {
   constructor(props) {
     super(props);
 
+    //console.log('name elder : ' + this.props.location.state.name);
+    console.log('props on familyAlbum : ' + JSON.stringify(this.props, null, 4));
+
     this.handleSave = this.handleSave.bind(this);
   }
   handleClick() {
@@ -16,7 +19,13 @@ class FamilyAlbum extends Component {
 
   handleSave() {
     const { history } = this.props;
-    history.push('/inviteOthers');
+    //history.push('/inviteOthers');
+
+    const id = history.location.state.account.id;
+
+    //history.push();
+    history.push({pathname : '/account/'+id+'/member/new', state : {account : history.location.state.account}});
+    ///
     //alert("clicked detected...");
   }
 
