@@ -156,6 +156,10 @@ pre{
   text-align: left !important;
 }
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 0aaf47e70a29685aed4ca18e39d2692a938b2aa0
 .member{
   padding-bottom: 30px;
 }
