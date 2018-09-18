@@ -51,7 +51,29 @@ and in all cases returns it.
 
 ## Schema
 
-Please review the schema in the AppSync project.
+Please review the schema in the `awsmobilejs/backend/appsync` folder.
+
+## Files in S3
+Files in S3 need to be organized by key, using the following conventions.
+For now, all files will be under the `public` storage level;
+even though they are unprotected against modification by other users,
+the use of a UUID prefix will keep them separated.
+
+See the [AWS demo app](https://github.com/aws-samples/aws-amplify-graphql)
+for sample code that uploads and downloads photos.
+
+### User Avatar and Photo Album
+- Storage level: `public` (default)
+- Prefix: `User.id` + `/`
+- Name: _basename of the original file_
+
+### Elder Name Pronunciation
+
+TBD
+
+### Event Media
+
+Created by elder tablet app; bucket, key and region TBD.
 
 ## To-do
 - AppSync API
