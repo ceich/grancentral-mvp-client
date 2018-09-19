@@ -61,11 +61,32 @@ the use of a UUID prefix will keep them separated.
 
 See the [AWS demo app](https://github.com/aws-samples/aws-amplify-graphql)
 for sample code that uploads and downloads photos.
+Note that the Appsync SDK handles upload automatically for
+variables matching the S3ObjectInput signature,
+but download must be done in application code.
 
 ### User Avatar and Photo Album
-- Storage level: `public` (default)
-- Prefix: `User.id` + `/`
+The `bucket` and `region` fields should be obtained from `aws-exports.js`,
+and passed to components that need them.
+For example:
+```
+# App.js
+  s3Opts = {
+    bucket: awsmobile.aws_user_files_s3_bucket,
+    region: awsmobile.aws_user_files_s3_bucket_region
+  }
+  ...
+  <Component s3Opts={s3Opts} ... />
+
+# Component.js
+  // Use this.props.s3Opts to build S3ObjectInput variables
+```
+The `key` should be `level/prefix/name`, with the following meaning:
+- Level: `"public"` (this corresponds to Amplify's default storage level)
+- Prefix: `user.id`
 - Name: _basename of the original file_
+
+The `localUri` and `mimeType` fields come from the selected file.
 
 ### Elder Name Pronunciation
 
