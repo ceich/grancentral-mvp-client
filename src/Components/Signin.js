@@ -11,7 +11,7 @@ const Signin = (props) => {
   const { name, avatar, members } = me;
   const profileComplete = name && avatar;
 
-  console.log('signin.render');
+  console.log('Signin: me=', me);
 
   if (!profileComplete) {
     // Prompt to complete profile
