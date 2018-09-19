@@ -6,14 +6,28 @@ import moment from 'moment';
 
 import QueryGetAccount from "../GraphQL/QueryGetAccount";
 import AccountMembers from "./AccountMembers";
+import BtnSubmit from './BtnSubmit';
 
 class ViewAccount extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleSave = this.handleSave.bind(this);
+  }
+
+  handleSave() {
+    const { account, loading, history } = this.props;
+
+    history.push("/account/" + account.id+"/member/new");
+  }
+
+
   render() {
     const { account, loading } = this.props;
-    console.log('viewaccount.render');
+    //console.log('viewaccount.render');
 
     //console.log('account : ' + JSON.stringify(account, null, 4));
-    console.log('loading on viewaccount : ' + JSON.stringify(loading, null, 4));
+    //console.log('loading on viewaccount : ' + JSON.stringify(loading, null, 4));
 
 
     return (
@@ -28,6 +42,11 @@ class ViewAccount extends Component {
               <AccountMembers accountId={account.id} members={account.members} />
             </div>
           </div>}
+
+          <div className="ui buttons caringCircle">
+            <BtnSubmit text="Invite Someone Else" disabled='' onClick={this.handleSave}/>
+          </div>
+
 
         </div>
       </div>

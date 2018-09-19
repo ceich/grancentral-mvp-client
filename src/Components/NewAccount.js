@@ -97,7 +97,7 @@ class NewAccount extends Component {
     //console.log('id before push history to family album : ' + account.members[0].id);
 
     //history.push('/');
-    history.push({pathname : '/familyAlbum', state : {account : myaccount[1].members}});
+    history.push({pathname : '/createFamilyAlbum', state : {account : myaccount[1].members}});
   }
 
   render() {

@@ -231,7 +231,8 @@ export default compose(
                           __typename: 'User',
                           id: input.userId,
                           name,
-                          email
+                          email,
+                          createdAt: Date.now()
                         },
                         role: input.role
                       }

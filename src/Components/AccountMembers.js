@@ -27,7 +27,15 @@ class AccountMembers extends Component {
   }
 
   renderMember = (member) => {
-    console.log('member on renderMember : ' + JSON.stringify(member, null, 4));
+    String.prototype.toCamelCase = function() {
+      return this.replace(/\b(\w)/g, function(match, capture) {
+        return capture.toUpperCase();
+      });
+    }
+
+
+
+    //console.log('member on renderMember : ' + JSON.stringify(member, null, 4));
     return (<div className="member" key={member.user.id}>
       <div className="avatar">
         <Avatar user={member.user} />
@@ -40,7 +48,7 @@ class AccountMembers extends Component {
         </div>
         <div className="content">
           <div className="text">
-            {member.role}
+            {member.role.replace("OTHER_", "").toLowerCase().toCamelCase().replace(/_/g, "-")}
           </div>
         </div>
       </div>
@@ -53,11 +61,16 @@ class AccountMembers extends Component {
   render() {
     const { members } = this.props;
 
+    //console.log('members : ' + JSON.stringify(members, null, 4));
+
+
     return (<div className="ui items">
       <div className="item">
         <div className="ui members">
-          {members.map(this.renderMember)}
-          {/* <NewMember accountId={accountId} members={members} /> */}
+          <div className="ui members inner">
+            {members.map(this.renderMember)}
+            {/* <NewMember accountId={accountId} members={members} /> */}
+          </div>
         </div>
       </div>
     </div>);

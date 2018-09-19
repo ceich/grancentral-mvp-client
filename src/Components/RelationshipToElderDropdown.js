@@ -53,7 +53,7 @@ class RelationshipToElderDropdown extends React.Component {
                       }
                     </select>
                     {
-                    (valueSelect == 'OTHER') ?
+                    (valueSelect === 'OTHER') ?
                         <input placeholder="Role" type="text" id="roleOther" value={valueRoleOther} onChange={(event) => onChange('roleOther', event)}/> :
                         ''
                     }
