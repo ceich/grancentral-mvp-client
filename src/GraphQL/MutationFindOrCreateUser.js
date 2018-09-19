@@ -12,7 +12,7 @@ mutation FindOrCreateUser($id: ID! $name: String! $email: AWSEmail!) {
     user {
       id
       name
-      #email
+      email
     }
   }
 }`);
