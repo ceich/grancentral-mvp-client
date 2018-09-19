@@ -156,8 +156,24 @@ pre{
   text-align: left !important;
 }
 
+.ui.members{
+  overflow:hidden;
+  height:350px;
+}
+
+.ui.members.inner{
+  overflow-y:scroll;
+  margin-right:-20px;
+  padding-right:20px;
+}
+
 .member{
   padding-bottom: 30px;
+}
+
+
+.ui.buttons.caringCircle{
+  margin-top:10px !important;
 }
 
 .content > .ui.header {
@@ -168,7 +184,7 @@ pre{
 .contentData {
   width: 100%;
   text-align: left;
-  margin-left : 10px;
+  margin-left : 20px;
 }
 
 .text{
@@ -178,4 +194,26 @@ pre{
 .member .avatar img{
   width:65px;
   height:65px;
+}
+
+.devtrial{
+  height: 500px;
+}
+
+.div1{
+  height: 70%;
+  outline: 1px solid blue;
+  overflow: hidden;
+}
+
+.div2{
+  height:30%;
+  background-color: #f7f7f7;
+  outline: 1px solid black;
+}
+
+.div1inner{
+  background-color: #C1D2D2;
+  height: 1000px;
+  overflow: scroll;
 }

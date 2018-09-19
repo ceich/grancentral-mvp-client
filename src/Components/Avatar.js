@@ -7,28 +7,61 @@ const avatarPath = (user) => ('avatar/' + user.id);
 
 const avatarOptions = (user) => {};
 
-const Avatar = ({user, ...props}) => {
-  console.log('user : ' + JSON.stringify(user, null, 4));
-  console.log('props : ' + JSON.stringify(avatarPath(user), null, 4));
 
-  /*
-  let params = {
-    Bucket: config.get('s3bucket'),
-    Key: path
-  };
+class Avatar extends React.Component{
+  constructor(props) {
+    super(props);
 
-  s3.waitFor('objectExists', params, function(err, data) {
-    if (err) console.log(err, err.stack); // an error occurred
-    else     console.log(data);           // successful response
-  });
+    this.state = {
+      imgFound : false
+    }
 
-  <S3Image imgKey={avatarPath(user)} onError={(e) => {e.target.src={imgvoice};}} {...props} />
-  */
+    this.checkImg = this.checkImg.bind(this);
+  }
 
-  return (
-    <S3Image imgKey={avatarPath(user)} onError={(e) => {console.log('image not found : ' + avatarPath(user));}} {...props} />
-  )
-};
+  componentDidMount() {
+    this.checkImg(this.props.user);
+  }
+
+  checkImg = async(user) => {
+    await Storage.list(avatarPath(user))
+      .then(result => {
+        if (result[0]) {
+          console.log('succeed on checkImg, imgKey(' + avatarPath(user) + ') : ' + JSON.stringify(result));
+          this.setState({imgFound : true});
+        } else {
+          console.log('image not found, imgKey(' + avatarPath(user) + ')');
+          this.setState({imgFound : false});
+        }
+      })
+      .catch(err => console.log('error, imgKey(' + avatarPath(user) + ') : ' + err));
+  }
+
+  render() {
+    const {imgFound} = this.state;
+    const {user, ...props} = this.props;
+
+    Storage.get(avatarPath(user))
+      .then(result => {
+        console.log('succeed on checkImg, imgKey(' + avatarPath(user) + ') : ' + JSON.stringify(result));
+      })
+      .catch(err => console.log('error, imgKey(' + avatarPath(user) + ') : ' + err));
+
+
+    if (imgFound) {
+      //console.log('imgFound true, re-render');
+      return(
+        <S3Image imgKey={avatarPath(user)} onError={(e) => {console.log('image not found : ' + avatarPath(user));}} {...props} />
+      );
+    } else {
+      return (
+        <img src={imgvoice} alt="member's " />
+      );
+    }
+  }
+
+}
+
 
 const deleteAvatar = (user) => {
   Storage.remove(avatarPath(user), avatarOptions(user))
