@@ -5,12 +5,14 @@ import './../CSS/Style.css';
 class BtnSubmit extends React.Component{
 
   render() {
-    const{ text, disabled, onClick } = this.props;
+    const{ text, disabled, onClick, customClass } = this.props;
 
-    console.log('text : ' + text);
+    const propsClass = (customClass) ? customClass : '';
+
+    //console.log('text : ' + text);
 
     return(
-      <button type="button" className="btnSubmit" disabled={disabled} onClick={(event) => onClick(event)}>
+      <button type="button" className={"btnSubmit " + propsClass} disabled={disabled} onClick={(event) => onClick(event)}>
         {text}
       </button>
     );

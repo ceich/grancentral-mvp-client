@@ -1,32 +1,32 @@
 import React, {Component} from "react";
 
 import './../CSS/Style.css';
-import imgupload from './../img/imgupload.png';
+import BtnSubmit from './BtnSubmit';
 
 class FamilyAlbum extends Component {
+  constructor(props) {
+    super(props);
 
-  handleClick() {
+    this.handleUpload = this.handleUpload.bind(this);
+  }
+
+  handleUpload() {
     alert("clicked detected...");
   }
 
+  handleSave() {
+    //history.push({pathname : '/account/'+id+'/member/new', state : {account : history.location.state.account}});
+  }
+
   render() {
-    return (<div className="ui container raised very padded segment">
-      <h1 className="ui header">Create Family Album</h1>
-      <div className="ui form">
-        <div className="field twelve wide">
-          <div className="intro">
-            When not in use, GranCentral will display a slideshow of images uploaded by you and your family
+    return (
+      <div className="ui container raised very padded segment">
+        <h1 className="ui header">Family Album</h1>
+        <div className="ui buttons">
+            <BtnSubmit text="Add More Photos" disabled='' onClick={this.handleUpload}/>
           </div>
-        </div>
-        <div className="field twelve wide">
-          <input id="imgUpload" className="nameSound" type="image" alt="Photo Upload" src={imgupload} onClick={this.handleClick.bind(this)}/>
-          <label htmlFor="imgUpload">Upload a few images now to get started</label>
-        </div>
-        <div className="field twelve wide link">
-          <a href="">skip this step</a>
-        </div>
       </div>
-    </div>);
+    );
   }
 
 }

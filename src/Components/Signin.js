@@ -11,6 +11,8 @@ const Signin = (props) => {
   const { name, avatar, members } = me;
   const profileComplete = name && avatar;
 
+  console.log('signin.render');
+
   if (!profileComplete) {
     // Prompt to complete profile
     return (<Redirect push to="/profile" />);

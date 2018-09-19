@@ -20,8 +20,8 @@ import NewAccount from './Components/NewAccount';
 import NewMember from './Components/NewMember';
 import Profile from './Components/Profile';
 import Signin from './Components/Signin';
+import CreateFamilyAlbum from './Components/CreateFamilyAlbum';
 import FamilyAlbum from './Components/FamilyAlbum';
-import Invite from './Components/Invite';
 
 Amplify.configure(aws_exports);
 
@@ -73,6 +73,8 @@ class App extends React.Component {
   // Call the mutation when the user authenticates,
   // to bootstrap the GraphQL User from Cognito.
   async componentDidMount() {
+    //console.log('component did mount');
+
     const {
       findOrCreateUser,
       result: { loading, error, called }
@@ -80,11 +82,15 @@ class App extends React.Component {
     if (loading || error || called) return;
 
     const { idToken: { payload } } = await Auth.currentSession();
+    //const { idToken } = await Auth.currentSession();
+
+    //console.log('mydata : ' + JSON.stringify(idToken));
 
     const input = {
       id: payload.sub,
       name: payload.name || payload['cognito:username'],
-      email: payload.email
+      email: payload.email,
+      avatar: null
     };
 
     await findOrCreateUser({
@@ -98,7 +104,7 @@ class App extends React.Component {
       },
       update: (proxy, { data: { findOrCreateUser: { user } } }) => {
         if (!user) return;
-        // console.log('Setting user to:', user);
+        //console.log('Setting user to:', user);
         // Write the response into the cache for "me" Query
         proxy.writeQuery({ query: QueryMe, data: { me: user } });
         // Update the state with the server response
@@ -108,6 +114,7 @@ class App extends React.Component {
   }
 
   render() {
+    //console.log('App.render');
     return (
       <Router>
         <div className="App">
@@ -126,10 +133,10 @@ class App extends React.Component {
                  render={(props) => <Profile {...props} {...this.state} />} />
           <Route path="/signin"
                  render={(props) => <Signin {...props} {...this.state} />} />
+          <Route path="/createFamilyAlbum"
+                 render={(props) => <CreateFamilyAlbum {...props} {...this.state} />} />
           <Route path="/familyAlbum"
                  render={(props) => <FamilyAlbum {...props} {...this.state} />} />
-          <Route path="/inviteOthers"
-                 render={(props) => <Invite {...props} {...this.state} />} />
           <Route path="/signout" render={() => {
             console.log('signout: going to hosted UI');
             this.props.OAuthSignIn();
@@ -149,7 +156,9 @@ const WithProvider = (props) => (
   	  auth: {
     		type: appSyncConfig.authenticationType,
     		jwtToken: async () => (await Auth.currentSession()
-          .then(data => { return data })
+          .then(data => {
+            return data
+          })
           .catch(err => {
             console.log('while getting jwtToken: no current session');
             console.log('err : ' + err);

@@ -13,7 +13,8 @@ query($id: ID!) {
       user {
         id
         name
-        email
+        #createdAt
+        #email
       }
     }
   }
