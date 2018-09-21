@@ -14,7 +14,12 @@ class CreateFamilyAlbum extends Component {
     this.handleSave = this.handleSave.bind(this);
   }
   handleClick() {
-    alert("clicked detected...");
+    const { history } = this.props;
+    //alert("clicked detected...");
+
+    console.log('account : ' + JSON.stringify(history.location.state.account, null, 4));
+
+    history.push({pathname : '/familyAlbum', state : {account : history.location.state.account}});
   }
 
   handleSave() {
