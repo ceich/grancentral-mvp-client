@@ -41,12 +41,13 @@ class Avatar extends React.Component{
     const {imgFound} = this.state;
     const {user, ...props} = this.props;
 
+    /*
     Storage.get(avatarPath(user))
       .then(result => {
         console.log('succeed on checkImg, imgKey(' + avatarPath(user) + ') : ' + JSON.stringify(result));
       })
       .catch(err => console.log('error, imgKey(' + avatarPath(user) + ') : ' + err));
-
+    */
 
     if (imgFound) {
       //console.log('imgFound true, re-render');
