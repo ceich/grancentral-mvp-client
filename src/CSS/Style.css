@@ -9,9 +9,18 @@
   padding-right: 1em !important;
 }
 
+.ui.segment.viewAccount{
+  padding-top : 0px !important;
+}
+
 .ui.header{
   margin-top: -3.5em !important;
   margin-bottom: 1.5em;
+}
+
+.ui.header.viewAccount{
+  margin-top: -1.5em !important;
+  margin-bottom: 0px !important;
 }
 
 .ui.form {
@@ -216,4 +225,17 @@ pre{
   background-color: #C1D2D2;
   height: 1000px;
   overflow: scroll;
+}
+
+.fileUpload{
+  display:none;
+}
+
+.album img{
+  max-width:100%;
+  margin-bottom:50px;
+}
+
+.ui.buttons.familyAlbum{
+  margin-top: 1em !important;
 }

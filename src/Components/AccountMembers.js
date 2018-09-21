@@ -19,20 +19,35 @@ class AccountMembers extends Component {
 
   async handleDeleteClick(member, e) {
     e.preventDefault();
+    const{ accountId } = this.props;
+    //console.log('props on DeleteClick : ' + JSON.stringify(this.props, null, 4));
 
     if (window.confirm(`Are you sure you want to delete member ${member.user.name}?`)) {
       const { deleteMember } = this.props;
-      await deleteMember(member);
+      await deleteMember(member, accountId);
     }
   }
 
+  toTitleCase(phrase) {
+    return phrase
+      .replace('OTHER_', '')
+      .toLowerCase()
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join('-')
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
   renderMember = (member) => {
+    /*
     String.prototype.toCamelCase = function() {
       return this.replace(/\b(\w)/g, function(match, capture) {
         return capture.toUpperCase();
       });
     }
-
+    */
 
 
     //console.log('member on renderMember : ' + JSON.stringify(member, null, 4));
@@ -48,7 +63,7 @@ class AccountMembers extends Component {
         </div>
         <div className="content">
           <div className="text">
-            {member.role.replace("OTHER_", "").toLowerCase().toCamelCase().replace(/_/g, "-")}
+            {this.toTitleCase(member.role)}
           </div>
         </div>
       </div>
@@ -137,21 +152,30 @@ export default compose(
       }
     },
     props: (props) => ({
-      deleteMember: (member) => {
+      deleteMember: (member, accountId) => {
+        //console.log('member : ' + JSON.stringify(member, null, 4));
         return props.mutate({
           variables: {
-            accountId: member.account.id,
+            accountId: accountId,
             userId: member.user.id
           },
-          optimisticResponse: () => ({
-            deleteMember: {
-              __typename: 'DeleteMemberResult',
-              member: {
-                __typename: 'Member',
-                ...member
+          optimisticResponse: () => {
+            let tmpAccount = {
+              __typename: 'Account',
+              id : accountId
+            };
+
+            return ({
+              deleteMember: {
+                __typename: 'DeleteMemberResult',
+                member: {
+                  __typename: 'Member',
+                  account : tmpAccount,
+                  ...member
+                }
               }
-            }
-          })
+            });
+          }
         })
       }
     })

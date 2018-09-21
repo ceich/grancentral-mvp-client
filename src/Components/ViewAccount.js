@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import { graphql } from "react-apollo";
 import { Link } from "react-router-dom";
 
-import moment from 'moment';
-
 import QueryGetAccount from "../GraphQL/QueryGetAccount";
 import AccountMembers from "./AccountMembers";
 import BtnSubmit from './BtnSubmit';
+
 
 class ViewAccount extends Component {
   constructor(props) {
@@ -16,11 +15,14 @@ class ViewAccount extends Component {
   }
 
   handleSave() {
-    const { account, loading, history } = this.props;
+    const { account, history } = this.props;
 
     history.push("/account/" + account.id+"/member/new");
   }
 
+  checkLink() {
+    console.log("check link");
+  }
 
   render() {
     const { account, loading } = this.props;
@@ -32,12 +34,14 @@ class ViewAccount extends Component {
 
     return (
       <div>
+        {
+           account && <h1 className="ui header viewAccount">{account.name}'s Caring Circle</h1>
+        }
         <div className={`ui container raised very padded segment backToAcc ${loading ? 'loading' : ''}`}>
-          <Link to="/" className="ui button">Back to accounts</Link>
+          <Link to="/" className="ui button" onClick={() => this.checkLink()}>Back to accounts</Link>
         </div>
-        <div className={`ui container raised very padded segment`}>
+        <div className={`ui container raised very padded segment viewAccount`}>
           {account && <div className="content">
-            <h1 className="ui header">{account.name}'s Caring Circle</h1>
             <div className="extra">
               <AccountMembers accountId={account.id} members={account.members} />
             </div>

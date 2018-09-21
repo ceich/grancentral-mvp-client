@@ -31,7 +31,7 @@ class NewMember extends Component {
         isDisabled : 'disabled'
     };
 
-    console.log('props on NewMember : ' + JSON.stringify(this.props, null, 4));
+    //console.log('props on NewMember : ' + JSON.stringify(this.props, null, 4));
 
     this.handleRoleChange = this.handleRoleChange.bind(this);
     this.checkAllInput = this.checkAllInput.bind(this);
@@ -59,7 +59,7 @@ class NewMember extends Component {
     //console.log('checkAllInput got called');
     const {email, role, name, roleOther} = this.state.member;
 
-    console.log("state : " + JSON.stringify(this.state.member, null, 4));
+    //console.log("state : " + JSON.stringify(this.state.member, null, 4));
 
     const isDisabled = (role === "" || (role === 'OTHER' && roleOther === "") || name === "" || email === "") ? 'disabled' : '';
     this.setState({isDisabled : isDisabled});
@@ -72,7 +72,7 @@ class NewMember extends Component {
     const { account, findOrCreateUser, createMember, history } = this.props;
     const { member: { name, email, role, roleOther } } = this.state;
 
-    console.log('account on handleSave : ' + JSON.stringify(account, null, 4));
+    //console.log('account on handleSave : ' + JSON.stringify(account, null, 4));
 
     const finalRole = (role === 'OTHER') ? role + "_" + roleOther : role;
 
@@ -95,7 +95,7 @@ class NewMember extends Component {
       email
     });
 
-    console.log('account after findOrCreateUser : ' + JSON.stringify(user, null, 4));
+    //console.log('account after findOrCreateUser : ' + JSON.stringify(user, null, 4));
 
     if (user && user.id) {
       const member = {
@@ -106,19 +106,20 @@ class NewMember extends Component {
         role: finalRole
       }
 
-      console.log('member before createMember : ' + JSON.stringify(member, null, 4));
+      //console.log('member before createMember : ' + JSON.stringify(member, null, 4));
 
       await createMember(member);
 
-      console.log('create Member completed');
+      //console.log('create Member completed');
     }
 
     history.push("/account/" + account.id);
   }
 
   render() {
-    const { history } = this.props;
     const { member, isDisabled } = this.state;
+    const { account } = this.props;
+    //console.log('props on newMember.render' + JSON.stringify(this.props, null, 4));
 
     /*
           <select id="role" value={member.role} onChange={this.handleChange.bind(this, 'role')}>
@@ -132,7 +133,10 @@ class NewMember extends Component {
       <div className="ui form">
         <div className="field twelve wide">
           <div className="intro">
-            Invite family members, friends, and caregivers who want to share updates about Yvonne
+            Invite family members, friends, and caregivers who want to share updates about
+            {
+              (account) ? ' ' + account.name : ''
+            }
           </div>
         </div>
         <div className="field twelve wide">
