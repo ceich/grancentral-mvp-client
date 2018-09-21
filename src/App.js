@@ -22,7 +22,7 @@ import Profile from './Components/Profile';
 import Signin from './Components/Signin';
 import CreateFamilyAlbum from './Components/CreateFamilyAlbum';
 import FamilyAlbum from './Components/FamilyAlbum';
-import Devtrial from './Components/Devtrial';
+//import Devtrial from './Components/Devtrial';
 
 Amplify.configure(aws_exports);
 
@@ -115,7 +115,11 @@ class App extends React.Component {
   }
 
   render() {
-    //console.log('App.render');
+    //console.log('props on App.render : ' + JSON.stringify(this.props, null, 4) );
+    //const { user } = this.props;
+
+    console.log('user : ' + JSON.stringify(this.state, null, 4));
+
     return (
       <Router>
         <div className="App">
@@ -138,8 +142,6 @@ class App extends React.Component {
                  render={(props) => <CreateFamilyAlbum {...props} {...this.state} />} />
           <Route path="/familyAlbum"
                  render={(props) => <FamilyAlbum {...props} {...this.state} />} />
-          <Route path="/devtrial"
-                 render={(props) => <Devtrial {...props} {...this.state} />} />
           <Route path="/signout" render={() => {
             console.log('signout: going to hosted UI');
             this.props.OAuthSignIn();

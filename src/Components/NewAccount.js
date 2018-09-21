@@ -8,6 +8,9 @@ import MutationCreateAccount from "../GraphQL/MutationCreateAccount";
 
 import Moment from 'moment'
 import momentLocalizer from 'react-widgets-moment';
+//import Globalize from 'globalize';
+//import globalizeLocalizer from 'react-widgets-globalize';
+
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import 'react-widgets/dist/css/react-widgets.css'
 import './../CSS/Style.css';
@@ -15,7 +18,7 @@ import imgvoice from './../img/imgvoice.png';
 import BtnSubmit from './BtnSubmit';
 
 Moment.locale('en');
-momentLocalizer();
+momentLocalizer(Moment);
 
 const myaccount = [];
 
@@ -58,7 +61,7 @@ class NewAccount extends Component {
   }
 
   handleBirthdayChange(value) {
-    //console.log('on handleBirthdayChange : ' + value);
+    console.log('on handleBirthdayChange : ' + value);
     const {account, defaultDate} = this.state;
 
     const newDate = (value) ? new Date(value) : defaultDate;
@@ -129,10 +132,11 @@ class NewAccount extends Component {
         <div className="field twelve wide">
           <label htmlFor="name">Birthday</label>
           <DateTimePicker
+            dateFormat={dt => String(dt.getDate())}
             placeholder={newDateStr}
             defaultCurrentDate={defaultDate}
             onChange={(value) => this.handleBirthdayChange(value)}
-            format="MM/DD/YYYY"
+            format="M/D/YYYY"
             time={false}
           />
         </div>

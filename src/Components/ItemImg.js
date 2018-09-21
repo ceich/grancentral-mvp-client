@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import { Storage } from 'aws-amplify';
-import { S3Image } from 'aws-amplify-react';
 
 
 export default class ItemImg extends Component {
@@ -33,7 +32,7 @@ export default class ItemImg extends Component {
     if(imgURL) {
       console.log('imgURL : ' + imgURL);
       return(
-        <img src={imgURL} />
+        <img src={imgURL} alt="Family Album"/>
       );
     } else {
       return(
