@@ -217,3 +217,12 @@ pre{
   height: 1000px;
   overflow: scroll;
 }
+
+.fileUpload{
+  display:none;
+}
+
+.album img{
+  max-width:100%;
+  margin-bottom:50px;
+}

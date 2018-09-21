@@ -82,6 +82,10 @@ class NewAccount extends Component {
     const { createAccount, history, user, location } = this.props;
     const { account} = this.state;
     account.ownerId = user.id;
+
+
+
+
     //account.role = 'son-in-law';    // TODO: add UI for owner's relation to elder
     account.role = location.state.role;    // TODO: add UI for owner's relation to elder
     //account.birthday = '1948-12-23'; // TODO: add UI for birthday selection
