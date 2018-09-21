@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Query, graphql} from "react-apollo";
+import {compose, Query, graphql} from "react-apollo";
 import { v4 as uuid } from 'uuid';
 import { Auth } from "aws-amplify";
 
@@ -10,8 +10,8 @@ import './../CSS/Style.css';
 import BtnSubmit from './BtnSubmit';
 import ItemImg from './ItemImg';
 import MutationCreateEvent from "../GraphQL/MutationCreateEvent";
+import QueryGetAccount from "../GraphQL/QueryGetAccount";
 import QueryGetListEvents from "../GraphQL/QueryGetListEvents";
-import QueryMe from "../GraphQL/QueryMe";
 
 class FamilyAlbum extends Component {
   constructor(props) {
@@ -22,16 +22,29 @@ class FamilyAlbum extends Component {
     }
 
     console.log('props : ' + JSON.stringify(this.props, null, 4));
+
     this.myRef = React.createRef();
     this.formRef = React.createRef();
     this.handleClick = this.handleClick.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleRedirect = this.handleRedirect.bind(this);
+  }
+
+  handleRedirect() {
+    console.log('props on handleRedirect : ' + JSON.stringify(this.props, null, 4));
+    const { account, history } = this.props;
+    if (account.members.length > 1) {
+      alert("redirect to elder's central");
+    } else {
+      history.push("/account/" + account.id+"/member/new");
+    }
+
   }
 
   handleClick() {
     //alert("clicked detected...");
-    console.log('state : ' + JSON.stringify(this.state, null, 4));
+    //console.log('state : ' + JSON.stringify(this.state, null, 4));
     this.myRef.current.click();
   }
 
@@ -42,7 +55,7 @@ class FamilyAlbum extends Component {
     const { account } = this.props.location.state;
     //console.log('state : ' + JSON.stringify(this.state, null, 4));
 
-    console.log('account on handleSubmit : ' + JSON.stringify(this.props, null, 4));
+    //console.log('account on handleSubmit : ' + JSON.stringify(this.props, null, 4));
 
     const { identityId } = await Auth.currentCredentials();
     const { username: owner } = await Auth.currentUserInfo();
@@ -146,13 +159,13 @@ class FamilyAlbum extends Component {
               } else {
                 const {items} = data.listEvents;
 
-                console.log('items : ' + JSON.stringify(items, null, 4));
+                //console.log('items : ' + JSON.stringify(items, null, 4));
 
                 return(
                   <div className="album">
                   {
                     items.map((mydata, index) =>
-                        <ItemImg propImgKey={mydata.media.key} />
+                        <ItemImg key={index} propImgKey={mydata.media.key} />
                     )
                   }
                   </div>
@@ -163,9 +176,12 @@ class FamilyAlbum extends Component {
           </Query>
         </div>
         <form onSubmit={this.handleSubmit} ref={this.formRef}>
-          <div className="ui buttons">
+          <div className="ui buttons familyAlbum">
             <BtnSubmit text="Add More Photos" disabled='' onClick={this.handleClick} />
             <input className="fileUpload" label="File to upload" type="file" onChange={this.handleUpload} ref={this.myRef}/>
+          </div>
+          <div className="ui buttons familyAlbum">
+            <BtnSubmit text="Done" disabled='' customClass='link' onClick={this.handleRedirect}/>
           </div>
         </form>
       </div>
@@ -174,77 +190,62 @@ class FamilyAlbum extends Component {
 
 }
 
-export default graphql(
-  MutationCreateEvent,
-  {
-      options: {
-        update: (proxy, { data: { createEvent } }) => {
-          console.log('createEvent on update MutationCreateEvent : ' + JSON.stringify(createEvent, null, 4));
-          const { accountId } = createEvent.event;
-
-          const query = QueryGetListEvents;
-          const variables = { accountId };
-          //const data = proxy.readQuery({ query, variables });
-          const { listEvents } = proxy.readQuery({ query, variables });
-
-          console.log('listEvents on cache after MutationCreateEvent' + JSON.stringify(listEvents, null, 4));
-
-          //const events = data.listEvents.items;
-          // Guard against multiple calls with optimisticResponse:
-          // https://github.com/awslabs/aws-mobile-appsync-sdk-js/issues/65
-
-          //console.log('events before adding element : ' + JSON.stringify(events, null, 4));
-
-          //events.push(createEvent.event);
-
-          /*
-          if (members.length === 0 ||
-              members[members.length-1].user.id !== userId) {
-            members.push(createMember);
-          }
-
-          console.log('members before writeQuery to cache : ' + JSON.stringify(members, null, 4));
-
-          proxy.writeQuery({ query, data });
-          */
-
-          /*
-          READ THIS ONE :
-          https://stackoverflow.com/questions/49102797/apollo-graphql-writequery-after-mutation-does-not-trigger-re-render-of-flatlist
-          https://stackoverflow.com/questions/50341975/apollo-client-cache-updates-but-ui-does-not
-          https://stackoverflow.com/questions/41665695/apollo-client-upsert-mutation-only-modifies-cache-on-update-but-not-on-create
-          https://s3.amazonaws.com/apollo-docs-1.x/cache-updates.html
-          https://blog.vulcanjs.org/understanding-post-mutation-data-updates-in-apollo-43e90c37023b
-          https://scotch.io/tutorials/realtime-graphql-ui-updates-in-react-with-apollo
-          https://www.prisma.io/forum/t/update-store-after-mutation/3390
-          https://github.com/apollographql/apollo-client/issues/1697
-
-
-          */
-
-          listEvents["items"] = [...listEvents["items"], createEvent.event];
-          console.log('events before writeQuery to cache : ' + JSON.stringify(listEvents, null, 4));
-
-          proxy.writeQuery({
-            query,
-            data: { listEvents: listEvents },
-            variables
-          });
-          console.log('proses updating completed : ' + JSON.stringify(listEvents, null, 4));
-        }
+export default compose(
+  graphql(
+    QueryGetAccount,
+    {
+      options: ({ location: { state: { account: {id} } } }) => {
+        console.log('query options running');
+        return ({
+          variables: { id },
+          fetchPolicy: 'cache-and-network'
+        })
       },
-      props: ({ ownProps, mutate }) => ({
-          ...ownProps,
-          createEvent: input => {
-            console.log('input at props : ' + JSON.stringify(input, null, 4));
-            return(
-              mutate({
-                  variables: input
-              })
-            );
+      props: ({ data: { getAccount: account } }) => {
+        console.log('query props running');
+        return({account});
+      }
+    }
+  ),
+  graphql(
+    MutationCreateEvent,
+    {
+        options: {
+          update: (proxy, { data: { createEvent } }) => {
+            //console.log('createEvent on update MutationCreateEvent : ' + JSON.stringify(createEvent, null, 4));
+            const { accountId } = createEvent.event;
+
+            const query = QueryGetListEvents;
+            const variables = { accountId };
+            //const data = proxy.readQuery({ query, variables });
+            const { listEvents } = proxy.readQuery({ query, variables });
+
+            //console.log('listEvents on cache after MutationCreateEvent' + JSON.stringify(listEvents, null, 4));
+
+            listEvents["items"] = [...listEvents["items"], createEvent.event];
+            //console.log('events before writeQuery to cache : ' + JSON.stringify(listEvents, null, 4));
+
+            proxy.writeQuery({
+              query,
+              data: { listEvents: listEvents },
+              variables
+            });
+            //console.log('proses updating completed : ' + JSON.stringify(listEvents, null, 4));
           }
-      })
-  }
+        },
+        props: ({ ownProps, mutate }) => ({
+            ...ownProps,
+            createEvent: input => {
+              //console.log('input at props : ' + JSON.stringify(input, null, 4));
+              return(
+                mutate({
+                    variables: input
+                })
+              );
+            }
+        })
+    }
+  )
 ) (FamilyAlbum);
 
 
