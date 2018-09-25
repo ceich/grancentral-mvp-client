@@ -8,7 +8,6 @@ import { Rehydrated } from 'aws-appsync-react';
 
 import appSyncConfig from './AppSync';
 import aws_exports from './aws-exports';
-import heart from './heart.svg';
 import './CSS/App.css';
 
 import QueryMe from "./GraphQL/QueryMe";
@@ -22,7 +21,8 @@ import Profile from './Components/Profile';
 import Signin from './Components/Signin';
 import CreateFamilyAlbum from './Components/CreateFamilyAlbum';
 import FamilyAlbum from './Components/FamilyAlbum';
-//import Devtrial from './Components/Devtrial';
+import Timeline from './Components/Timeline';
+import TimelineDetail from './Components/TimelineDetail';
 
 Amplify.configure(aws_exports);
 
@@ -118,14 +118,11 @@ class App extends React.Component {
     //console.log('props on App.render : ' + JSON.stringify(this.props, null, 4) );
     //const { user } = this.props;
 
-    console.log('user : ' + JSON.stringify(this.state, null, 4));
+    //console.log('user : ' + JSON.stringify(this.state, null, 4));
 
     return (
       <Router>
         <div className="App">
-          <header className="App-header">
-            <img className="App-logo" src={heart} alt="heart" />
-          </header>
           <Route exact={true} path="/"
                  render={(props) => <MyAccounts {...props} {...this.state} />} />
           <Route path="/account/new"
@@ -142,6 +139,10 @@ class App extends React.Component {
                  render={(props) => <CreateFamilyAlbum {...props} {...this.state} />} />
           <Route path="/familyAlbum"
                  render={(props) => <FamilyAlbum {...props} {...this.state} />} />
+          <Route path="/timeline"
+                 render={(props) => <Timeline {...props} {...this.state} />} />
+          <Route path="/timelineDetail"
+                 render={(props) => <TimelineDetail {...props} {...this.state} />} />
           <Route path="/signout" render={() => {
             console.log('signout: going to hosted UI');
             this.props.OAuthSignIn();

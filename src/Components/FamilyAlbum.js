@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { Link } from "react-router-dom";
 import {compose, Query, graphql} from "react-apollo";
 import { v4 as uuid } from 'uuid';
 import { Auth } from "aws-amplify";
@@ -12,6 +13,7 @@ import ItemImg from './ItemImg';
 import MutationCreateEvent from "../GraphQL/MutationCreateEvent";
 import QueryGetAccount from "../GraphQL/QueryGetAccount";
 import QueryGetListEvents from "../GraphQL/QueryGetListEvents";
+import heart from './../heart.svg';
 
 class FamilyAlbum extends Component {
   constructor(props) {
@@ -20,8 +22,6 @@ class FamilyAlbum extends Component {
     this.state = {
       myfile : null
     }
-
-    console.log('props : ' + JSON.stringify(this.props, null, 4));
 
     this.myRef = React.createRef();
     this.formRef = React.createRef();
@@ -32,7 +32,6 @@ class FamilyAlbum extends Component {
   }
 
   handleRedirect() {
-    console.log('props on handleRedirect : ' + JSON.stringify(this.props, null, 4));
     const { account, history } = this.props;
     if (account.members.length > 1) {
       alert("redirect to elder's central");
@@ -43,25 +42,19 @@ class FamilyAlbum extends Component {
   }
 
   handleClick() {
-    //alert("clicked detected...");
-    //console.log('state : ' + JSON.stringify(this.state, null, 4));
     this.myRef.current.click();
   }
 
   async handleSubmit(event) {
-    //alert("form Submitted");
     const { myfile: selectedFile } = this.state;
     const { createEvent } = this.props;
     const { account } = this.props.location.state;
-    //console.log('state : ' + JSON.stringify(this.state, null, 4));
-
-    //console.log('account on handleSubmit : ' + JSON.stringify(this.props, null, 4));
 
     const { identityId } = await Auth.currentCredentials();
-    const { username: owner } = await Auth.currentUserInfo();
+    //const { username: owner } = await Auth.currentUserInfo();
 
-    await console.log('identityId : ' + JSON.stringify(identityId, null, 4));
-    await console.log('owner : ' + JSON.stringify(owner, null, 4));
+    //await console.log('identityId : ' + JSON.stringify(identityId, null, 4));
+    //await console.log('owner : ' + JSON.stringify(owner, null, 4));
 
 
 
@@ -69,9 +62,6 @@ class FamilyAlbum extends Component {
         let file;
         let input;
         const { name: fileName, type: mimeType } = selectedFile;
-
-        console.log('fileName : ' + fileName);
-        console.log('mimeType: ' + mimeType);
 
         const [, , , extension] = /([^.]+)(\.(\w+))?$/.exec(fileName);
 
@@ -96,31 +86,6 @@ class FamilyAlbum extends Component {
         };
 
         await createEvent(input);
-
-
-        /*
-          input S3ObjectInput {
-            bucket: String!
-            region: String!
-            key: String!
-            localUri: String
-            mimeType: String
-          }
-
-          input CreateEventInput {
-            accountId: ID!
-            text: String
-            userId: ID
-            referenceId: ID
-            media: S3ObjectInput
-          }
-
-
-
-
-        */
-
-        //createEvent({ name, owner, `public`, file })
     }
 
 
@@ -128,12 +93,7 @@ class FamilyAlbum extends Component {
   }
 
   handleUpload(event) {
-      //const { target: { files } } = event;
-      //const [file,] = files || [];
-
       const { target: { value, files } } = event;
-      //console.log('files : ' + JSON.stringify(files, null, 4));
-      //console.log('value : ' + JSON.stringify(value, null, 4));
       const [file,] = files || [];
 
       this.setState({
@@ -143,47 +103,52 @@ class FamilyAlbum extends Component {
 
   render() {
     const {id} = this.props.location.state.account;
+    const { history } = this.props;
 
     return (
-      <div className="ui container raised very padded segment">
-        <h1 className="ui header">Family Album</h1>
-        <div className="field twelve wide">
-          <Query query={QueryGetListEvents} variables={{ accountId : id }}>
-          {
-            ({ data, loading, error }) => {
-              if(loading || !data.listEvents) {
-                return('loading');
-              } else if(error) {
-                console.log('error : ' + JSON.stringify(error));
-                return('error');
-              } else {
-                const {items} = data.listEvents;
+      <div>
+        <header className="App-header">
+          <Link to={{pathname : '/timeline', state : {account : history.location.state.account}}}>
+            <img className="App-logo" src={heart} alt="heart" />
+          </Link>
+        </header>
+        <div className="ui container raised very padded segment">
+          <h1 className="ui header">Family Album</h1>
+          <div className="field twelve wide">
+            <Query query={QueryGetListEvents} variables={{ accountId : id }}>
+            {
+              ({ data, loading, error }) => {
+                if(loading || !data.listEvents) {
+                  return('loading');
+                } else if(error) {
+                  return('error');
+                } else {
+                  const {items} = data.listEvents;
 
-                //console.log('items : ' + JSON.stringify(items, null, 4));
-
-                return(
-                  <div className="album">
-                  {
-                    items.map((mydata, index) =>
-                        <ItemImg key={index} propImgKey={mydata.media.key} />
-                    )
-                  }
-                  </div>
-                );
+                  return(
+                    <div className="album">
+                    {
+                      items.map((mydata, index) =>
+                          <ItemImg key={index} propType="image" propImgKey={mydata.media.key} />
+                      )
+                    }
+                    </div>
+                  );
+                }
               }
             }
-          }
-          </Query>
+            </Query>
+          </div>
+          <form onSubmit={this.handleSubmit} ref={this.formRef}>
+            <div className="ui buttons familyAlbum">
+              <BtnSubmit text="Add More Photos" disabled='' onClick={this.handleClick} />
+              <input className="fileUpload" label="File to upload" type="file" onChange={this.handleUpload} ref={this.myRef}/>
+            </div>
+            <div className="ui buttons familyAlbum">
+              <BtnSubmit text="Done" disabled='' customClass='link' onClick={this.handleRedirect}/>
+            </div>
+          </form>
         </div>
-        <form onSubmit={this.handleSubmit} ref={this.formRef}>
-          <div className="ui buttons familyAlbum">
-            <BtnSubmit text="Add More Photos" disabled='' onClick={this.handleClick} />
-            <input className="fileUpload" label="File to upload" type="file" onChange={this.handleUpload} ref={this.myRef}/>
-          </div>
-          <div className="ui buttons familyAlbum">
-            <BtnSubmit text="Done" disabled='' customClass='link' onClick={this.handleRedirect}/>
-          </div>
-        </form>
       </div>
     );
   }
@@ -195,14 +160,12 @@ export default compose(
     QueryGetAccount,
     {
       options: ({ location: { state: { account: {id} } } }) => {
-        console.log('query options running');
         return ({
           variables: { id },
           fetchPolicy: 'cache-and-network'
         })
       },
       props: ({ data: { getAccount: account } }) => {
-        console.log('query props running');
         return({account});
       }
     }
@@ -212,31 +175,24 @@ export default compose(
     {
         options: {
           update: (proxy, { data: { createEvent } }) => {
-            //console.log('createEvent on update MutationCreateEvent : ' + JSON.stringify(createEvent, null, 4));
             const { accountId } = createEvent.event;
 
             const query = QueryGetListEvents;
             const variables = { accountId };
-            //const data = proxy.readQuery({ query, variables });
             const { listEvents } = proxy.readQuery({ query, variables });
 
-            //console.log('listEvents on cache after MutationCreateEvent' + JSON.stringify(listEvents, null, 4));
-
             listEvents["items"] = [...listEvents["items"], createEvent.event];
-            //console.log('events before writeQuery to cache : ' + JSON.stringify(listEvents, null, 4));
 
             proxy.writeQuery({
               query,
               data: { listEvents: listEvents },
               variables
             });
-            //console.log('proses updating completed : ' + JSON.stringify(listEvents, null, 4));
           }
         },
         props: ({ ownProps, mutate }) => ({
             ...ownProps,
             createEvent: input => {
-              //console.log('input at props : ' + JSON.stringify(input, null, 4));
               return(
                 mutate({
                     variables: input
