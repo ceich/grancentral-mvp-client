@@ -8,6 +8,7 @@ query($id: ID!) {
     id
     createdAt
     name
+    ownerId
     members {
       role
       user {

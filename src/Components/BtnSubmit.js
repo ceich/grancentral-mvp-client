@@ -9,8 +9,6 @@ class BtnSubmit extends React.Component{
 
     const propsClass = (customClass) ? customClass : '';
 
-    //console.log('text : ' + text);
-
     return(
       <button type="button" className={"btnSubmit " + propsClass} disabled={disabled} onClick={(event) => onClick(event)}>
         {text}
