@@ -24,39 +24,30 @@ class Avatar extends React.Component{
   }
 
   checkImg = async(user) => {
-    await Storage.list(avatarPath(user))
-      .then(result => {
-        if (result[0]) {
-          console.log('succeed on checkImg, imgKey(' + avatarPath(user) + ') : ' + JSON.stringify(result));
-          this.setState({imgFound : true});
-        } else {
-          console.log('image not found, imgKey(' + avatarPath(user) + ')');
-          this.setState({imgFound : false});
-        }
-      })
-      .catch(err => console.log('error, imgKey(' + avatarPath(user) + ') : ' + err));
+    if(user.id) {
+      await Storage.list(avatarPath(user))
+        .then(result => {
+          if (result[0]) {
+            this.setState({imgFound : true});
+          } else {
+            this.setState({imgFound : false});
+          }
+        })
+        .catch(err => console.log('error, imgKey(' + avatarPath(user) + ') : ' + err));
+    }
   }
 
   render() {
     const {imgFound} = this.state;
     const {user, ...props} = this.props;
 
-    /*
-    Storage.get(avatarPath(user))
-      .then(result => {
-        console.log('succeed on checkImg, imgKey(' + avatarPath(user) + ') : ' + JSON.stringify(result));
-      })
-      .catch(err => console.log('error, imgKey(' + avatarPath(user) + ') : ' + err));
-    */
-
     if (imgFound) {
-      //console.log('imgFound true, re-render');
       return(
-        <S3Image imgKey={avatarPath(user)} onError={(e) => {console.log('image not found : ' + avatarPath(user));}} {...props} />
+        <S3Image imgKey={avatarPath(user)} {...props} />
       );
     } else {
       return (
-        <img src={imgvoice} alt="member's " />
+        <S3Image src={imgvoice} {...props} />
       );
     }
   }

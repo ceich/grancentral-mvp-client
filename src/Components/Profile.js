@@ -11,6 +11,7 @@ import MutationUpdateUser from "../GraphQL/MutationUpdateUser";
 import RelationshipToElderDropdown from './RelationshipToElderDropdown';
 import './../CSS/Style.css';
 import BtnSubmit from './BtnSubmit';
+import heart from './../heart.svg';
 
 class Profile extends React.Component {
   static defaultProps = {
@@ -21,8 +22,6 @@ class Profile extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log('me : ' + JSON.stringify(this.props.me, null, 4));
-
     this.onImageLoad = this.onImageLoad.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleRoleChange = this.handleRoleChange.bind(this);
@@ -30,9 +29,6 @@ class Profile extends React.Component {
   }
 
   componentWillMount() {
-    console.log('componentWillMount got called, me : ' + JSON.stringify(this.props.me, null, 4));
-    //OTHER_aa
-
     let origRole = '';
     let tmpRole = '';
     let tmpRoleOther = '';
@@ -46,19 +42,17 @@ class Profile extends React.Component {
     this.setState({
         profile,
         roleOther : tmpRoleOther,
+        originalRole : origRole,
         isDisabled : 'disabled'
     });
 
   }
 
   onImageLoad(url) {
-    //console.log('onImageLoad got called');
     this.setState({ imageLoaded: url.startsWith('https://') }, () => this.checkAllInput());
   }
 
   handleChange(field, {target: { value }}) {
-    //console.log('handleChange got called');
-
     const tmpvalue = (field === 'role' && value === "please select") ? '' : value;
 
     if ((field === 'role') && (value !== "OTHER")) {
@@ -69,7 +63,6 @@ class Profile extends React.Component {
   }
 
   handleRoleChange(field, event) {
-    //console.log('handleRoleChange got called');
     if (field === 'role') {
       this.handleChange('role', event);
     } else {
@@ -78,14 +71,9 @@ class Profile extends React.Component {
   }
 
   checkAllInput() {
-    //console.log('checkAllInput got called');
     const {role, name} = this.state.profile;
     const {roleOther, imageLoaded} = this.state;
     const isDisabled = (role === "" || (role === 'OTHER' && roleOther === "") || name === "" || imageLoaded === null) ? 'disabled' : '';
-
-    //console.log('isDisabled : ' + isDisabled);
-    //console.log('role : ' + role);
-    //console.log('roleOther : ' + roleOther);
 
     this.setState({isDisabled : isDisabled});
   }
@@ -94,7 +82,7 @@ class Profile extends React.Component {
     e.preventDefault();
 
     const { updateUser, history } = this.props;
-    const { profile, imageLoaded, roleOther } = this.state;
+    const { profile, imageLoaded, roleOther, originalRole } = this.state;
 
     const finalRole = (profile.role === 'OTHER') ? profile.role + "_" + roleOther : profile.role;
 
@@ -118,49 +106,67 @@ class Profile extends React.Component {
         proxy.writeQuery({ query, data });
       }
     })
-    .then(() => history.push({pathname : '/account/new', state : {role : finalRole}}))
-    //.then(() => history.goBack())
+    .then(() => {
+      if (originalRole === "") {
+        history.push({pathname : '/account/new', state : {role : finalRole}});
+      } else {
+        history.goBack();
+      }
+    })
     .catch(err => console.log(err));
   }
 
   render() {
-    const { result } = this.props;
-    const { profile, roleOther, imageLoaded, isDisabled } = this.state;
-
-    //console.log('profile.render() got called');
-    //console.log('profile on profile.render : ' + JSON.stringify(profile, null, 4));
+    const { result, history } = this.props;
+    const { profile, roleOther, originalRole, imageLoaded, isDisabled } = this.state;
 
     if (result.loading) return('Loading...');
     if (result.error) return('Error: ' + result.error);
 
+    let customClass = (originalRole === "") ? "" : "hide";
+
     return profile && (
-      <div className="ui container raised very padded segment containerClass">
-        <h1 className="ui header">About you...</h1>
-        <div className="ui form">
-          <div className="field twelve wide avatar">
-            <Avatar user={profile} picker onLoad={this.onImageLoad} />
-          </div>
-          <div className="field twelve wide deleteImage">
-            <input type="checkbox" id="deleteAvatar" disabled={!imageLoaded}
-              value={profile.deleteAvatar}
-              onChange={this.handleChange.bind(this, 'deleteAvatar')}
-            />
-            <label htmlFor="deleteAvatar">Delete Image</label>
-          </div>
-          <div className="field twelve wide">
-            <label htmlFor="name">Name</label>
-            <input placeholder="Your Name" type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
-          </div>
-          <div className="field twelve wide">
-            <label htmlFor="relationship">Relationship To Elder</label>
-            <RelationshipToElderDropdown
-                valueRoleOther={roleOther}
-                valueSelect={profile.role}
-                queryProps={QueryGetRole}
-                onChange={this.handleRoleChange} />
-          </div>
-          <div className="ui buttons">
-            <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
+      <div>
+        <header className="App-header">
+          <img className="App-logo" src={heart} alt="heart" />
+        </header>
+        <div className="ui container raised very padded segment containerClass">
+          <h1 className="ui header">About you...</h1>
+          <div className="ui form">
+            <div className="field twelve wide avatar">
+              <Avatar user={profile} onLoad={this.onImageLoad} picker />
+            </div>
+            <div className="field twelve wide deleteImage">
+              <input type="checkbox" id="deleteAvatar" disabled={!imageLoaded}
+                value={profile.deleteAvatar}
+                onChange={this.handleChange.bind(this, 'deleteAvatar')}
+              />
+              <label htmlFor="deleteAvatar">Delete Image</label>
+            </div>
+            <div className="field twelve wide">
+              <label htmlFor="name">Name</label>
+              <input placeholder="Your Name" type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
+            </div>
+            <div className={"field twelve wide " + customClass}>
+              <label htmlFor="relationship">Relationship To Elder</label>
+              <RelationshipToElderDropdown
+                  valueRoleOther={roleOther}
+                  valueSelect={profile.role}
+                  queryProps={QueryGetRole}
+                  onChange={this.handleRoleChange} />
+            </div>
+
+            {
+              (originalRole === "") ?
+                  <div className="ui buttons">
+                    <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
+                  </div> :
+                  <div className="ui buttons">
+                    <button className="ui button" onClick={history.goBack}>Cancel</button>
+                    <div className="or"></div>
+                    <button className="ui positive button" onClick={this.handleSave}>Save</button>
+                  </div>
+            }
           </div>
         </div>
       </div>
@@ -172,8 +178,6 @@ class Profile extends React.Component {
 export default (props) => (
   <Query query={QueryMyAccounts}>
     {({ data, loading, error }) => {
-      //console.log('data at profile : ' + JSON.stringify(data));
-      //console.log('error at profile : ' + JSON.stringify(error));
       return (
         loading ? "Loading..." :
         error ? "Error" :

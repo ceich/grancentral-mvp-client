@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {graphql} from "react-apollo";
 import { v4 as uuid } from "uuid";
+import { VoicePlayer } from 'react-voice-components';
 
 import QueryMyAccounts from "../GraphQL/QueryMyAccounts";
 import QueryMe from "../GraphQL/QueryMe";
@@ -8,14 +9,14 @@ import MutationCreateAccount from "../GraphQL/MutationCreateAccount";
 
 import Moment from 'moment'
 import momentLocalizer from 'react-widgets-moment';
-//import Globalize from 'globalize';
-//import globalizeLocalizer from 'react-widgets-globalize';
 
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import 'react-widgets/dist/css/react-widgets.css'
 import './../CSS/Style.css';
 import imgvoice from './../img/imgvoice.png';
 import BtnSubmit from './BtnSubmit';
+import heart from './../heart.svg';
+
 
 Moment.locale('en');
 momentLocalizer(Moment);
@@ -25,8 +26,6 @@ const myaccount = [];
 class NewAccount extends Component {
   static defaultProps = { createAccount: () => null }
 
-  //state = { account: { name: '', birthday: '' }, isDisabled : 'disabled' }
-
   constructor(props) {
     super(props);
 
@@ -34,20 +33,18 @@ class NewAccount extends Component {
 
     const currentDate = new Date();
     const newDate = new Date((currentDate.getFullYear() - maxYears), (currentDate.getMonth()), currentDate.getDate());
-    //const newDateStr = (newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate())
-
-    //console.log('defaultDate : ' + newDate);
-
-    console.log('props : ' + JSON.stringify(this.props, null, 4));
 
     this.state = {
       account: { name: '', birthday: '' },
       isDisabled : 'disabled',
-      defaultDate : newDate
+      defaultDate : newDate,
+      voicePlayed : false,
+      namePronunciation : false
     }
 
     this.handleBirthdayChange = this.handleBirthdayChange.bind(this);
     this.checkAllInput = this.checkAllInput.bind(this);
+    this.handleClickVoice = this.handleClickVoice.bind(this);
   }
 
   handleChange(field, {target: { value }}) {
@@ -56,12 +53,19 @@ class NewAccount extends Component {
     this.setState({account}, () => this.checkAllInput());
   }
 
-  handleClick() {
-    alert("Sound Right ?");
+  handleClickVoice(isPlayed) {
+
+    let isNameCorrect = false;
+    if (!isPlayed) {
+      let confirmResult = window.confirm("Sound Right ?");
+      if (confirmResult) {
+        isNameCorrect = true;
+      }
+    }
+    this.setState({voicePlayed : isPlayed, namePronunciation : isNameCorrect}, () => this.checkAllInput());
   }
 
   handleBirthdayChange(value) {
-    console.log('on handleBirthdayChange : ' + value);
     const {account, defaultDate} = this.state;
 
     const newDate = (value) ? new Date(value) : defaultDate;
@@ -72,9 +76,9 @@ class NewAccount extends Component {
   }
 
   checkAllInput() {
-    //console.log('checkAllInput got called');
     const {name, birthday} = this.state.account;
-    const isDisabled = (name === "" || birthday === "") ? 'disabled' : '';
+    const {namePronunciation} = this.state;
+    const isDisabled = (name === "" || birthday === "" || !namePronunciation) ? 'disabled' : '';
     this.setState({isDisabled : isDisabled});
   }
 
@@ -93,58 +97,60 @@ class NewAccount extends Component {
     account.role = location.state.role;    // TODO: add UI for owner's relation to elder
     //account.birthday = '1948-12-23'; // TODO: add UI for birthday selection
 
-    console.log('user : ' + JSON.stringify(user));
-    console.log('account : ' + JSON.stringify(account));
 
     await createAccount(account);
 
-    console.log('account after create new account : ' + JSON.stringify(account));
-    console.log('myaccount after create new account : ' + JSON.stringify(myaccount, null, 4));
-
-    //console.log('id before push history to family album : ' + account.members[0].id);
-
-    //history.push('/');
     history.push({pathname : '/createFamilyAlbum', state : {account : myaccount[1].members}});
   }
 
   render() {
-    const {account, isDisabled, defaultDate} = this.state;
-
-    console.log('account on render : ' + JSON.stringify(account));
-    //console.log('birthdayDate on render : ' + birthdayDate);
+    const {account, isDisabled, defaultDate, voicePlayed} = this.state;
 
     let newDateStr = (defaultDate.getMonth() + 1) + '/' + defaultDate.getDate() + '/' + defaultDate.getFullYear();
 
-    //console.log('role : ' + this.props.location.state.role);
-    console.log('user : ' + JSON.stringify(this.props.user));
+    return (
+      <div>
+        <header className="App-header">
+          <img className="App-logo" src={heart} alt="heart" />
+        </header>
+        <div className="ui container raised very padded segment">
+          <h1 className="ui header">About your elder...</h1>
+          <div className="ui form">
+            <div className="field twelve wide">
+              <label htmlFor="name">Elder's Name</label>
+              <input type="text" placeholder="Enter Elder's Full Name" id="name" value={account.name} onChange={this.handleChange.bind(this, 'name')}/>
+            </div>
+            <div className="field twelve wide">
+              <input id="nameSound" className="nameSound" type="image" alt="Name Pronunciation" src={imgvoice} onClick={() => this.handleClickVoice(true)}/>
+              <label htmlFor="nameSound">Tap to hear how GranCentral will say "{this.state.account.name}"</label>
+              {
+                (voicePlayed) ?
+                    <VoicePlayer
+                      play
+                      onEnd={() => this.handleClickVoice(false)}
+                      text={account.name} /> :
+                    ""
 
-    return (<div className="ui container raised very padded segment">
-      <h1 className="ui header">About your elder...</h1>
-      <div className="ui form">
-        <div className="field twelve wide">
-          <label htmlFor="name">Elder's Name</label>
-          <input type="text" placeholder="Enter Elder's Full Name" id="name" value={account.name} onChange={this.handleChange.bind(this, 'name')}/>
-        </div>
-        <div className="field twelve wide">
-          <input id="nameSound" className="nameSound" type="image" alt="Name Pronunciation" src={imgvoice} onClick={this.handleClick.bind(this)}/>
-          <label htmlFor="nameSound">Tap to hear how GranCentral will say "{this.state.account.name}"</label>
-        </div>
-        <div className="field twelve wide">
-          <label htmlFor="name">Birthday</label>
-          <DateTimePicker
-            dateFormat={dt => String(dt.getDate())}
-            placeholder={newDateStr}
-            defaultCurrentDate={defaultDate}
-            onChange={(value) => this.handleBirthdayChange(value)}
-            format="M/D/YYYY"
-            time={false}
-          />
-        </div>
-        <div className="ui buttons">
-          <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
+              }
+            </div>
+            <div className="field twelve wide">
+              <label htmlFor="name">Birthday</label>
+              <DateTimePicker
+                dateFormat={dt => String(dt.getDate())}
+                placeholder={newDateStr}
+                defaultCurrentDate={defaultDate}
+                onChange={(value) => this.handleBirthdayChange(value)}
+                format="M/D/YYYY"
+                time={false}
+              />
+            </div>
+            <div className="ui buttons">
+              <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
+            </div>
+          </div>
         </div>
       </div>
-    </div>);
+    );
   }
 }
 
@@ -153,10 +159,7 @@ export default graphql(
     options: {
       refetchQueries: [{ query: QueryMyAccounts }],
       update: (proxy, { data: { createAccount: { account } } }) => {
-        console.log('update running ... : ' + JSON.stringify(account, null, 4));
         const query = QueryMyAccounts;
-
-        //console.log('query : ' + JSON.stringify(query, null, 4));
 
         //readQuery will be error on first try
         //const data = proxy.readQuery({ query });
@@ -164,16 +167,13 @@ export default graphql(
         try{
           data = proxy.readQuery({ query });
         } catch(err) {
-          console.log('err : ' + err);
+          //console.log('err : ' + err);
           data = proxy.readQuery({ query : QueryMe });
         }
 
 
-        console.log('filling members... : ' + JSON.stringify(data));
-
         var members = (data.me.members) ? data.me.members : [];
 
-        console.log('finish filling members');
         // Guard against multiple calls with optimisticResponse:
         // https://github.com/awslabs/aws-mobile-appsync-sdk-js/issues/65
         if (members.length === 0 ||
@@ -186,7 +186,6 @@ export default graphql(
 
           if(!data.me.members) {
             data.me.members = members;
-            console.log('copying members, data : ' + JSON.stringify(data));
           }
 
         }
@@ -195,18 +194,14 @@ export default graphql(
           members : account
         });
         proxy.writeQuery({ query, data });
-        console.log('proses update finished');
       }
     },
     props: (props) => ({
       createAccount: (account) => {
-        console.log('create account executed... ');
-        console.log('original account : ' + JSON.stringify(account, null, 4));
         return props.mutate({
           variables: account,
           optimisticResponse: () => {
 
-            console.log('optimistic response running .. ');
             return ({
               createAccount: {
                 __typename: 'CreateAccountResult',
