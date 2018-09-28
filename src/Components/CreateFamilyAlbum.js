@@ -15,7 +15,7 @@ class CreateFamilyAlbum extends Component {
   handleClick() {
     const { history } = this.props;
 
-    history.push({pathname : '/familyAlbum', state : {account : history.location.state.account}});
+    history.push({pathname : '/myPictures', state : {account : history.location.state.account}});
   }
 
   handleSave() {

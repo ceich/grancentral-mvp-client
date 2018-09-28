@@ -1,5 +1,5 @@
 import React from "react";
-import {compose, graphql} from "react-apollo";
+import { Mutation, Query } from "react-apollo";
 import { Link } from "react-router-dom";
 import { v4 as uuid } from 'uuid';
 import { Auth } from "aws-amplify";
@@ -88,47 +88,52 @@ class Timeline extends React.Component{
 
   async handleSubmit(event) {
     const { myfile: selectedFile } = this.state;
-    const { createEvent } = this.props;
-    const { account } = this.props.location.state;
+    const { accountId, createEvent, user: { id: userId } } = this.props;
+    
+    const text = "this is a trial";
 
-    const { identityId } = await Auth.currentCredentials();
-    //const { username: owner } = await Auth.currentUserInfo();
-
-    //await console.log('identityId : ' + JSON.stringify(identityId, null, 4));
-    //await console.log('owner : ' + JSON.stringify(owner, null, 4));
-
+    let media;
     if (selectedFile) {
-        let file;
-        let input;
         const { name: fileName, type: mimeType } = selectedFile;
 
         const [, , , extension] = /([^.]+)(\.(\w+))?$/.exec(fileName);
+        
+        const { identityId } = await Auth.currentCredentials();
 
         const key = `public/${identityId}/${uuid()}${extension && '.'}${extension}`;
         const bucket = awsmobile.aws_user_files_s3_bucket;
         const region = awsmobile.aws_user_files_s3_bucket_region;
 
-        file = {
+        media = {
             bucket,
             region,
             key,
             localUri: selectedFile,
             mimeType
         };
-
-
-        input = {
-          accountId : account.id,
-          text: "this is trial",
-          userId: account.members[0].user.id,
-          media: file,
-        };
-
-        await createEvent(input);
     }
 
+    await createEvent({
+      variables: { accountId, userId, text, media },
+      update: this.createEventUpdate
+    });
+  }
 
+  createEventUpdate(proxy, { data: { createEvent } }) {
+    const { accountId, id } = createEvent.event;
 
+    const query = QueryGetListEvents;
+    const variables = { accountId };
+    const data = proxy.readQuery({ query, variables });
+    
+    const items = data.listEvents.items;
+    // Guard against multiple calls with optimisticResponse:
+    // https://github.com/awslabs/aws-mobile-appsync-sdk-js/issues/65
+    if (items.length === 0 || items[items.length-1].id !== id) {
+      items.push(createEvent.event);
+    }
+
+    proxy.writeQuery({ query, variables, data });
   }
 
   render() {
@@ -187,8 +192,8 @@ class Timeline extends React.Component{
                   <input type="image" src={video} alt="upload new media" onClick={this.handleClick}/>
                   <input className="fileUpload" label="File to upload" type="file" onChange={this.handleUpload} ref={this.myRef}/>
 
-                  <Link to={{pathname : '/familyAlbum', state : {account : account}}}>
-                    <img src={plus} alt="add more family album"/>
+                  <Link to={{pathname : '/myPictures', state : {account : account}}}>
+                    <img src={plus} alt="add to family album"/>
                   </Link>
 
 
@@ -205,54 +210,19 @@ class Timeline extends React.Component{
   }
 }
 
-export default compose(
-  graphql(
-    QueryGetListEvents,
-    {
-      options: ({ location: { state: { account: {id} } } }) => {
-        return ({
-          variables: { accountId : id },
-          fetchPolicy: 'cache-and-network'
-        })
-      },
-      props: ({ data: { listEvents }}) => {
-        return({listEvents});
-      }
-    }
-  ),
-  graphql(
-    MutationCreateEvent,
-    {
-        options: {
-          update: (proxy, { data: { createEvent } }) => {
-            const { accountId } = createEvent.event;
-
-            const query = QueryGetListEvents;
-            const variables = { accountId };
-
-            const { listEvents } = proxy.readQuery({ query, variables });
-
-
-            listEvents["items"] = [...listEvents["items"], createEvent.event];
-
-            proxy.writeQuery({
-              query,
-              data: { listEvents: listEvents },
-              variables
-            });
-          }
-        },
-        props: ({ ownProps, mutate }) => ({
-            ...ownProps,
-            createEvent: input => {
-
-              return(
-                mutate({
-                    variables: input
-                })
-              );
-            }
-        })
-    }
-  )
-) (Timeline)
+export default (props) => (
+  <Query query={QueryGetListEvents}
+    variables={{ accountId: props.location.state.account.id }}>
+    {({ data, loading, error }) => (
+      (loading) ? "Loading..." :
+      (error) ? error :
+      <Mutation mutation={MutationCreateEvent} ignoreResults={true}>
+        {(createEvent) => (
+          <Timeline {...props}
+            listEvents={data.listEvents}
+            createEvent={createEvent} />
+        )}
+      </Mutation>
+    )}
+  </Query>
+);

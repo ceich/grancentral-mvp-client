@@ -14,8 +14,6 @@ query($id: ID!) {
       user {
         id
         name
-        #createdAt
-        #email
       }
     }
   }

@@ -121,7 +121,7 @@ class Profile extends React.Component {
     const { profile, roleOther, originalRole, imageLoaded, isDisabled } = this.state;
 
     if (result.loading) return('Loading...');
-    if (result.error) return('Error: ' + result.error);
+    if (result.error) return(result.error);
 
     let customClass = (originalRole === "") ? "" : "hide";
 

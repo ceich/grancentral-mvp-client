@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { compose, graphql } from "react-apollo";
+import { Mutation } from "react-apollo";
 
 import Avatar from "./Avatar";
 import QueryGetAccount from "../GraphQL/QueryGetAccount";
@@ -19,12 +19,24 @@ class AccountMembers extends Component {
 
   async handleDeleteClick(member, e) {
     e.preventDefault();
-    const{ accountId } = this.props;
+    const { accountId } = this.props;
+    const userId = member.user.id;
 
     if (window.confirm(`Are you sure you want to delete member ${member.user.name}?`)) {
       const { deleteMember } = this.props;
-      await deleteMember(member, accountId);
+      await deleteMember({
+        variables: { accountId, userId },
+        update: this.deleteMemberUpdate
+      });
     }
+  }
+  
+  deleteMemberUpdate(proxy, { data: { deleteMember: { member } } }) {
+    const query = QueryGetAccount;
+    const variables = { id: member.account.id };
+    const data = proxy.readQuery({ query, variables });
+    data.getAccount.members = data.getAccount.members.filter(m => m.user.id !== member.user.id);
+    proxy.writeQuery({ query, data });
   }
 
   toTitleCase(phrase) {
@@ -40,7 +52,6 @@ class AccountMembers extends Component {
   };
 
   renderMember = (member) => {
-
     return (<div className="member" key={member.user.id}>
       <div className="avatar">
         <Avatar user={member.user} />
@@ -78,91 +89,10 @@ class AccountMembers extends Component {
   }
 }
 
-export default compose(
-  graphql(QueryGetAccount, {
-    alias: 'QueryGetAccount',
-    options: ({ accountId: id }) => ({
-      fetchPolicy: 'cache-first',
-      variables: { id }
-    }),
-    props: ({ data: { getAccount = { members: [] } } }) => ({
-      members: getAccount.members
-    }),
-    // props: props => ({
-    //   members: props.data.getAccount.members,
-    //   subscribeToMembers: () => props.data.subscribeToMore({
-    //     document: SubscriptionAccountMembers,
-    //     variables: {
-    //       accountId: props.ownProps.accountId,
-    //     },
-    //     updateQuery: (prev, { subscriptionData: { data: { subscribeToAccountMembers } } }) => {
-    //       const res = {
-    //           ...prev,
-    //           ...{
-    //               getAccount: {
-    //                   ...prev.getAccount,
-    //                   members: {
-    //                       __typename: 'MemberConnections',
-    //                       items: [
-    //                           ...prev.getAccount.members.items.filter(c => {
-    //                               return (
-    //                                   c.content !== subscribeToAccountMembers.content &&
-    //                                   c.createdAt !== subscribeToAccountMembers.createdAt &&
-    //                                   c.memberId !== subscribeToAccountMembers.memberId
-    //                               );
-    //                           }),
-    //                           subscribeToAccountMembers,
-    //                       ]
-    //                   }
-    //               }
-    //           },
-    //       };
-    //
-    //       return res;
-    //     }
-    //   })
-    // }),
-  }),
-  graphql(MutationDeleteMember, {
-    alias: 'MutationDeleteMember',
-    options: {
-      refetchQueries: ({ data: { deleteMember: { member: { account: { id } } } } }) => (
-        [{ query: QueryGetAccount, variables: { id } }]
-      ),
-      update: (proxy, { data: { deleteMember: { member } } }) => {
-        const query = QueryGetAccount;
-        const variables = { id: member.account.id };
-        const data = proxy.readQuery({ query, variables });
-        data.getAccount.members = data.getAccount.members.filter(m => m.user.id !== member.user.id);
-        proxy.writeQuery({ query, data });
-      }
-    },
-    props: (props) => ({
-      deleteMember: (member, accountId) => {
-        return props.mutate({
-          variables: {
-            accountId: accountId,
-            userId: member.user.id
-          },
-          optimisticResponse: () => {
-            let tmpAccount = {
-              __typename: 'Account',
-              id : accountId
-            };
-
-            return ({
-              deleteMember: {
-                __typename: 'DeleteMemberResult',
-                member: {
-                  __typename: 'Member',
-                  account : tmpAccount,
-                  ...member
-                }
-              }
-            });
-          }
-        })
-      }
-    })
-  })
-)(AccountMembers);
+export default (props) => (
+  <Mutation mutation={MutationDeleteMember} ignoreResults={true}>
+    {(deleteMember) => (
+      <AccountMembers {...props} deleteMember={deleteMember} />
+    )}
+  </Mutation>
+);

@@ -20,7 +20,7 @@ import NewMember from './Components/NewMember';
 import Profile from './Components/Profile';
 import Signin from './Components/Signin';
 import CreateFamilyAlbum from './Components/CreateFamilyAlbum';
-import FamilyAlbum from './Components/FamilyAlbum';
+import MyPictures from './Components/MyPictures';
 import Timeline from './Components/Timeline';
 import TimelineDetail from './Components/TimelineDetail';
 
@@ -137,8 +137,8 @@ class App extends React.Component {
                  render={(props) => <Signin {...props} {...this.state} />} />
           <Route path="/createFamilyAlbum"
                  render={(props) => <CreateFamilyAlbum {...props} {...this.state} />} />
-          <Route path="/familyAlbum"
-                 render={(props) => <FamilyAlbum {...props} {...this.state} />} />
+          <Route path="/myPictures"
+                 render={(props) => <MyPictures {...props} {...this.state} />} />
           <Route path="/timeline"
                  render={(props) => <Timeline {...props} {...this.state} />} />
           <Route path="/timelineDetail"

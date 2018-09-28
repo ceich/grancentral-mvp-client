@@ -1,10 +1,8 @@
 import React, {Component} from "react";
-import {graphql} from "react-apollo";
-import { v4 as uuid } from "uuid";
+import {Mutation} from "react-apollo";
 import { VoicePlayer } from 'react-voice-components';
 
 import QueryMyAccounts from "../GraphQL/QueryMyAccounts";
-import QueryMe from "../GraphQL/QueryMe";
 import MutationCreateAccount from "../GraphQL/MutationCreateAccount";
 
 import Moment from 'moment'
@@ -17,11 +15,8 @@ import imgvoice from './../img/imgvoice.png';
 import BtnSubmit from './BtnSubmit';
 import heart from './../heart.svg';
 
-
 Moment.locale('en');
 momentLocalizer(Moment);
-
-const myaccount = [];
 
 class NewAccount extends Component {
   static defaultProps = { createAccount: () => null }
@@ -29,10 +24,12 @@ class NewAccount extends Component {
   constructor(props) {
     super(props);
 
-    const maxYears = 65;
+    const defaultAge = 65;
 
-    const currentDate = new Date();
-    const newDate = new Date((currentDate.getFullYear() - maxYears), (currentDate.getMonth()), currentDate.getDate());
+    const today = new Date();
+    const newDate = new Date((today.getFullYear() - defaultAge),
+                             today.getMonth(),
+                             today.getDate());
 
     this.state = {
       account: { name: '', birthday: '' },
@@ -87,20 +84,23 @@ class NewAccount extends Component {
     e.preventDefault();
 
     const { createAccount, history, user, location } = this.props;
-    const { account} = this.state;
-    account.ownerId = user.id;
+    const { account } = this.state;
+    const variables = {
+      name: account.name,
+      ownerId: user.id,
+      role: location.state.role,
+      birthday: account.birthday
+    };
 
+    const { data: { createAccount: { account: newAccount } } } = await createAccount({
+      variables,
+      refetchQueries: [{query: QueryMyAccounts}]
+    });
 
-
-
-    //account.role = 'son-in-law';    // TODO: add UI for owner's relation to elder
-    account.role = location.state.role;    // TODO: add UI for owner's relation to elder
-    //account.birthday = '1948-12-23'; // TODO: add UI for birthday selection
-
-
-    await createAccount(account);
-
-    history.push({pathname : '/createFamilyAlbum', state : {account : myaccount[1].members}});
+    history.push({
+      pathname: '/createFamilyAlbum',
+      state: { account: newAccount }
+    });
   }
 
   render() {
@@ -154,83 +154,10 @@ class NewAccount extends Component {
   }
 }
 
-export default graphql(
-  MutationCreateAccount, {
-    options: {
-      refetchQueries: [{ query: QueryMyAccounts }],
-      update: (proxy, { data: { createAccount: { account } } }) => {
-        const query = QueryMyAccounts;
-
-        //readQuery will be error on first try
-        //const data = proxy.readQuery({ query });
-        let data = null;
-        try{
-          data = proxy.readQuery({ query });
-        } catch(err) {
-          //console.log('err : ' + err);
-          data = proxy.readQuery({ query : QueryMe });
-        }
-
-
-        var members = (data.me.members) ? data.me.members : [];
-
-        // Guard against multiple calls with optimisticResponse:
-        // https://github.com/awslabs/aws-mobile-appsync-sdk-js/issues/65
-        if (members.length === 0 ||
-            members[members.length-1].account.id !== account.id) {
-          members.push({
-            __typename: 'Member',
-            role: account.members[0].role, // TODO: should not be hardcoded
-            account: account
-          });
-
-          if(!data.me.members) {
-            data.me.members = members;
-          }
-
-        }
-        //members : data.me.members
-        myaccount.push({
-          members : account
-        });
-        proxy.writeQuery({ query, data });
-      }
-    },
-    props: (props) => ({
-      createAccount: (account) => {
-        return props.mutate({
-          variables: account,
-          optimisticResponse: () => {
-
-            return ({
-              createAccount: {
-                __typename: 'CreateAccountResult',
-                account: {
-                  __typename: 'Account',
-                  id: uuid(),
-                  createdAt: Date.now(),
-                  name: account.name,
-                  ownerId: account.ownerId,
-                  elders: [{
-                    __typename: 'Elder',
-                    name: account.name,
-                    birthday: account.birthday
-                  }],
-                  members: [{
-                    __typename: 'Member',
-                    user: {
-                      __typename: 'User',
-                      id: account.ownerId
-                    },
-                    role: account.role
-                  }]
-                }
-              }
-            });
-          }
-
-        })
-      }
-    })
-  }
-)(NewAccount);
+export default (props) => (
+  <Mutation mutation={MutationCreateAccount}>
+    {(createAccount) => (
+      <NewAccount {...props} createAccount={createAccount} />
+    )}
+  </Mutation>
+);

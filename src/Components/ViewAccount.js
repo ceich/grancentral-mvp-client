@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { graphql } from "react-apollo";
+import { Query } from "react-apollo";
 import { Link } from "react-router-dom";
 
 import QueryGetAccount from "../GraphQL/QueryGetAccount";
@@ -50,12 +50,12 @@ class ViewAccount extends Component {
   }
 }
 
-export default graphql(QueryGetAccount, {
-  options: ({ match: { params: { id } } }) => {
-    return ({
-      variables: { id },
-      fetchPolicy: 'cache-and-network'
-    })
-  },
-  props: ({ data: { getAccount: account }, loading }) => ({account, loading})
-},)(ViewAccount);
+export default (props) => (
+  <Query query={QueryGetAccount} variables={{ id: props.match.params.id }}>
+    {({ data, loading, error }) => (
+      (loading) ? "Loading..." :
+      (error) ? error :
+      <ViewAccount account={data.getAccount} {...props} />
+    )}
+  </Query>
+);

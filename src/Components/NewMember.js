@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { compose, graphql } from "react-apollo";
+import { Query, Mutation } from "react-apollo";
 import { Link } from "react-router-dom";
 
 import QueryGetAccount from "../GraphQL/QueryGetAccount";
@@ -68,7 +68,6 @@ class NewMember extends Component {
 
     const finalRole = (role === 'OTHER') ? role + "_" + roleOther : role;
 
-
     if (name.length === 0 || email.length < 5) {
       alert('invalid name or email');
       return;
@@ -81,37 +80,48 @@ class NewMember extends Component {
 
     // In-app user creation uses a placeholder id === email
     const { data: { findOrCreateUser: { user } } } = await findOrCreateUser({
-      id: email,
-      name,
-      email
+      variables: {
+        id: email,
+        name,
+        email
+      }
     });
 
     if (user && user.id) {
-      const member = {
-        name,
-        email,
+      const variables = {
         accountId: account.id,
         userId: user.id,
         role: finalRole
       }
 
-      await createMember(member);
+      await createMember({ variables, update: this.createMemberUpdate });
+      
+      history.push("/account/" + account.id);
+    } // else remain on this page
+  }
+  
+  createMemberUpdate = (proxy, { data: { createMember: { member } } }) => {
+    const { account: { id }, user: { id: userId } } = member;
+
+    const query = QueryGetAccount;
+    const variables = { id };
+    const data = proxy.readQuery({ query, variables });
+
+    const members = data.getAccount.members;
+    // Guard against multiple calls with optimisticResponse:
+    // https://github.com/awslabs/aws-mobile-appsync-sdk-js/issues/65
+    if (members.length === 0 ||
+        members[members.length-1].user.id !== userId) {
+      members.push(member);
     }
 
-    history.push("/account/" + account.id);
+    proxy.writeQuery({ query, data });
   }
 
   render() {
     const { member, isDisabled } = this.state;
     const { account } = this.props;
 
-    /*
-          <select id="role" value={member.role} onChange={this.handleChange.bind(this, 'role')}>
-            {'owner elder family neighbor caregiver'.split(' ').map((r,i) => (
-              <option value={r} key={i}>{r}</option>
-            ))}
-          </select>
-    */
     return (
       <div>
         <header className="App-header">
@@ -152,97 +162,22 @@ class NewMember extends Component {
   }
 }
 
-export default compose(
-  graphql(
-    QueryGetAccount,
-    {
-      options: ({ match: { params: { id } } }) => {
-        return ({
-          variables: { id },
-          fetchPolicy: 'cache-and-network'
-        })
-      },
-      props: ({ data: { getAccount: account } }) => {
-        return({account});
-      }
-    }
-  ),
-  graphql(
-    MutationCreateMember,
-    {
-      options: {
-        refetchQueries: ({ data: { createMember: { member : { account: { id } } } } }) => (
-          [{ query: QueryGetAccount, variables: { id } }]
-        ),
-        update: (proxy, { data: { createMember } }) => {
-          const { account: { id }, user: { id: userId } } = createMember.member;
-
-          const query = QueryGetAccount;
-          const variables = { id };
-          const data = proxy.readQuery({ query, variables });
-
-          const members = data.getAccount.members;
-          // Guard against multiple calls with optimisticResponse:
-          // https://github.com/awslabs/aws-mobile-appsync-sdk-js/issues/65
-
-          if (members.length === 0 ||
-              members[members.length-1].user.id !== userId) {
-            members.push(createMember);
-          }
-
-          proxy.writeQuery({ query, data });
-        }
-      },
-      props: (props) => ({
-        createMember: ({ name, email, ...input }) => {
-
-          return props.mutate({
-            variables: input,
-            optimisticResponse: () => {
-
-              return({
-                    createMember: {
-                      __typename: 'CreateMemberResult',
-                      member: {
-                        __typename: 'Member',
-                        account: {
-                          __typename: 'Account',
-                          id: input.accountId
-                        },
-                        user: {
-                          __typename: 'User',
-                          id: input.userId,
-                          name,
-                          email,
-                          createdAt: Date.now()
-                        },
-                        role: input.role
-                      }
-                    }
-                  });
-            }
-          })
-        }
-      })
-    }
-  ),
-  graphql(
-    MutationFindOrCreateUser,
-    {
-      props: (props) => ({
-        findOrCreateUser: (input) => {
-
-          return props.mutate({
-            variables: input,
-            optimisticResponse: {
-              findOrCreateUser: {
-                __typename: 'FindOrCreateUserResult',
-                user: { ...input, __typename: 'User' }
-              }
-            }
-          });
-        }
-      })
-    }
-  )
-)(NewMember);
+export default (props) => (
+  <Query query={QueryGetAccount} variables={{ id: props.match.params.id }}>
+    {({ data: { getAccount }, loading, error }) => (
+      (loading) ? "Loading..." :
+      (error) ? "Error:" + error :
+      <Mutation mutation={MutationFindOrCreateUser} ignoreResults={true}>
+        {(findOrCreateUser) => (
+          <Mutation mutation={MutationCreateMember} ignoreResults={true}>
+            {(createMember) => (
+              <NewMember {...props} account={getAccount}
+                findOrCreateUser={findOrCreateUser}
+                createMember={createMember} />
+            )}
+          </Mutation>
+        )}
+      </Mutation>
+    )}
+  </Query>
+);
