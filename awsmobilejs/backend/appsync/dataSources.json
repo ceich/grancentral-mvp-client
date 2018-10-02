@@ -23,6 +23,11 @@
             }
         },
         {
+            "name": "None",
+            "description": "Null DataSource",
+            "type": "NONE",
+        },
+        {
             "name": "MemberTable",
             "description": "DataSource for Amazon DynamoDB table MemberTable (arn:aws:dynamodb:us-west-2:305905853980:table/MemberTable)",
             "type": "AMAZON_DYNAMODB",

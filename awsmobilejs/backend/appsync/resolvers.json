@@ -7,6 +7,13 @@
         "responseMappingTemplate": "{managed-by-awsmobile-cli}:Account.members.response"
     },
     {
+        "typeName": "Event",
+        "fieldName": "media",
+        "dataSourceName": "None",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Event.media.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Event.media.response"
+    },
+    {
         "typeName": "Member",
         "fieldName": "account",
         "dataSourceName": "AccountTable",
@@ -99,9 +106,23 @@
     },
     {
         "typeName": "User",
+        "fieldName": "avatar",
+        "dataSourceName": "None",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:User.avatar.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:User.avatar.response"
+    },
+    {
+        "typeName": "User",
         "fieldName": "members",
         "dataSourceName": "MemberTable",
         "requestMappingTemplate": "{managed-by-awsmobile-cli}:User.members.request",
         "responseMappingTemplate": "{managed-by-awsmobile-cli}:User.members.response"
+    },
+    {
+        "typeName": "User",
+        "fieldName": "pictures",
+        "dataSourceName": "None",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:User.pictures.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:User.pictures.response"
     }
 ]
