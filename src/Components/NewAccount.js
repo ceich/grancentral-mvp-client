@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Mutation} from "react-apollo";
-import { VoicePlayer } from 'react-voice-components';
+import VoicePlayer from '../lib/VoicePlayer';
 
 import QueryMyAccounts from "../GraphQL/QueryMyAccounts";
 import MutationCreateAccount from "../GraphQL/MutationCreateAccount";
