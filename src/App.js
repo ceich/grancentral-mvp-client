@@ -10,7 +10,6 @@ import appSyncConfig from './AppSync';
 import aws_exports from './aws-exports';
 import './CSS/App.css';
 
-import QueryMe from "./GraphQL/QueryMe";
 import MutationFindOrCreateUser from './GraphQL/MutationFindOrCreateUser';
 
 import MyAccounts from './Components/MyAccounts';
@@ -26,6 +25,7 @@ import TimelineDetail from './Components/TimelineDetail';
 
 Amplify.configure(aws_exports);
 
+// Hosted login configuration
 const oauth = {
   domain: 'auth.grancentral.ai',
   label: 'Hosted Login',  // default label for OAuthButton (unused)
@@ -34,7 +34,6 @@ const oauth = {
   responseType: 'code',
   scope: [ 'email', 'profile' ] // hosted auth uses User Pool settings
 }
-
 Amplify.configure({ oauth });
 
 // Amplify.Logger.LOG_LEVEL = 'DEBUG';
@@ -53,6 +52,10 @@ class App extends React.Component {
     Hub.listen('auth', this);
 
     this.state = {
+      s3Opts: { // Utility object for S3 access
+        bucket: aws_exports.aws_user_files_s3_bucket,
+        region: aws_exports.aws_user_files_s3_bucket_region
+      },
       user: null // NB: AppSync user, not Cognito user
     };
   }
@@ -106,8 +109,6 @@ class App extends React.Component {
       update: (proxy, { data: { findOrCreateUser: { user } } }) => {
         if (!user) return;
         //console.log('Setting user to:', user);
-        // Write the response into the cache for "me" Query
-        proxy.writeQuery({ query: QueryMe, data: { me: user } });
         // Update the state with the server response
         this.setState({ user });
       }
@@ -157,11 +158,11 @@ class App extends React.Component {
 const WithProvider = (props) => (
   <ApolloProvider client={new AWSAppSyncClient(
     {
-  	  url: appSyncConfig.graphqlEndpoint,
-  	  region: appSyncConfig.region,
-  	  auth: {
-    		type: appSyncConfig.authenticationType,
-    		jwtToken: async () => (await Auth.currentSession()
+      url: appSyncConfig.graphqlEndpoint,
+      region: appSyncConfig.region,
+      auth: {
+        type: appSyncConfig.authenticationType,
+        jwtToken: async () => (await Auth.currentSession()
           .then(data => {
             return data
           })
@@ -171,10 +172,10 @@ const WithProvider = (props) => (
             props.OAuthSignIn();
           })
         ).getAccessToken().getJwtToken()
-  	  },
+      },
       complexObjectsCredentials: () => Auth.currentCredentials(),
       disableOffline : true
-  	}
+    }
   )}>
     <Rehydrated>
       <Mutation mutation={MutationFindOrCreateUser}>
