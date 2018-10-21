@@ -2,6 +2,80 @@
 # yarn lockfile v1
 
 
+"@aws-amplify/analytics@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/analytics/-/analytics-1.2.4.tgz#68ab464d01b298818ff7ad36431a5c042b1fb04e"
+  dependencies:
+    "@aws-amplify/cache" "^1.0.16"
+    "@aws-amplify/core" "^1.0.16"
+    uuid "^3.2.1"
+
+"@aws-amplify/api@^1.0.18":
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/api/-/api-1.0.18.tgz#eee9cb961065beb7ef24d342c42a92a41047cc6a"
+  dependencies:
+    "@aws-amplify/auth" "^1.2.7"
+    "@aws-amplify/cache" "^1.0.16"
+    "@aws-amplify/core" "^1.0.16"
+    "@types/zen-observable" "^0.5.3"
+    axios "^0.17.0"
+    graphql "0.13.0"
+    uuid "^3.2.1"
+    zen-observable "^0.8.6"
+
+"@aws-amplify/auth@^1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/auth/-/auth-1.2.7.tgz#919019d91f024755c2fde2386e4965d2e3b1dd4c"
+  dependencies:
+    "@aws-amplify/cache" "^1.0.16"
+    "@aws-amplify/core" "^1.0.16"
+    amazon-cognito-auth-js "^1.1.9"
+    amazon-cognito-identity-js "^3.0.3"
+
+"@aws-amplify/cache@^1.0.16":
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/cache/-/cache-1.0.16.tgz#4b36813f38b0c87851f8809972e0d1d8493bcc40"
+  dependencies:
+    "@aws-amplify/core" "^1.0.16"
+
+"@aws-amplify/core@^1.0.16":
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/core/-/core-1.0.16.tgz#7236548144eaa65ccb1cbb0bc804003a2465b7bd"
+  dependencies:
+    aws-sdk "2.329.0"
+    url "^0.11.0"
+
+"@aws-amplify/interactions@^1.0.16":
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/interactions/-/interactions-1.0.16.tgz#d9da03d82c48b92b37d810754eba5d031beb12c5"
+  dependencies:
+    "@aws-amplify/core" "^1.0.16"
+
+"@aws-amplify/pubsub@^1.0.16":
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/pubsub/-/pubsub-1.0.16.tgz#9b4a029c941c6250c5500d357fa869134e02a885"
+  dependencies:
+    "@aws-amplify/core" "^1.0.16"
+    "@types/zen-observable" "^0.5.3"
+    uuid "^3.2.1"
+    zen-observable "^0.8.6"
+
+"@aws-amplify/storage@^1.0.16":
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/storage/-/storage-1.0.16.tgz#84b2a0712ee30e6d27920a04a79ff03197252bcd"
+  dependencies:
+    "@aws-amplify/core" "^1.0.16"
+
+"@aws-amplify/ui@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/ui/-/ui-1.0.7.tgz#300f823c3447611e67c022b8ae63b3832857d4a4"
+
+"@aws-amplify/xr@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/xr/-/xr-0.1.6.tgz#c77a587b73d21dafac526352bb01d2a1404be945"
+  dependencies:
+    "@aws-amplify/core" "^1.0.16"
+
 "@redux-offline/redux-offline@^2.2.1":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@redux-offline/redux-offline/-/redux-offline-2.4.0.tgz#7a9ca81c34033b2814c5faef9033261178b8d122"
@@ -12,10 +86,6 @@
 "@types/async@2.0.49":
   version "2.0.49"
   resolved "http://registry.npmjs.org/@types/async/-/async-2.0.49.tgz#92e33d13f74c895cb9a7f38ba97db8431ed14bc0"
-
-"@types/paho-mqtt@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@types/paho-mqtt/-/paho-mqtt-1.0.3.tgz#2eda0886584e1e69551f5203934878c326fe3566"
 
 "@types/zen-observable@0.8.0", "@types/zen-observable@^0.8.0":
   version "0.8.0"
@@ -118,12 +188,12 @@ amazon-cognito-auth-js@^1.1.9:
   dependencies:
     js-cookie "^2.1.4"
 
-amazon-cognito-identity-js@^2.0.13:
-  version "2.0.30"
-  resolved "https://registry.yarnpkg.com/amazon-cognito-identity-js/-/amazon-cognito-identity-js-2.0.30.tgz#120d16ec15bf980e64d05911bb755662fc1a9af1"
+amazon-cognito-identity-js@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/amazon-cognito-identity-js/-/amazon-cognito-identity-js-3.0.3.tgz#4095ee649648c10d725517ed82e7b53f19644814"
   dependencies:
     buffer "4.9.1"
-    crypto-browserify "1.0.9"
+    crypto-js "^3.1.9-1"
     js-cookie "^2.1.4"
 
 amdefine@>=0.0.4:
@@ -180,7 +250,7 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-apollo-cache-inmemory@^1.0.0, apollo-cache-inmemory@^1.2.5:
+apollo-cache-inmemory@^1.0.0:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/apollo-cache-inmemory/-/apollo-cache-inmemory-1.3.5.tgz#7628ee598271cfffa611e15a7ce67652a84b07b0"
   dependencies:
@@ -194,7 +264,7 @@ apollo-cache@1.1.17, apollo-cache@^1.1.17:
   dependencies:
     apollo-utilities "^1.0.21"
 
-apollo-client@2.4.2, apollo-client@^2.3.5:
+apollo-client@2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-2.4.2.tgz#d2f044d8740723bf98a6d8d8b9684ee8c36150e6"
   dependencies:
@@ -226,7 +296,7 @@ apollo-link-http-common@^0.2.5:
   dependencies:
     apollo-link "^1.2.3"
 
-apollo-link-http@^1.0.0, apollo-link-http@^1.5.4:
+apollo-link-http@^1.0.0:
   version "1.5.5"
   resolved "https://registry.yarnpkg.com/apollo-link-http/-/apollo-link-http-1.5.5.tgz#7dbe851821771ad67fa29e3900c57f38cbd80da8"
   dependencies:
@@ -437,29 +507,27 @@ autoprefixer@^6.3.1:
     postcss "^5.2.16"
     postcss-value-parser "^3.2.3"
 
-aws-amplify-react@^0.1.52:
-  version "0.1.54"
-  resolved "https://registry.yarnpkg.com/aws-amplify-react/-/aws-amplify-react-0.1.54.tgz#1ac5fefcc9441fc2f7eaea237f305c854611b516"
+aws-amplify-react@^2.1.0:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/aws-amplify-react/-/aws-amplify-react-2.1.1.tgz#b19ca1caaa4194b41c24a6223ba8fa40494bfa36"
   dependencies:
-    aws-amplify "^0.4.8"
+    "@aws-amplify/ui" "^1.0.7"
     qrcode.react "^0.8.0"
     regenerator-runtime "^0.11.1"
 
-aws-amplify@^0.4.6, aws-amplify@^0.4.8:
-  version "0.4.8"
-  resolved "https://registry.yarnpkg.com/aws-amplify/-/aws-amplify-0.4.8.tgz#82b9028d80fa83597c25eaaeadbfcc3761d4d967"
+aws-amplify@^1.1.0:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/aws-amplify/-/aws-amplify-1.1.7.tgz#f0f5e1562a7e397ae58e2281f0fa0a1395823301"
   dependencies:
-    "@types/paho-mqtt" "^1.0.3"
-    "@types/zen-observable" "^0.5.3"
-    amazon-cognito-auth-js "^1.1.9"
-    amazon-cognito-identity-js "^2.0.13"
-    aws-sdk "2.198.0"
-    axios "^0.17.0"
-    graphql "0.11.7"
-    paho-mqtt "^1.0.4"
-    url "^0.11.0"
-    uuid "^3.2.1"
-    zen-observable "^0.8.6"
+    "@aws-amplify/analytics" "^1.2.4"
+    "@aws-amplify/api" "^1.0.18"
+    "@aws-amplify/auth" "^1.2.7"
+    "@aws-amplify/cache" "^1.0.16"
+    "@aws-amplify/core" "^1.0.16"
+    "@aws-amplify/interactions" "^1.0.16"
+    "@aws-amplify/pubsub" "^1.0.16"
+    "@aws-amplify/storage" "^1.0.16"
+    "@aws-amplify/xr" "^0.1.6"
 
 aws-appsync-react@^1.1.3:
   version "1.2.0"
@@ -485,20 +553,6 @@ aws-appsync@^1.3.3:
     setimmediate "^1.0.5"
     url "^0.11.0"
     uuid "3.x"
-
-aws-sdk@2.198.0:
-  version "2.198.0"
-  resolved "http://registry.npmjs.org/aws-sdk/-/aws-sdk-2.198.0.tgz#2245311337ddc844cc34c13f3fcf3b7ea843f434"
-  dependencies:
-    buffer "4.9.1"
-    events "^1.1.1"
-    jmespath "0.15.0"
-    querystring "0.2.0"
-    sax "1.2.1"
-    url "0.10.3"
-    uuid "3.1.0"
-    xml2js "0.4.17"
-    xmlbuilder "4.2.1"
 
 aws-sdk@2.329.0:
   version "2.329.0"
@@ -1625,10 +1679,6 @@ classnames@^2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 
-cldrjs@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/cldrjs/-/cldrjs-0.5.0.tgz#37be92d8d1a8e66c8ee12f1303ed316d85d8eb37"
-
 clean-css@4.1.x:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/clean-css/-/clean-css-4.1.11.tgz#2ecdf145aba38f54740f26cefd0ff3e03e125d6a"
@@ -1906,10 +1956,6 @@ cross-spawn@5.1.0, cross-spawn@^5.0.1, cross-spawn@^5.1.0:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
-crypto-browserify@1.0.9:
-  version "1.0.9"
-  resolved "http://registry.npmjs.org/crypto-browserify/-/crypto-browserify-1.0.9.tgz#cc5449685dfb85eb11c9828acc7cb87ab5bbfcc0"
-
 crypto-browserify@^3.11.0:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/crypto-browserify/-/crypto-browserify-3.12.0.tgz#396cf9f3137f03e4b8e532c58f698254e00f80ec"
@@ -1925,6 +1971,10 @@ crypto-browserify@^3.11.0:
     public-encrypt "^4.0.0"
     randombytes "^2.0.0"
     randomfill "^1.0.3"
+
+crypto-js@^3.1.9-1:
+  version "3.1.9-1"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
 
 crypto-random-string@^1.0.0:
   version "1.0.0"
@@ -2057,10 +2107,6 @@ dashdash@^1.12.0:
 date-arithmetic@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/date-arithmetic/-/date-arithmetic-3.1.0.tgz#1fcd03dbd504b9dbee2b9078c85a5f1c7d3cc2d3"
-
-date-fns@^2.0.0-alpha.7:
-  version "2.0.0-alpha.23"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.0.0-alpha.23.tgz#d3384f4628de78a4819fb3292286c8fa77cb175d"
 
 date-now@^0.1.4:
   version "0.1.4"
@@ -2668,7 +2714,7 @@ eventemitter3@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.0.tgz#090b4d6cdbd645ed10bf750d4b5407942d7ba163"
 
-events@1.1.1, events@^1.0.0, events@^1.1.1:
+events@1.1.1, events@^1.0.0:
   version "1.1.1"
   resolved "http://registry.npmjs.org/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
 
@@ -3181,12 +3227,6 @@ global-prefix@^1.0.1:
     is-windows "^1.0.1"
     which "^1.2.14"
 
-globalize@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/globalize/-/globalize-1.4.0.tgz#4c00a79de67d739a9b7ff83b66b90d0257c27493"
-  dependencies:
-    cldrjs "^0.5.0"
-
 globals@^9.17.0, globals@^9.18.0:
   version "9.18.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.18.0.tgz#aa3896b3e69b487f17e31ed2143d69a8e30c2d8a"
@@ -3236,17 +3276,17 @@ graphql-tag@^2.9.2:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.0.tgz#87da024be863e357551b2b8700e496ee2d4353ae"
 
-graphql@0.11.7, graphql@^0.11.7:
+graphql@0.13.0:
+  version "0.13.0"
+  resolved "http://registry.npmjs.org/graphql/-/graphql-0.13.0.tgz#d1b44a282279a9ce0a6ec1037329332f4c1079b6"
+  dependencies:
+    iterall "1.1.x"
+
+graphql@^0.11.7:
   version "0.11.7"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.11.7.tgz#e5abaa9cb7b7cccb84e9f0836bf4370d268750c6"
   dependencies:
     iterall "1.1.3"
-
-graphql@^0.13.2:
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.13.2.tgz#4c740ae3c222823e7004096f832e7b93b2108270"
-  dependencies:
-    iterall "^1.2.1"
 
 growly@^1.3.0:
   version "1.3.0"
@@ -4036,9 +4076,9 @@ iterall@1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.1.3.tgz#1cbbff96204056dde6656e2ed2e2226d0e6d72c9"
 
-iterall@^1.2.1:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.2.2.tgz#92d70deb8028e0c39ff3164fdbf4d8b088130cd7"
+iterall@1.1.x:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.1.4.tgz#0db40d38fdcf53ae14dc8ec674e62ab190d52cfc"
 
 jest-changed-files@^20.0.3:
   version "20.0.3"
@@ -4562,7 +4602,7 @@ lodash.uniq@^4.5.0:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
-lodash@^4.0.0, lodash@^4.17.4, lodash@^4.2.1:
+lodash@^4.17.4, lodash@^4.2.1:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
@@ -5216,10 +5256,6 @@ package-json@^4.0.0:
     registry-auth-token "^3.0.1"
     registry-url "^3.0.3"
     semver "^5.1.0"
-
-paho-mqtt@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/paho-mqtt/-/paho-mqtt-1.0.4.tgz#279822dd8ea00a961bf141f03d09c9f4339ebb79"
 
 pako@~1.0.5:
   version "1.0.6"
@@ -6016,10 +6052,6 @@ react-transition-group@^2.4.0:
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
 
-react-widgets-date-fns@^4.0.20:
-  version "4.0.21"
-  resolved "https://registry.yarnpkg.com/react-widgets-date-fns/-/react-widgets-date-fns-4.0.21.tgz#8b828900e89996a8dfc91ff35ff0040f4c780523"
-
 react-widgets-moment@^4.0.20:
   version "4.0.22"
   resolved "https://registry.yarnpkg.com/react-widgets-moment/-/react-widgets-moment-4.0.22.tgz#3d462499f4d73e8cd9b101e925dd530ecf3b4bc4"
@@ -6684,10 +6716,6 @@ source-map@^0.4.4:
 source-map@^0.6.1, source-map@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
-
-spark-md5@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/spark-md5/-/spark-md5-3.0.0.tgz#3722227c54e2faf24b1dc6d933cc144e6f71bfef"
 
 spdx-correct@^3.0.0:
   version "3.0.0"
@@ -7597,25 +7625,12 @@ xml-name-validator@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/xml-name-validator/-/xml-name-validator-2.0.1.tgz#4d8b8f1eccd3419aa362061becef515e1e559635"
 
-xml2js@0.4.17:
-  version "0.4.17"
-  resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.4.17.tgz#17be93eaae3f3b779359c795b419705a8817e868"
-  dependencies:
-    sax ">=0.6.0"
-    xmlbuilder "^4.1.0"
-
 xml2js@0.4.19:
   version "0.4.19"
   resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.4.19.tgz#686c20f213209e94abf0d1bcf1efaa291c7827a7"
   dependencies:
     sax ">=0.6.0"
     xmlbuilder "~9.0.1"
-
-xmlbuilder@4.2.1, xmlbuilder@^4.1.0:
-  version "4.2.1"
-  resolved "http://registry.npmjs.org/xmlbuilder/-/xmlbuilder-4.2.1.tgz#aa58a3041a066f90eaa16c2f5389ff19f3f461a5"
-  dependencies:
-    lodash "^4.0.0"
 
 xmlbuilder@~9.0.1:
   version "9.0.7"
