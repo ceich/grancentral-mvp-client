@@ -157,24 +157,22 @@ class App extends React.Component {
 const WithProvider = (props) => (
   <ApolloProvider client={new AWSAppSyncClient(
     {
-  	  url: appSyncConfig.graphqlEndpoint,
-  	  region: appSyncConfig.region,
-  	  auth: {
-    		type: appSyncConfig.authenticationType,
-    		jwtToken: async () => (await Auth.currentSession()
-          .then(data => {
-            return data
-          })
+      url: appSyncConfig.graphqlEndpoint,
+      region: appSyncConfig.region,
+      auth: {
+        type: appSyncConfig.authenticationType,
+        jwtToken: async () => (await Auth.currentSession()
+          .then(data => { return data })
           .catch(err => {
             console.log('while getting jwtToken: no current session');
             console.log('err : ' + err);
             props.OAuthSignIn();
           })
         ).getAccessToken().getJwtToken()
-  	  },
+       },
       complexObjectsCredentials: () => Auth.currentCredentials(),
       disableOffline : true
-  	}
+    }
   )}>
     <Rehydrated>
       <Mutation mutation={MutationFindOrCreateUser}>
