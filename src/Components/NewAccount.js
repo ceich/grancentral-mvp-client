@@ -8,7 +8,7 @@ import MutationCreateAccount from "../GraphQL/MutationCreateAccount";
 import Moment from 'moment'
 import momentLocalizer from 'react-widgets-moment';
 
-import DateTimePicker from 'react-widgets/lib/DateTimePicker';
+import { DateTimePicker } from 'react-widgets';
 import 'react-widgets/dist/css/react-widgets.css'
 import './../CSS/Style.css';
 import imgvoice from './../img/imgvoice.png';
