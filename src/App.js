@@ -22,12 +22,13 @@ import CreateFamilyAlbum from './Components/CreateFamilyAlbum';
 import MyPictures from './Components/MyPictures';
 import Timeline from './Components/Timeline';
 import TimelineDetail from './Components/TimelineDetail';
+import Redirector from './Components/Redirector';
 
 Amplify.configure(aws_exports);
 
 const oauth = {
   domain: 'auth.grancentral.ai',
-  label: 'Hosted Login',  // default label for OAuthButton (unused)
+  label: 'Sign in',  // default label for OAuthButton
   redirectSignIn: window.location.origin + '/signin',
   redirectSignOut: window.location.origin + '/signout', // unused AFAICT
   responseType: 'code',
@@ -121,7 +122,11 @@ class App extends React.Component {
   }
 }
 
-export default withOAuth(withAuthenticator((props) => (
+// Wrap the app in:
+// - OAuth wrapper to provide hosted signin via props.OAuthSignin()
+// - Apollo client, incorporating AppSync client and Cognito identity
+// - idempotent FindOrCreateUser mutation to establish AppSync user
+const WithProvider = withOAuth((props) => (
   <ApolloProvider client={new AWSAppSyncClient(
     {
       url: appSyncConfig.graphqlEndpoint,
@@ -148,4 +153,13 @@ export default withOAuth(withAuthenticator((props) => (
       </Mutation>
     </Rehydrated>
   </ApolloProvider>
-)));
+));
+
+// Do not put an Amplify Greetings header above the application
+// Navigate to /signout to force sign out
+const withGreetings = false;
+
+// Use only one component when not logged in, to redirect to the hosted UI
+const authComps = [ <Redirector label={oauth.label} /> ];
+
+export default withAuthenticator(WithProvider, withGreetings, authComps);
