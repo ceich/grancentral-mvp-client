@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { ApolloProvider, Mutation } from 'react-apollo';
-import Amplify, { Auth, Hub } from 'aws-amplify';
-import { withOAuth, Greetings } from 'aws-amplify-react';
+import Amplify, { Auth } from 'aws-amplify';
+import { withOAuth, withAuthenticator } from 'aws-amplify-react';
 import AWSAppSyncClient from 'aws-appsync';
 import { Rehydrated } from 'aws-appsync-react';
 
@@ -22,13 +22,14 @@ import CreateFamilyAlbum from './Components/CreateFamilyAlbum';
 import MyPictures from './Components/MyPictures';
 import Timeline from './Components/Timeline';
 import TimelineDetail from './Components/TimelineDetail';
+import Redirector from './Components/Redirector';
 
 Amplify.configure(aws_exports);
 
 // Hosted login configuration
 const oauth = {
   domain: 'auth.grancentral.ai',
-  label: 'Hosted Login',  // default label for OAuthButton (unused)
+  label: 'Sign in',  // default label for OAuthButton
   redirectSignIn: window.location.origin + '/signin',
   redirectSignOut: window.location.origin + '/signout', // unused AFAICT
   responseType: 'code',
@@ -37,47 +38,24 @@ const oauth = {
 Amplify.configure({ oauth });
 
 // Amplify.Logger.LOG_LEVEL = 'DEBUG';
-// const logger = new Amplify.Logger('App');
+const logger = new Amplify.Logger('App');
 // logger.LOG_LEVEL = 'DEBUG';
 
 class App extends React.Component {
-  // These methods imitate aws-amplify-react's Greetings.jsx
-  // in order to react to authentication events.
-  constructor(props) {
-    super(props);
+  state = {
+    user: null // NB: AppSync user, not Cognito user
+  };
 
-    // Listen for 'auth' channel events from Amplify
-    this.checkUser = this.checkUser.bind(this);
-    this.onHubCapsule = this.onHubCapsule.bind(this);
-    Hub.listen('auth', this);
-
-    this.state = {
-      s3Opts: { // Utility object for S3 access
-        bucket: aws_exports.aws_user_files_s3_bucket,
-        region: aws_exports.aws_user_files_s3_bucket_region
-      },
-      user: null // NB: AppSync user, not Cognito user
-    };
-  }
-
-  checkUser() {
-    Auth.currentAuthenticatedUser().catch(err => {
-      console.log('checkUser: no current authenticated user');
-      this.props.OAuthSignIn();
-    });
-  }
-
-  onHubCapsule(capsule) {
-    const {channel} = capsule;
-    if (channel === 'auth') {
-      this.checkUser();
-    }
-  }
+  // Dead code for now; may be needed when logout added
+  // componentWillUnmount() {
+  //   logger.debug('componentWillUnmount: calling OAuthSignIn');
+  //   this.props.OAuthSignIn();
+  // }
 
   // Call the mutation when the user authenticates,
   // to bootstrap the GraphQL User from Cognito.
   async componentDidMount() {
-    //console.log('component did mount');
+    logger.debug('componentDidMount: calling findOrCreateUser');
 
     const {
       findOrCreateUser,
@@ -86,9 +64,6 @@ class App extends React.Component {
     if (loading || error || called) return;
 
     const { idToken: { payload } } = await Auth.currentSession();
-    //const { idToken } = await Auth.currentSession();
-
-    //console.log('mydata : ' + JSON.stringify(idToken));
 
     const input = {
       id: payload.sub,
@@ -108,7 +83,7 @@ class App extends React.Component {
       },
       update: (proxy, { data: { findOrCreateUser: { user } } }) => {
         if (!user) return;
-        //console.log('Setting user to:', user);
+        logger.debug('Setting user to', user);
         // Update the state with the server response
         this.setState({ user });
       }
@@ -116,11 +91,6 @@ class App extends React.Component {
   }
 
   render() {
-    //console.log('props on App.render : ' + JSON.stringify(this.props, null, 4) );
-    //const { user } = this.props;
-
-    //console.log('user : ' + JSON.stringify(this.state, null, 4));
-
     return (
       <Router>
         <div className="App">
@@ -144,18 +114,19 @@ class App extends React.Component {
                  render={(props) => <Timeline {...props} {...this.state} />} />
           <Route path="/timelineDetail"
                  render={(props) => <TimelineDetail {...props} {...this.state} />} />
-          <Route path="/signout" render={() => {
-            console.log('signout: going to hosted UI');
-            this.props.OAuthSignIn();
-          }} />
-          <Greetings />
+          <Route path="/signout"
+                 render={() => { Auth.signOut(); return null; }} />
         </div>
       </Router>
     );
   }
 }
 
-const WithProvider = (props) => (
+// Wrap the app in:
+// - OAuth wrapper to provide hosted signin via props.OAuthSignin()
+// - Apollo client, incorporating AppSync client and Cognito identity
+// - idempotent FindOrCreateUser mutation to establish AppSync user
+const WithProvider = withOAuth((props) => (
   <ApolloProvider client={new AWSAppSyncClient(
     {
       url: appSyncConfig.graphqlEndpoint,
@@ -163,16 +134,13 @@ const WithProvider = (props) => (
       auth: {
         type: appSyncConfig.authenticationType,
         jwtToken: async () => (await Auth.currentSession()
-          .then(data => {
-            return data
-          })
+          .then(data => { return data })
           .catch(err => {
-            console.log('while getting jwtToken: no current session');
-            console.log('err : ' + err);
+            logger.warn('no current session, redirect to hosted UI');
             props.OAuthSignIn();
           })
         ).getAccessToken().getJwtToken()
-      },
+       },
       complexObjectsCredentials: () => Auth.currentCredentials(),
       disableOffline : true
     }
@@ -185,6 +153,13 @@ const WithProvider = (props) => (
       </Mutation>
     </Rehydrated>
   </ApolloProvider>
-)
+));
 
-export default withOAuth(WithProvider);
+// Do not put an Amplify Greetings header above the application
+// Navigate to /signout to force sign out
+const withGreetings = false;
+
+// Use only one component when not logged in, to redirect to the hosted UI
+const authComps = [ <Redirector label={oauth.label} /> ];
+
+export default withAuthenticator(WithProvider, withGreetings, authComps);
