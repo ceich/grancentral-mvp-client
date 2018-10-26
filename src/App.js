@@ -43,6 +43,10 @@ const logger = new Amplify.Logger('App');
 
 class App extends React.Component {
   state = {
+    s3Opts: { // Utility object for S3 access
+      bucket: aws_exports.aws_user_files_s3_bucket,
+      region: aws_exports.aws_user_files_s3_bucket_region
+    },
     user: null // NB: AppSync user, not Cognito user
   };
 
