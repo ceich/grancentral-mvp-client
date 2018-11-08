@@ -14,6 +14,7 @@ query($id: ID!) {
       user {
         id
         name
+        avatar { key bucket region }
       }
     }
   }
