@@ -88,7 +88,7 @@ class MyPictures extends Component {
   }
 
   render() {
-    const { user: {id}, history, me } = this.props;
+    const { /*user: {id}, history,*/ me } = this.props;
     if (!me || !me.pictures) return null;
     const pictures = me.pictures;
 
