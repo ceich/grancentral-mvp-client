@@ -14,60 +14,43 @@ import heart from './../heart.svg';
 
 class Profile extends React.Component {
   state = {
-    profile: {
-      ...this.props.me,
-      role: '',
-      roleOther: '',
-    },
+    avatar: this.props.me && this.props.me.avatar,
+    newAvatar: false,
+    name: this.props.me && this.props.me.name,
+    role: '',
+    roleOther: '',
+    originalRole: this.props.location.state && this.props.location.state.originalRole,
     isDisabled: 'disabled'
   }
 
-  constructor(props) {
-    super(props);
+  componentDidUpdate(prevProps) {
+    // Update when the query returns
+    if (this.props.me && !prevProps.me) {
+      // console.log('componentDidUpdate: updating state from props');
+      this.setState({
+        avatar: this.props.me.avatar,
+        name: this.props.me.name
+      }, () => this.checkAllInput());
+    }
+  }
   
-    this.onPick = this.onPick.bind(this);
-    this.handleSave = this.handleSave.bind(this);
-    this.handleRoleChange = this.handleRoleChange.bind(this);
-    this.checkAllInput = this.checkAllInput.bind(this);
-  // }
-  // 
-  // componentWillMount() {
-    let origRole = '';
-    let tmpRole = '';
-    let tmpRoleOther = '';
-    // if ((this.props.me.members) && (this.props.me.members.length > 0)) {
-    //   origRole = this.props.me.members[0].role;
-    //   tmpRole = (origRole.substring(0,5) === 'OTHER') ? 'OTHER' : origRole;
-    //   tmpRoleOther = (tmpRole === 'OTHER') ? origRole.substring(6,origRole.length) : '';
-    // }
-  
-    const profile = Object.assign({ deleteS3Photo: false, role : tmpRole }, this.props.me);
-    this.state = {
-        profile,
-        newAvatar : null,
-        roleOther : tmpRoleOther,
-        originalRole : origRole,
-        isDisabled : 'disabled'
-    };
-  
+  handlePick = (avatar) => {
+    // console.log('Profile.handlePick', avatar);
+    const newAvatar = true;
+    this.setState({avatar, newAvatar}, () => this.checkAllInput());
   }
 
-  onPick(avatar) {
-    console.log('Profile.onPick', avatar);
-    this.setState({avatar}, () => this.checkAllInput());
-  }
-
-  handleChange(field, {target: { value }}) {
+  handleChange = (field, {target: { value }}) => {
     const tmpvalue = (field === 'role' && value === "please select") ? '' : value;
 
     if ((field === 'role') && (value !== "OTHER")) {
       this.setState({roleOther : ""});
     }
 
-    this.setState(state => ({profile: { ...state.profile, [field]: tmpvalue }}), () => this.checkAllInput());
+    this.setState(state => ({[field]: tmpvalue }), () => this.checkAllInput());
   }
 
-  handleRoleChange(field, event) {
+  handleRoleChange = (field, event) => {
     if (field === 'role') {
       this.handleChange('role', event);
     } else {
@@ -75,9 +58,8 @@ class Profile extends React.Component {
     }
   }
 
-  checkAllInput() {
-    const {role, name, avatar} = this.state.profile;
-    const {roleOther, newAvatar} = this.state;
+  checkAllInput = () => {
+    const {role, name, avatar, roleOther, newAvatar} = this.state;
     const isDisabled = (role === "" || (role === 'OTHER' && roleOther === "") ||
                         name === "" ||
                         (avatar === null && newAvatar === null)) ? 'disabled' : '';
@@ -85,27 +67,31 @@ class Profile extends React.Component {
     this.setState({isDisabled});
   }
 
-  async handleSave(e) {
+  handleSave = async (e) => {
     e.preventDefault();
 
-    const { updateUser, history } = this.props;
-    const { profile, roleOther, originalRole, newAvatar } = this.state;
+    const { me, updateUser, history } = this.props;
+    const { avatar, newAvatar, name, role, roleOther, originalRole } = this.state;
 
-    const finalRole = (profile.role === 'OTHER') ? profile.role + "_" + roleOther : profile.role;
+    const finalRole = (role === 'OTHER') ? role + "_" + roleOther : role;
 
-    if (profile.deleteS3Photo) {
-      deleteS3Photo(profile.avatar);
-      profile.avatar = null;
-    } else if (newAvatar) {
-      deleteS3Photo(profile.avatar);
-      profile.avatar = newAvatar;
+    if (newAvatar) {
+      deleteS3Photo(me.avatar);
     }
-
+    
     await updateUser({
-      variables: { ...profile },
+      variables: { id: me.id, name, avatar: newAvatar ? avatar : null },
       optimisticResponse: { updateUser: {
         __typename: 'UpdateUserResult',
-        user: { __typename: 'User', ...profile }
+        user: {
+          __typename: 'User',
+          id: me.id,
+          name: name,
+          avatar: {
+            ...avatar,
+            __typename: 'S3Object'
+          }
+        }
       } },
       update: (proxy, { data: { updateUser: { user } }}) => {
         const query = QueryMe;
@@ -126,14 +112,15 @@ class Profile extends React.Component {
 
   render() {
     const { me, history } = this.props;
-    const { profile, roleOther, originalRole, isDisabled } = this.state;
-    
     if (!me) return null;
-    const { avatar } = me;
+    let { avatar } = me;
 
-    let customClass = (originalRole === "") ? "" : "hide";
+    const { newAvatar, name, role, roleOther, originalRole, isDisabled } = this.state;
+    if (newAvatar) { avatar = this.state.avatar; }
 
-    return profile && (
+    const customClass = (originalRole === "") ? "" : "hide";
+
+    return (
       <div>
         <header className="App-header">
           <img className="App-logo" src={heart} alt="heart" />
@@ -142,25 +129,19 @@ class Profile extends React.Component {
           <h1 className="ui header">About you...</h1>
           <div className="ui form">
             <div className="field twelve wide avatar">
+              <label htmlFor="photo">Photo</label>
               <S3Photo photo={avatar} level={"protected"}
-                {...this.props.s3Opts} onPick={this.onPick} />
+                {...this.props.s3Opts} onPick={this.handlePick} />
             </div>
-            {/* <div className="field twelve wide deleteImage">
-              <input type="checkbox" id="deleteS3Photo" disabled={!profile.avatar}
-                value={profile.deleteS3Photo}
-                onChange={this.handleChange.bind(this, 'deleteS3Photo')}
-              />
-              <label htmlFor="deleteS3Photo">Delete Image</label>
-            </div> */}
             <div className="field twelve wide">
               <label htmlFor="name">Name</label>
-              <input placeholder="Your Name" type="text" id="name" value={profile.name} onChange={this.handleChange.bind(this, 'name')}/>
+              <input placeholder="Your Name" type="text" id="name" value={name} onChange={this.handleChange.bind(this, 'name')}/>
             </div>
             <div className={"field twelve wide " + customClass}>
               <label htmlFor="relationship">Relationship To Elder</label>
               <RelationshipToElderDropdown
                   valueRoleOther={roleOther}
-                  valueSelect={profile.role}
+                  valueSelect={role}
                   queryProps={QueryGetRole}
                   onChange={this.handleRoleChange} />
             </div>
