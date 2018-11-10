@@ -14,30 +14,17 @@ import heart from './../heart.svg';
 
 class Profile extends React.Component {
   state = {
-    avatar: this.props.me && this.props.me.avatar,
-    newAvatar: false,
-    name: this.props.me && this.props.me.name,
+    avatar: null,
+    name: null,
     role: '',
     roleOther: '',
     originalRole: this.props.location.state && this.props.location.state.originalRole,
     isDisabled: 'disabled'
   }
 
-  componentDidUpdate(prevProps) {
-    // Update when the query returns
-    if (this.props.me && !prevProps.me) {
-      // console.log('componentDidUpdate: updating state from props');
-      this.setState({
-        avatar: this.props.me.avatar,
-        name: this.props.me.name
-      }, () => this.checkAllInput());
-    }
-  }
-  
   handlePick = (avatar) => {
     // console.log('Profile.handlePick', avatar);
-    const newAvatar = true;
-    this.setState({avatar, newAvatar}, () => this.checkAllInput());
+    this.setState({avatar}, () => this.checkAllInput());
   }
 
   handleChange = (field, {target: { value }}) => {
@@ -59,10 +46,14 @@ class Profile extends React.Component {
   }
 
   checkAllInput = () => {
-    const {role, name, avatar, roleOther, newAvatar} = this.state;
-    const isDisabled = (role === "" || (role === 'OTHER' && roleOther === "") ||
+    const { me } = this.props;
+    const avatar = this.state.avatar || me.avatar;
+    const name = this.state.name || me.name;
+    const {role, roleOther, originalRole} = this.state;
+
+    const isDisabled = ((originalRole === "" && (role === "" || (role === 'OTHER' && roleOther === ""))) ||
                         name === "" ||
-                        (avatar === null && newAvatar === null)) ? 'disabled' : '';
+                        avatar === null) ? 'disabled' : '';
 
     this.setState({isDisabled});
   }
@@ -71,16 +62,18 @@ class Profile extends React.Component {
     e.preventDefault();
 
     const { me, updateUser, history } = this.props;
-    const { avatar, newAvatar, name, role, roleOther, originalRole } = this.state;
+    const avatar = this.state.avatar || me.avatar;
+    const name = this.state.name || me.name;
+    const { role, roleOther, originalRole } = this.state;
 
     const finalRole = (role === 'OTHER') ? role + "_" + roleOther : role;
 
-    if (newAvatar) {
+    if (this.state.avatar && me.avatar) {
       deleteS3Photo(me.avatar);
     }
     
     await updateUser({
-      variables: { id: me.id, name, avatar: newAvatar ? avatar : null },
+      variables: { id: me.id, name, avatar },
       optimisticResponse: { updateUser: {
         __typename: 'UpdateUserResult',
         user: {
@@ -113,12 +106,11 @@ class Profile extends React.Component {
   render() {
     const { me, history } = this.props;
     if (!me) return null;
-    let { avatar } = me;
 
-    const { newAvatar, name, role, roleOther, originalRole, isDisabled } = this.state;
-    if (newAvatar) { avatar = this.state.avatar; }
+    const avatar = this.state.avatar || me.avatar;
+    const name = this.state.name || me.name;
 
-    const customClass = (originalRole === "") ? "" : "hide";
+    const { role, roleOther, originalRole, isDisabled } = this.state;
 
     return (
       <div>
@@ -137,24 +129,26 @@ class Profile extends React.Component {
               <label htmlFor="name">Name</label>
               <input placeholder="Your Name" type="text" id="name" value={name} onChange={this.handleChange.bind(this, 'name')}/>
             </div>
-            <div className={"field twelve wide " + customClass}>
-              <label htmlFor="relationship">Relationship To Elder</label>
-              <RelationshipToElderDropdown
-                  valueRoleOther={roleOther}
-                  valueSelect={role}
-                  queryProps={QueryGetRole}
-                  onChange={this.handleRoleChange} />
-            </div>
 
             {(originalRole === "") ?
+            <div>
+              <div className={"field twelve wide"}>
+                <label htmlFor="relationship">Relationship To Elder</label>
+                <RelationshipToElderDropdown
+                    valueRoleOther={roleOther}
+                    valueSelect={role}
+                    queryProps={QueryGetRole}
+                    onChange={this.handleRoleChange} />
+              </div>
               <div className="ui buttons">
                 <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
               </div>
+            </div>
             :
               <div className="ui buttons">
                 <button className="ui button" onClick={history.goBack}>Cancel</button>
                 <div className="or"></div>
-                <button className="ui positive button" onClick={this.handleSave}>Save</button>
+                <button className="ui positive button" disabled={isDisabled} onClick={this.handleSave}>Save</button>
               </div>
             }
           </div>
@@ -166,7 +160,7 @@ class Profile extends React.Component {
 }
 
 export default (props) => (
-  <Query query={QueryMe} fetchPolicy={"cache-and-network"}>
+  <Query query={QueryMe}>
     {({ data, loading, error }) => (
         loading ? "Loading..." :
         error ? "Error" :
