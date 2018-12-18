@@ -78,7 +78,7 @@ For example:
     region: aws_exports.aws_user_files_s3_bucket_region
   }
   ...
-  <Component s3Opts={s3Opts} ... />
+  <Component s3Opts={...s3Opts} ... />
 
 # Component.js
   // Use the prop to build S3ObjectInput variables
