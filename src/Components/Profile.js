@@ -62,7 +62,8 @@ class Profile extends React.Component {
     e.preventDefault();
 
     const { me, updateUser, history } = this.props;
-    const avatar = this.state.avatar || me.avatar;
+    const avatar = this.state.avatar || Object.assign({}, me.avatar);
+    delete avatar.__typename;
     const name = this.state.name || me.name;
     const { role, roleOther, originalRole } = this.state;
 
