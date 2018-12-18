@@ -1,98 +1,60 @@
 import React, {Component} from "react";
 import { Link } from "react-router-dom";
 import { Mutation, Query } from "react-apollo";
-import { v4 as uuid } from 'uuid';
-import { Auth } from "aws-amplify";
-
-//Get configs
-import awsmobile from './../aws-exports';
 
 import './../CSS/Style.css';
 import BtnSubmit from './BtnSubmit';
-import ItemImg from './ItemImg';
+import S3PhotoAlbum from './S3PhotoAlbum';
 import QueryPictures from "../GraphQL/QueryPictures";
 import MutationUpdatePictures from "../GraphQL/MutationUpdatePictures";
 import heart from './../heart.svg';
 
 class MyPictures extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      selectedFile : null
-    }
-
-    this.myRef = React.createRef();
-    this.formRef = React.createRef();
-    this.handleClick = this.handleClick.bind(this);
-    this.handleUpload = this.handleUpload.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleRedirect = this.handleRedirect.bind(this);
-  }
-
-  handleRedirect() {
+  handleDone = () => {
     const { history } = this.props;
     history.goBack();
   }
 
-  handleClick() {
-    this.myRef.current.click();
-  }
+  // Called by S3PhotoAlbum after successful upload
+  handleUpload = (photo) => {
+    const { me } = this.props;
+    const pictures = [
+      ...me.pictures.slice().map((p) => {delete p.__typename; return p}),
+      photo
+    ];
 
-  async handleSubmit(event) {
-    const { me, updatePictures } = this.props;
-    const { selectedFile } = this.state;
-
-    const { identityId } = await Auth.currentCredentials();
-
-    if (selectedFile) {
-        const { name: fileName, type: mimeType } = selectedFile;
-
-        const [, , , extension] = /([^.]+)(\.(\w+))?$/.exec(fileName);
-
-        const key = `public/${identityId}/${uuid()}${extension && '.'}${extension}`;
-        const bucket = awsmobile.aws_user_files_s3_bucket;
-        const region = awsmobile.aws_user_files_s3_bucket_region;
-
-        const file = {
-            bucket,
-            region,
-            key,
-            localUri: selectedFile,
-            mimeType
-        };
-        
-        const variables = {
-          id: me.id,
-          pictures: [...me.pictures, file]
-        };
-
-        await updatePictures({variables, update: this.updatePicturesUpdate});
-    }
+    this.updatePicturesField(pictures);
   }
   
-  updatePicturesUpdate(proxy, { data: { updateUser: { user } } }) {
+  handleDelete = (deletedItems) => {
+    const { me } = this.props;
+    const deletedKeys = new Map(deletedItems.map(i => [i.key, i]));
+    const pictures = me.pictures
+      .filter(p => !deletedKeys.has(p.key))
+      .map((p) => {delete p.__typename; return p});
+    this.updatePicturesField(pictures);
+  }
+  
+  updatePicturesField = async (pictures) => {
+    const { me: { id }, updatePictures } = this.props;
+
+    const variables = { id, pictures };
+    const update = this.updatePicturesUpdate;
+
+    await updatePictures({variables, update});
+  }
+  
+  updatePicturesUpdate = (proxy, { data: { updateUser: { user } } }) => {
     const query = QueryPictures;
     const data = proxy.readQuery({query})
     data.me.pictures = user.pictures;
     proxy.writeQuery({query, data});
   }
 
-  handleUpload(event) {
-      const { target: { value, files } } = event;
-      const [file,] = files || [];
-
-      this.setState({
-          selectedFile: file || value
-      }, () => this.formRef.current.dispatchEvent(new Event("submit")));
-  }
-
   render() {
-    const { /*user: {id}, history,*/ me } = this.props;
-    if (!me || !me.pictures) return null;
-    const pictures = me.pictures;
+    const { me, s3Opts } = this.props;
 
-    return (
+    return me ? (
       <div>
         <header className="App-header">
           <Link to={'/signin'}>
@@ -103,23 +65,16 @@ class MyPictures extends Component {
           <h1 className="ui header">Your Pictures</h1>
           <div className="field twelve wide">
             <div className="album">
-              {pictures.map((pic, index) =>
-                <ItemImg key={index} propType="image" propImgKey={pic.key} />
-              )}
+              <S3PhotoAlbum {...s3Opts} level="protected"
+               onLoad={this.handleUpload} onDelete={this.handleDelete} />
             </div>
           </div>
-          <form onSubmit={this.handleSubmit} ref={this.formRef}>
-            <div className="ui buttons myPictures">
-              <BtnSubmit text="Add More Photos" disabled='' onClick={this.handleClick} />
-              <input className="fileUpload" label="File to upload" type="file" onChange={this.handleUpload} ref={this.myRef}/>
-            </div>
-            <div className="ui buttons myPictures">
-              <BtnSubmit text="Done" customClass='link' onClick={this.handleRedirect}/>
-            </div>
-          </form>
+          <div className="ui buttons myPictures">
+            <BtnSubmit text="Done" customClass='link' onClick={this.handleDone}/>
+          </div>
         </div>
       </div>
-    );
+    ) : null;
   }
 }
 

@@ -144,6 +144,10 @@
   opacity: 0.5;
 }
 
+.btnSubmit.destructive{
+  background-color:#dd2222;
+}
+
 .btnSubmit.link{
   border:0;
   background-color:white;
@@ -234,7 +238,7 @@ pre{
 
 .album img{
   max-width:100%;
-  margin-bottom:50px;
+  margin-bottom:1em;
 }
 
 .ui.buttons.myPictures{
