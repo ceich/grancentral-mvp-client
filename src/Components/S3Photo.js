@@ -128,15 +128,15 @@ class S3Photo extends React.Component{
       onPick: this.handlePick,
       title: this.props.photo ? 'Change Photo' : 'Pick a Photo',
       theme: {
-        photoPickerButton: { display: 'none' },
-        pickerInput: { height: '40%' } // TODO: figure out how to make this fit
+        photoPickerButton: { display: 'none' }
       }
     };
   }
 
   render() {
+    // Outer div is containing block for Picker input
     return (
-      <div>
+      <div style={{position: 'relative'}}>
         <S3Image {...this.s3ImageProps()} />
         { this.props.onPick &&
           <Picker {...this.pickerProps()} />
