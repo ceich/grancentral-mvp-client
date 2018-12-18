@@ -1,6 +1,8 @@
 import React from 'react';
 import { Auth, Storage } from 'aws-amplify';
 import { Picker, S3Image } from 'aws-amplify-react';
+import { v4 as uuid } from 'uuid';
+
 import blank from '../img/BlankProfilePic.png';
 
 const s3ImagePath = (photo) => {
@@ -62,19 +64,24 @@ class S3Photo extends React.Component{
     const { file, name, type } = data;
     // console.log('handlePick:', data);
     const level = this.props.level || 'public';
+    // Preserve the file extension (if any), including the dot
+    // cf. https://www.jstips.co/en/javascript/get-file-extension/
+    const ext = name.slice((name.lastIndexOf(".") - 1 >>> 0) + 1);
+    // Use a UUID instead of the file name, which may contain private info
+    const leaf = ext ? uuid() + ext : uuid();
     let key;
     switch (level) {
       default:
         console.log('handlePick: unexpected level:', level);
         // FALLTHROUGH
       case "public":
-        key = [ level, name ].join('/');
+        key = [ level, leaf ].join('/');
         break;
       case "protected":
       case "private":
         const { identityId } = await Auth.currentCredentials();
         // console.log('handlePick: non-public path:', level, identityId);
-        key = [ level, identityId, name ].join('/');
+        key = [ level, identityId, leaf ].join('/');
         break;
     }
 
