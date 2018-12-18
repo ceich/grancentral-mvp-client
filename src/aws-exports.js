@@ -6,7 +6,7 @@
 
 // AWS Mobile Hub Project Constants
 const awsmobile = {
-    'aws_app_analytics': 'enable',
+    'aws_app_analytics': 'disable',
     'aws_auth_facebook': 'enable',
     'aws_cognito_identity_pool_id': 'us-west-2:acd29023-b7f6-4edd-b11c-e0fdb8c4bc61',
     'aws_cognito_region': 'us-west-2',
@@ -18,8 +18,8 @@ const awsmobile = {
     'aws_facebook_app_id': '325521941271540',
     'aws_facebook_app_permissions': 'public_profile',
     'aws_google_app_permissions': 'email,profile,openid',
-    'aws_mobile_analytics_app_id': 'd6bff822454e4342b4fe97c5829aa022',
-    'aws_mobile_analytics_app_region': 'us-east-1',
+    // 'aws_mobile_analytics_app_id': 'd6bff822454e4342b4fe97c5829aa022',
+    // 'aws_mobile_analytics_app_region': 'us-east-1',
     'aws_project_id': '3bfcbdb3-45fc-4cf9-a3f2-8ec61282ed89',
     'aws_project_name': 'grancentral-mvp-2018-06-13',
     'aws_project_region': 'us-west-2',
