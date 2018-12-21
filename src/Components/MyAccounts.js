@@ -68,7 +68,7 @@ class MyAccounts extends Component {
             <Link to={`/profile`} className="card" key={me}>
               <div className="content avatar">
                 <div className="header">Edit Profile</div>
-                <S3Photo photo={me.avatar} />
+                <S3Photo photo={me ? me.avatar : null} />
               </div>
             </Link>
           </div>
