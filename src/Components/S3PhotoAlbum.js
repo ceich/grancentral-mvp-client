@@ -87,6 +87,8 @@ class S3PhotoAlbum extends React.Component{
     if (onLoad) {
       onLoad(this.toS3Object(data));
     }
+    // Cause S3Album to display photos newest-first (default: just-added at end)
+    this.setState({ ts: new Date().getTime() });
   }
   
   handleSelect = (_clickedItem, selectedItems) => {
