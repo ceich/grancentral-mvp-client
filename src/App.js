@@ -26,6 +26,7 @@ import Redirector from './Components/Redirector';
 
 Amplify.configure(aws_exports);
 
+// Hosted login configuration
 const oauth = {
   domain: 'auth.grancentral.ai',
   label: 'Sign in',  // default label for OAuthButton
@@ -34,7 +35,6 @@ const oauth = {
   responseType: 'code',
   scope: [ 'email', 'profile' ] // hosted auth uses User Pool settings
 }
-
 Amplify.configure({ oauth });
 
 // Amplify.Logger.LOG_LEVEL = 'DEBUG';
@@ -43,6 +43,10 @@ const logger = new Amplify.Logger('App');
 
 class App extends React.Component {
   state = {
+    s3Opts: { // Utility object for S3 access
+      bucket: aws_exports.aws_user_files_s3_bucket,
+      region: aws_exports.aws_user_files_s3_bucket_region
+    },
     user: null // NB: AppSync user, not Cognito user
   };
 

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Query } from "react-apollo";
 import "semantic-ui-css/semantic.min.css";
 
-import Avatar from "./Avatar";
+import S3Photo from "./S3Photo";
 import QueryMyAccounts from "../GraphQL/QueryMyAccounts";
 
 import moment from "moment";
@@ -49,7 +49,7 @@ class MyAccounts extends Component {
   );
 
   render() {
-    const { accounts, user } = this.props;
+    const { accounts, me } = this.props;
 
     return (
       <div>
@@ -65,10 +65,10 @@ class MyAccounts extends Component {
           </div>
           {accounts.map(this.renderAccount)}
           <div className="card green">
-            <Link to={`/profile`} className="card" key={user}>
-              <div className="content">
+            <Link to={`/profile`} className="card" key={me}>
+              <div className="content avatar">
                 <div className="header">Edit Profile</div>
-                {user && user.avatar && <Avatar user={user} />}
+                <S3Photo photo={me ? me.avatar : null} />
               </div>
             </Link>
           </div>
@@ -80,13 +80,13 @@ class MyAccounts extends Component {
 
 export default (props) => (
   <Query query={QueryMyAccounts}>
-    {({ data: { me }, loading, error }) => {
+    {({ data, loading, error }) => {
       if (loading) { return "Loading..."; }
       if (error) { return "Error:" + error; }
-      const accounts = (me && me.members) ?
-        me.members.map(m => Object.assign({}, m.account, { mutable: m.role==='owner' })) :
+      const accounts = (data.me && data.me.members) ?
+        data.me.members.map(m => Object.assign({}, m.account, { mutable: m.role==='owner' })) :
         [];
-      return <MyAccounts accounts={accounts} {...props} />
+      return <MyAccounts me={data.me} accounts={accounts} {...props} />
     }}
   </Query>
 );

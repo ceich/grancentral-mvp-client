@@ -7,18 +7,13 @@ import BtnSubmit from './BtnSubmit';
 import heart from './../heart.svg';
 
 class CreateFamilyAlbum extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleSave = this.handleSave.bind(this);
-  }
-  handleClick() {
+  handleClick = () => {
     const { history } = this.props;
 
     history.push({pathname : '/myPictures', state : {account : history.location.state.account}});
   }
 
-  handleSave() {
+  handleSave = () => {
     const { history } = this.props;
 
     const id = history.location.state.account.id;
@@ -44,7 +39,7 @@ class CreateFamilyAlbum extends Component {
               </div>
             </div>
             <div className="field twelve wide">
-              <input id="imgUpload" className="nameSound" type="image" alt="Photo Upload" src={imgupload} onClick={this.handleClick.bind(this)}/>
+              <input id="imgUpload" className="nameSound" type="image" alt="Photo Upload" src={imgupload} onClick={this.handleClick}/>
               <label htmlFor="imgUpload">Upload a few images now to get started</label>
             </div>
             <div className="field twelve wide link">

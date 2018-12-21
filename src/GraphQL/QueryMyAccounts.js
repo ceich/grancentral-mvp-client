@@ -5,6 +5,7 @@ query MyAccounts {
   me {
     id
     name
+    avatar { key bucket region }
     members {
 			role
       account {

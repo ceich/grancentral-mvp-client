@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Mutation } from "react-apollo";
 
-import Avatar from "./Avatar";
+import S3Photo from "./S3Photo";
 import QueryGetAccount from "../GraphQL/QueryGetAccount";
 import MutationDeleteMember from "../GraphQL/MutationDeleteMember";
 // import SubscriptionAccountMembers from "../GraphQL/SubscriptionAccountMembers";
@@ -54,7 +54,7 @@ class AccountMembers extends Component {
   renderMember = (member) => {
     return (<div className="member" key={member.user.id}>
       <div className="avatar">
-        <Avatar user={member.user} />
+        <S3Photo photo={member.user.avatar} />
       </div>
       <div className="contentData">
         <div className="content">

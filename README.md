@@ -66,20 +66,28 @@ variables matching the S3ObjectInput signature,
 but download must be done in application code.
 
 ### User Avatar and Photo Album
-The `bucket` and `region` fields should be obtained from `aws-exports.js`,
-and passed to components that need them.
+The app sets a prop `s3Opts` with `bucket` and `region` fields
+on all children.
 For example:
 ```
 # App.js
+  import aws_exports from './aws-exports';
+  ...
   s3Opts = {
-    bucket: awsmobile.aws_user_files_s3_bucket,
-    region: awsmobile.aws_user_files_s3_bucket_region
+    bucket: aws_exports.aws_user_files_s3_bucket,
+    region: aws_exports.aws_user_files_s3_bucket_region
   }
   ...
-  <Component s3Opts={s3Opts} ... />
+  <Component s3Opts={...s3Opts} ... />
 
 # Component.js
-  // Use this.props.s3Opts to build S3ObjectInput variables
+  // Use the prop to build S3ObjectInput variables
+  const s3ObjectInput = {
+    ...this.props.s3Opts,
+    key: name,
+    imageUri: file,
+    mimeType: type
+  }
 ```
 The `key` should be `level/prefix/name`, with the following meaning:
 - Level: `"public"` (this corresponds to Amplify's default storage level)
