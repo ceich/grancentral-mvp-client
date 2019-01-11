@@ -26,12 +26,13 @@ const s3ImagePath = (photo) => {
 };
 
 const s3ImageOptions = (photo) => {
-  const level = (photo && photo.key) ? photo.key.split('/')[0] : null;
+  const [ level, identityId ] = (photo && photo.key) ? photo.key.split('/') : [];
   switch (level) {
     case "public":
+      return { level };
     case "protected":
     case "private":
-      return { level };
+      return { level, identityId };
     default:
       console.log('s3ImageOptions: unexpected key in photo:', photo);
       return {};
