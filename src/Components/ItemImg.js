@@ -34,9 +34,7 @@ export default class ItemImg extends Component {
         );
       } else {
         return(
-          <a href="" onClick={(event) => propsClick(event, {imgURL})}>
-            <video src={imgURL} />
-          </a>
+          <video src={imgURL} onClick={(event) => propsClick(event, {imgURL})} />
         );
       }
     } else {
