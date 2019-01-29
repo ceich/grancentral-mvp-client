@@ -1,8 +1,10 @@
 # GranCentral MVP Client
 
-This web app uses [AWS Amplify](https://github.com/aws-amplify/amplify-js) to access
-the AWS Mobile Hub project [grancentral-mvp-2018-06-13](https://console.aws.amazon.com/mobilehub/home?region=us-east-2#/3bfcbdb3-45fc-4cf9-a3f2-8ec61282ed89/build) and
-the AppSync project [GranCentral MVP](https://us-west-2.console.aws.amazon.com/appsync/home?region=us-west-2#/eqsy3qtavnhuxkwcnvunhwzvyq/v1/home)
+## Architecture
+
+This web app uses [AWS Amplify SDK](https://github.com/aws-amplify/amplify-js)
+to access the AWS Mobile Hub project [grancentral-mvp-2018-06-13](https://console.aws.amazon.com/mobilehub/home?region=us-west-2#/3bfcbdb3-45fc-4cf9-a3f2-8ec61282ed89/build) and
+the AppSync API [GranCentral MVP](https://us-west-2.console.aws.amazon.com/appsync/home?region=us-west-2#/eqsy3qtavnhuxkwcnvunhwzvyq/v1/home)
 (if you don't see this project when you click the link,
 make sure you've selected the **us-west-2 Oregon** region
 in the upper right of the AWS page).
