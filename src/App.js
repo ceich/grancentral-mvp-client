@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { ApolloProvider, Mutation } from 'react-apollo';
 import Amplify, { Auth } from 'aws-amplify';
 import { withOAuth, withAuthenticator } from 'aws-amplify-react';
@@ -12,16 +12,7 @@ import './CSS/App.css';
 
 import MutationFindOrCreateUser from './GraphQL/MutationFindOrCreateUser';
 
-import MyAccounts from './Components/MyAccounts';
-import ViewAccount from './Components/ViewAccount';
-import NewAccount from './Components/NewAccount';
-import NewMember from './Components/NewMember';
-import Profile from './Components/Profile';
-import Signin from './Components/Signin';
-import CreateFamilyAlbum from './Components/CreateFamilyAlbum';
-import MyPictures from './Components/MyPictures';
-import Timeline from './Components/Timeline';
-import TimelineDetail from './Components/TimelineDetail';
+import Routes from './Routes';
 import Redirector from './Components/Redirector';
 
 Amplify.configure(aws_exports);
@@ -98,30 +89,7 @@ class App extends React.Component {
     return (
       <Router>
         <div className="App">
-          <Switch>
-            <Route exact={true} path="/"
-                   render={(props) => <MyAccounts {...props} {...this.state} />} />
-            <Route path="/account/new"
-                   render={(props) => <NewAccount {...props} {...this.state} />} />
-            <Route exact={true} path="/account/:id"
-                   render={(props) => <ViewAccount {...props} {...this.state} />} />
-            <Route path="/account/:id/member/new"
-                   render={(props) => <NewMember {...props} {...this.state} />} />
-            <Route path="/profile"
-                   render={(props) => <Profile {...props} {...this.state} />} />
-            <Route path="/signin"
-                   render={(props) => <Signin {...props} {...this.state} />} />
-            <Route path="/createFamilyAlbum"
-                   render={(props) => <CreateFamilyAlbum {...props} {...this.state} />} />
-            <Route path="/myPictures"
-                   render={(props) => <MyPictures {...props} {...this.state} />} />
-            <Route path="/timeline"
-                   render={(props) => <Timeline {...props} {...this.state} />} />
-            <Route path="/timelineDetail"
-                   render={(props) => <TimelineDetail {...props} {...this.state} />} />
-            <Route path="/signout"
-                   render={() => { Auth.signOut(); return null; }} />
-          </Switch>
+          <Routes {...this.state} />
         </div>
       </Router>
     );
