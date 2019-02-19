@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Query, Mutation } from "react-apollo";
-import { Link } from "react-router-dom";
 
 import QueryGetAccount from "../GraphQL/QueryGetAccount";
 import MutationFindOrCreateUser from '../GraphQL/MutationFindOrCreateUser';
@@ -10,7 +9,6 @@ import './../CSS/Style.css';
 import BtnSubmit from './BtnSubmit';
 import QueryGetRole from "../GraphQL/QueryGetRole";
 import RelationshipToElderDropdown from './RelationshipToElderDropdown';
-import heart from './../heart.svg';
 
 class NewMember extends Component {
   static defaultProps = {
@@ -123,38 +121,31 @@ class NewMember extends Component {
     const { account } = this.props;
 
     return (
-      <div>
-        <header className="App-header">
-          <Link to={{pathname : '/timeline', state : {account : account}}}>
-            <img className="App-logo" src={heart} alt="heart" />
-          </Link>
-        </header>
-        <div className="ui container raised very padded segment">
-          <h1 className="ui header">Create a Caring Circle</h1>
-          <div className="ui form">
-            <div className="field twelve wide">
-              <div className="intro">
-                Invite family members, friends, and caregivers who want to share updates about
-                {
-                  (account) ? ' ' + account.name : ''
-                }
-              </div>
+      <div className="ui container raised very padded segment">
+        <h1 className="ui header">Create a Caring Circle</h1>
+        <div className="ui form">
+          <div className="field twelve wide">
+            <div className="intro">
+              Invite family members, friends, and caregivers who want to share updates about
+              {
+                (account) ? ' ' + account.name : ''
+              }
             </div>
-            <div className="field twelve wide">
-              <label htmlFor="name">Name</label>
-              <input type="text" id="name" value={member.name} onChange={this.handleChange.bind(this, 'name')}/>
-            </div>
-            <div className="field twelve wide">
-              <label htmlFor="email">Email</label>
-              <input type="text" id="email" value={member.email} onChange={this.handleChange.bind(this, 'email')}/>
-            </div>
-            <div className="field twelve wide">
-              <label htmlFor="relationship">Relationship To Elder</label>
-              <RelationshipToElderDropdown valueSelect={member.role} queryProps={QueryGetRole} onChange={this.handleRoleChange} />
-            </div>
-            <div className="ui buttons medium">
-              <BtnSubmit text="Invite" disabled={isDisabled} onClick={this.handleSave}/>
-            </div>
+          </div>
+          <div className="field twelve wide">
+            <label htmlFor="name">Name</label>
+            <input type="text" id="name" value={member.name} onChange={this.handleChange.bind(this, 'name')}/>
+          </div>
+          <div className="field twelve wide">
+            <label htmlFor="email">Email</label>
+            <input type="text" id="email" value={member.email} onChange={this.handleChange.bind(this, 'email')}/>
+          </div>
+          <div className="field twelve wide">
+            <label htmlFor="relationship">Relationship To Elder</label>
+            <RelationshipToElderDropdown valueSelect={member.role} queryProps={QueryGetRole} onChange={this.handleRoleChange} />
+          </div>
+          <div className="ui buttons medium">
+            <BtnSubmit text="Invite" disabled={isDisabled} onClick={this.handleSave}/>
           </div>
         </div>
       </div>

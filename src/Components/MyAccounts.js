@@ -7,7 +7,6 @@ import S3Photo from "./S3Photo";
 import QueryMyAccounts from "../GraphQL/QueryMyAccounts";
 
 import moment from "moment";
-import heart from './../heart.svg';
 
 class MyAccounts extends Component {
   static defaultProps = {
@@ -52,26 +51,21 @@ class MyAccounts extends Component {
     const { accounts, me } = this.props;
 
     return (
-      <div>
-        <header className="App-header">
-          <img className="App-logo" src={heart} alt="heart" />
-        </header>
-        <div className="ui link cards">
-          <div className="card blue">
-            <Link to="/account/new" className="new-account content center aligned">
-              <i className="icon add massive"></i>
-              <p>Create new account</p>
-            </Link>
-          </div>
-          {accounts.map(this.renderAccount)}
-          <div className="card green">
-            <Link to={`/profile`} className="card" key={me}>
-              <div className="content avatar">
-                <div className="header">Edit Profile</div>
-                <S3Photo photo={me ? me.avatar : null} />
-              </div>
-            </Link>
-          </div>
+      <div className="ui link cards">
+        <div className="card blue">
+          <Link to="/account/new" className="new-account content center aligned">
+            <i className="icon add massive"></i>
+            <p>Create new account</p>
+          </Link>
+        </div>
+        {accounts.map(this.renderAccount)}
+        <div className="card green">
+          <Link to={`/profile`} className="card" key={me}>
+            <div className="content avatar">
+              <div className="header">Edit Profile</div>
+              <S3Photo photo={me ? me.avatar : null} />
+            </div>
+          </Link>
         </div>
       </div>
     );

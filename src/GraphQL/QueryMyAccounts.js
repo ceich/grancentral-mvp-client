@@ -12,6 +12,7 @@ query MyAccounts {
         id
         createdAt
         name
+        elders { name birthday }
         members {
           role
         }

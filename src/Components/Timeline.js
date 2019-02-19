@@ -19,9 +19,6 @@ import plus from './../img/plus1.png';
 import video from './../img/video1.png';
 import gear from './../img/gear1.png';
 
-
-import heart from './../heart.svg';
-
 class Timeline extends React.Component{
   constructor(props) {
     super(props);
@@ -145,63 +142,58 @@ class Timeline extends React.Component{
 
 
     return(
-      <div>
-        <header className="App-header">
-          <img className="App-logo" src={heart} alt="heart" />
-        </header>
-        <div className="ui container raised very padded segment containerClass">
-          <h1 className="ui header">{ account.name + " Central" }</h1>
-          <div className="ui form centralContainer">
-            <div className="centralContent">
-              <div className={"centralContentInner " + ((statusDisplay === 0) ? "tableShape" : "") }>
-                {
-                  (statusDisplay === -1) ?
-                      "Loading..." :
-                      ((statusDisplay > 0) ?
-                          listEvents.items.map((mydata, index) =>
-                            <div key={mydata.id} className="eventsItem">
-                              <b>User</b>
-                              {
-                                "  " + Moment.unix(mydata.createdAt).format('h:mm A')
-                              }
-                              <br/>
-                              {mydata.text}
-                              {
-                                (!mydata.media) ?
-                                    "" :
-                                    <ItemImg key={index} propType="video" propsClick={this.handleRedirect} propImgKey={mydata.media.key} />
-                              }
-                            </div>
-                          ) :
-                          <div className="noContent">
-                            <b>Nothing here yet ... here's some things to try</b>
-                            <br/><br/>
-                            Add a new photo to {account.name}'s' Family Album by tapping "+" below
-                            <br/><br/>
-                            Send a message to @{account.name}
-                          </div>)
-                }
-              </div>
+      <div className="ui container raised very padded segment containerClass">
+        <h1 className="ui header">{ account.name + " Central" }</h1>
+        <div className="ui form centralContainer">
+          <div className="centralContent">
+            <div className={"centralContentInner " + ((statusDisplay === 0) ? "tableShape" : "") }>
+              {
+                (statusDisplay === -1) ?
+                    "Loading..." :
+                    ((statusDisplay > 0) ?
+                        listEvents.items.map((mydata, index) =>
+                          <div key={mydata.id} className="eventsItem">
+                            <b>User</b>
+                            {
+                              "  " + Moment.unix(mydata.createdAt).format('h:mm A')
+                            }
+                            <br/>
+                            {mydata.text}
+                            {
+                              (!mydata.media) ?
+                                  "" :
+                                  <ItemImg key={index} propType="video" propsClick={this.handleRedirect} propImgKey={mydata.media.key} />
+                            }
+                          </div>
+                        ) :
+                        <div className="noContent">
+                          <b>Nothing here yet ... here's some things to try</b>
+                          <br/><br/>
+                          Add a new photo to {account.name}'s' Family Album by tapping "+" below
+                          <br/><br/>
+                          Send a message to @{account.name}
+                        </div>)
+              }
             </div>
-            <div className="field twelve wide">
+          </div>
+          <div className="field twelve wide">
 
-              <input placeholder="Your Message Here" value={msgText} className="msgInput" type="text" onChange={(event) => this.handleChange(event)}/>
-              <BtnSubmit text="..." customClass="btnSend" disabled="" onClick={this.handleSend}/>
-              <div className="leftSection">
-                <form onSubmit={this.handleSubmit} ref={this.formRef}>
-                  <input type="image" src={video} alt="upload new media" onClick={this.handleClick}/>
-                  <input className="fileUpload" label="File to upload" type="file" onChange={this.handleUpload} ref={this.myRef}/>
+            <input placeholder="Your Message Here" value={msgText} className="msgInput" type="text" onChange={(event) => this.handleChange(event)}/>
+            <BtnSubmit text="..." customClass="btnSend" disabled="" onClick={this.handleSend}/>
+            <div className="leftSection">
+              <form onSubmit={this.handleSubmit} ref={this.formRef}>
+                <input type="image" src={video} alt="upload new media" onClick={this.handleClick}/>
+                <input className="fileUpload" label="File to upload" type="file" onChange={this.handleUpload} ref={this.myRef}/>
 
-                  <Link to={{pathname : '/myPictures', state : {account : account}}}>
-                    <img src={plus} alt="add to family album"/>
-                  </Link>
+                <Link to={{pathname : '/myPictures', state : {account : account}}}>
+                  <img src={plus} alt="add to family album"/>
+                </Link>
 
 
-                </form>
-              </div>
-              <div className="rightSection">
-                <img src={gear} alt="setting"/>
-              </div>
+              </form>
+            </div>
+            <div className="rightSection">
+              <img src={gear} alt="setting"/>
             </div>
           </div>
         </div>

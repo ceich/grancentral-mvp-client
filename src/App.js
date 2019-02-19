@@ -12,6 +12,7 @@ import './CSS/App.css';
 
 import MutationFindOrCreateUser from './GraphQL/MutationFindOrCreateUser';
 
+import Menu from './Components/Menu';
 import Routes from './Routes';
 import Redirector from './Components/Redirector';
 
@@ -87,11 +88,12 @@ class App extends React.Component {
 
   render() {
     return (
-      <Router>
-        <div className="App">
+      <div className="App">
+        <Menu />
+        <Router>
           <Routes {...this.state} />
-        </div>
-      </Router>
+        </Router>
+      </div>
     );
   }
 }

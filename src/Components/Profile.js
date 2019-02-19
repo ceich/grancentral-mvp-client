@@ -10,7 +10,6 @@ import MutationUpdateUser from "../GraphQL/MutationUpdateUser";
 import RelationshipToElderDropdown from './RelationshipToElderDropdown';
 import './../CSS/Style.css';
 import BtnSubmit from './BtnSubmit';
-import heart from './../heart.svg';
 
 class Profile extends React.Component {
   state = {
@@ -114,45 +113,40 @@ class Profile extends React.Component {
     const { role, roleOther, originalRole, isDisabled } = this.state;
 
     return (
-      <div>
-        <header className="App-header">
-          <img className="App-logo" src={heart} alt="heart" />
-        </header>
-        <div className="ui container raised very padded segment containerClass">
-          <h1 className="ui header">About you...</h1>
-          <div className="ui form">
-            <div className="field twelve wide avatar">
-              <label htmlFor="photo">Photo</label>
-              <S3Photo photo={avatar} level={"protected"}
-                {...this.props.s3Opts} onPick={this.handlePick} />
-            </div>
-            <div className="field twelve wide">
-              <label htmlFor="name">Name</label>
-              <input placeholder="Your Name" type="text" id="name" value={name} onChange={this.handleChange.bind(this, 'name')}/>
-            </div>
-
-            {(originalRole === "") ?
-            <div>
-              <div className={"field twelve wide"}>
-                <label htmlFor="relationship">Relationship To Elder</label>
-                <RelationshipToElderDropdown
-                    valueRoleOther={roleOther}
-                    valueSelect={role}
-                    queryProps={QueryGetRole}
-                    onChange={this.handleRoleChange} />
-              </div>
-              <div className="ui buttons">
-                <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
-              </div>
-            </div>
-            :
-              <div className="ui buttons">
-                <button className="ui button" onClick={history.goBack}>Cancel</button>
-                <div className="or"></div>
-                <button className="ui positive button" disabled={isDisabled} onClick={this.handleSave}>Save</button>
-              </div>
-            }
+      <div className="ui container raised very padded segment containerClass">
+        <h1 className="ui header">About you...</h1>
+        <div className="ui form">
+          <div className="field twelve wide avatar">
+            <label htmlFor="photo">Photo</label>
+            <S3Photo photo={avatar} level={"protected"}
+              {...this.props.s3Opts} onPick={this.handlePick} />
           </div>
+          <div className="field twelve wide">
+            <label htmlFor="name">Name</label>
+            <input placeholder="Your Name" type="text" id="name" value={name} onChange={this.handleChange.bind(this, 'name')}/>
+          </div>
+
+          {(originalRole === "") ?
+          <div>
+            <div className={"field twelve wide"}>
+              <label htmlFor="relationship">Relationship To Elder</label>
+              <RelationshipToElderDropdown
+                  valueRoleOther={roleOther}
+                  valueSelect={role}
+                  queryProps={QueryGetRole}
+                  onChange={this.handleRoleChange} />
+            </div>
+            <div className="ui buttons">
+              <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
+            </div>
+          </div>
+          :
+            <div className="ui buttons">
+              <button className="ui button" onClick={history.goBack}>Cancel</button>
+              <div className="or"></div>
+              <button className="ui positive button" disabled={isDisabled} onClick={this.handleSave}>Save</button>
+            </div>
+          }
         </div>
       </div>
     );

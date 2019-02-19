@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import QueryGetAccount from "../GraphQL/QueryGetAccount";
 import AccountMembers from "./AccountMembers";
 import BtnSubmit from './BtnSubmit';
-import heart from './../heart.svg';
 
 class ViewAccount extends Component {
   constructor(props) {
@@ -25,9 +24,6 @@ class ViewAccount extends Component {
 
     return (
       <div>
-        <header className="App-header">
-          <img className="App-logo" src={heart} alt="heart" />
-        </header>
         {
            account && <h1 className="ui header viewAccount">{account.name}'s Caring Circle</h1>
         }
