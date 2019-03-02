@@ -1,16 +1,14 @@
 import React from "react";
-import { Query, Mutation } from "react-apollo";
+import { Mutation } from "react-apollo";
 import "semantic-ui-css/semantic.min.css";
 
 import S3Photo, { deleteS3Photo } from "./S3Photo";
-import QueryMe from "../GraphQL/QueryMe";
 import QueryGetRole from "../GraphQL/QueryGetRole";
 import MutationUpdateUser from "../GraphQL/MutationUpdateUser";
 
 import RelationshipToElderDropdown from './RelationshipToElderDropdown';
 import './../CSS/Style.css';
 import BtnSubmit from './BtnSubmit';
-import heart from './../heart.svg';
 
 class Profile extends React.Component {
   state = {
@@ -18,7 +16,6 @@ class Profile extends React.Component {
     name: null,
     role: '',
     roleOther: '',
-    originalRole: this.props.location.state && this.props.location.state.originalRole,
     isDisabled: 'disabled'
   }
 
@@ -46,12 +43,12 @@ class Profile extends React.Component {
   }
 
   checkAllInput = () => {
-    const { me } = this.props;
-    const avatar = this.state.avatar || me.avatar;
-    const name = this.state.name || me.name;
-    const {role, roleOther, originalRole} = this.state;
+    const { user, account } = this.props;
+    const avatar = this.state.avatar || user.avatar;
+    const name = this.state.name || user.name;
+    const {role, roleOther} = this.state;
 
-    const isDisabled = ((originalRole === "" && (role === "" || (role === 'OTHER' && roleOther === ""))) ||
+    const isDisabled = ((!account && (role === "" || (role === 'OTHER' && roleOther === ""))) ||
                         name === "" ||
                         avatar === null) ? 'disabled' : '';
 
@@ -61,42 +58,30 @@ class Profile extends React.Component {
   handleSave = async (e) => {
     e.preventDefault();
 
-    const { me, updateUser, history } = this.props;
-    const avatar = this.state.avatar || Object.assign({}, me.avatar);
+    const { user, account, updateUser, history } = this.props;
+    const avatar = this.state.avatar || Object.assign({}, user.avatar);
     delete avatar.__typename;
-    const name = this.state.name || me.name;
-    const { role, roleOther, originalRole } = this.state;
+    const name = this.state.name || user.name;
+    const { role, roleOther } = this.state;
 
     const finalRole = (role === 'OTHER') ? role + "_" + roleOther : role;
 
-    if (this.state.avatar && me.avatar) {
-      deleteS3Photo(me.avatar);
+    if (this.state.avatar && user.avatar) {
+      deleteS3Photo(user.avatar);
     }
     
     await updateUser({
-      variables: { id: me.id, name, avatar },
-      optimisticResponse: { updateUser: {
-        __typename: 'UpdateUserResult',
-        user: {
-          __typename: 'User',
-          id: me.id,
-          name: name,
-          avatar: {
-            ...avatar,
-            __typename: 'S3Object'
-          }
-        }
-      } },
+      variables: { id: user.id, name, avatar },
       update: (proxy, { data: { updateUser: { user } }}) => {
-        const query = QueryMe;
-        const data = proxy.readQuery({ query });
-        data.me = Object.assign({}, data.me, user);
-        proxy.writeQuery({ query, data });
+        // const query = QueryMe;
+        // const data = proxy.readQuery({ query });
+        // data.user = Object.assign({}, data.user, user);
+        // proxy.writeQuery({ query, data });
       }
     })
     .then(() => {
-      if (originalRole === "") {
-        history.push({pathname : '/account/new', state : {role : finalRole}});
+      if (!account) {
+        history.push({pathname : '/newAccount', state : {role : finalRole}});
       } else {
         history.goBack();
       }
@@ -105,54 +90,49 @@ class Profile extends React.Component {
   }
 
   render() {
-    const { me, history } = this.props;
-    if (!me) return null;
+    const { user, account, history } = this.props;
+    if (!user) return null;
 
-    const avatar = this.state.avatar || me.avatar;
-    const name = this.state.name || me.name;
+    const avatar = this.state.avatar || user.avatar;
+    const name = this.state.name || user.name;
 
-    const { role, roleOther, originalRole, isDisabled } = this.state;
+    const { role, roleOther, isDisabled } = this.state;
 
     return (
-      <div>
-        <header className="App-header">
-          <img className="App-logo" src={heart} alt="heart" />
-        </header>
-        <div className="ui container raised very padded segment containerClass">
-          <h1 className="ui header">About you...</h1>
-          <div className="ui form">
-            <div className="field twelve wide avatar">
-              <label htmlFor="photo">Photo</label>
-              <S3Photo photo={avatar} level={"protected"}
-                {...this.props.s3Opts} onPick={this.handlePick} />
-            </div>
-            <div className="field twelve wide">
-              <label htmlFor="name">Name</label>
-              <input placeholder="Your Name" type="text" id="name" value={name} onChange={this.handleChange.bind(this, 'name')}/>
-            </div>
-
-            {(originalRole === "") ?
-            <div>
-              <div className={"field twelve wide"}>
-                <label htmlFor="relationship">Relationship To Elder</label>
-                <RelationshipToElderDropdown
-                    valueRoleOther={roleOther}
-                    valueSelect={role}
-                    queryProps={QueryGetRole}
-                    onChange={this.handleRoleChange} />
-              </div>
-              <div className="ui buttons">
-                <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
-              </div>
-            </div>
-            :
-              <div className="ui buttons">
-                <button className="ui button" onClick={history.goBack}>Cancel</button>
-                <div className="or"></div>
-                <button className="ui positive button" disabled={isDisabled} onClick={this.handleSave}>Save</button>
-              </div>
-            }
+      <div className="ui container raised very padded segment containerClass">
+        <h1 className="ui header">About you...</h1>
+        <div className="ui form">
+          <div className="field twelve wide avatar">
+            <label htmlFor="photo">Photo</label>
+            <S3Photo photo={avatar} level={"protected"}
+              {...this.props.s3Opts} onPick={this.handlePick} />
           </div>
+          <div className="field twelve wide">
+            <label htmlFor="name">Name</label>
+            <input placeholder="Your Name" type="text" id="name" value={name} onChange={this.handleChange.bind(this, 'name')}/>
+          </div>
+
+          {(!account) ?
+          <div>
+            <div className={"field twelve wide"}>
+              <label htmlFor="relationship">Relationship To Elder</label>
+              <RelationshipToElderDropdown
+                  valueRoleOther={roleOther}
+                  valueSelect={role}
+                  queryProps={QueryGetRole}
+                  onChange={this.handleRoleChange} />
+            </div>
+            <div className="ui buttons">
+              <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
+            </div>
+          </div>
+          :
+            <div className="ui buttons">
+              <button className="ui button" onClick={history.goBack}>Cancel</button>
+              <div className="or"></div>
+              <button className="ui positive button" disabled={isDisabled} onClick={this.handleSave}>Save</button>
+            </div>
+          }
         </div>
       </div>
     );
@@ -161,17 +141,11 @@ class Profile extends React.Component {
 }
 
 export default (props) => (
-  <Query query={QueryMe}>
-    {({ data, loading, error }) => (
-        loading ? "Loading..." :
-        error ? "Error" :
-        <Mutation mutation={MutationUpdateUser} ignoreResults={true}>
-          {(updateUser, { loading, error }) => (
-            loading ? "Loading..." :
-            error ? "Error" :
-            <Profile {...props} me={data.me} updateUser={updateUser} />
-          )}
-        </Mutation>
+  <Mutation mutation={MutationUpdateUser} ignoreResults={true}>
+    {(updateUser, { loading, error }) => (
+      loading ? "Loading..." :
+      error ? "Error" :
+      <Profile {...props} updateUser={updateUser} />
     )}
-  </Query>
+  </Mutation>
 );

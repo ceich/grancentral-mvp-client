@@ -1,5 +1,4 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { ApolloProvider, Mutation } from 'react-apollo';
 import Amplify, { Auth } from 'aws-amplify';
 import { withOAuth, withAuthenticator } from 'aws-amplify-react';
@@ -12,16 +11,8 @@ import './CSS/App.css';
 
 import MutationFindOrCreateUser from './GraphQL/MutationFindOrCreateUser';
 
-import MyAccounts from './Components/MyAccounts';
-import ViewAccount from './Components/ViewAccount';
-import NewAccount from './Components/NewAccount';
-import NewMember from './Components/NewMember';
-import Profile from './Components/Profile';
-import Signin from './Components/Signin';
-import CreateFamilyAlbum from './Components/CreateFamilyAlbum';
-import MyPictures from './Components/MyPictures';
-import Timeline from './Components/Timeline';
-import TimelineDetail from './Components/TimelineDetail';
+import ErrorBoundary from './Components/ErrorBoundary';
+import Router from './Components/Router';
 import Redirector from './Components/Redirector';
 
 Amplify.configure(aws_exports);
@@ -47,6 +38,7 @@ class App extends React.Component {
       bucket: aws_exports.aws_user_files_s3_bucket,
       region: aws_exports.aws_user_files_s3_bucket_region
     },
+    account: null, // UI assumes one account "selected", if multiple
     user: null // NB: AppSync user, not Cognito user
   };
 
@@ -78,52 +70,27 @@ class App extends React.Component {
 
     await findOrCreateUser({
       variables: input,
-      optimisticResponse: {
-        // First approximation to server response
-        findOrCreateUser: {
-          __typename: 'FindOrCreateUserResult',
-          user: { __typename: 'User', ...input }
-        }
-      },
       update: (proxy, { data: { findOrCreateUser: { user } } }) => {
         if (!user) return;
         logger.debug('Setting user to', user);
         // Update the state with the server response
-        this.setState({ user });
+        const account = (user.members && user.members.length > 0)
+                         ? user.members[0].account
+                         : null
+        this.setState({ user, account });
       }
     });
   }
-
-  render() {
-    return (
-      <Router>
-        <div className="App">
-          <Route exact={true} path="/"
-                 render={(props) => <MyAccounts {...props} {...this.state} />} />
-          <Route path="/account/new"
-                 render={(props) => <NewAccount {...props} {...this.state} />} />
-          <Route exact={true} path="/account/:id"
-                 render={(props) => <ViewAccount {...props} {...this.state} />} />
-          <Route path="/account/:id/member/new"
-                 render={(props) => <NewMember {...props} {...this.state} />} />
-          <Route path="/profile"
-                 render={(props) => <Profile {...props} {...this.state} />} />
-          <Route path="/signin"
-                 render={(props) => <Signin {...props} {...this.state} />} />
-          <Route path="/createFamilyAlbum"
-                 render={(props) => <CreateFamilyAlbum {...props} {...this.state} />} />
-          <Route path="/myPictures"
-                 render={(props) => <MyPictures {...props} {...this.state} />} />
-          <Route path="/timeline"
-                 render={(props) => <Timeline {...props} {...this.state} />} />
-          <Route path="/timelineDetail"
-                 render={(props) => <TimelineDetail {...props} {...this.state} />} />
-          <Route path="/signout"
-                 render={() => { Auth.signOut(); return null; }} />
-        </div>
-      </Router>
-    );
+  
+  setAccount = (account) => {
+    this.setState({account});
   }
+
+  render = () => (
+    <ErrorBoundary>
+      <Router {...this.state} setAccount={this.setAccount} />
+    </ErrorBoundary>
+  )
 }
 
 // Wrap the app in:

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Mutation } from "react-apollo";
 
 import S3Photo from "./S3Photo";
-import QueryGetAccount from "../GraphQL/QueryGetAccount";
 import MutationDeleteMember from "../GraphQL/MutationDeleteMember";
 // import SubscriptionAccountMembers from "../GraphQL/SubscriptionAccountMembers";
 
@@ -19,24 +18,24 @@ class AccountMembers extends Component {
 
   async handleDeleteClick(member, e) {
     e.preventDefault();
-    const { accountId } = this.props;
-    const userId = member.user.id;
 
     if (window.confirm(`Are you sure you want to delete member ${member.user.name}?`)) {
-      const { deleteMember } = this.props;
+      const { deleteMember, account } = this.props;
       await deleteMember({
-        variables: { accountId, userId },
+        variables: { accountId: account.id, userId: member.user.id },
         update: this.deleteMemberUpdate
       });
     }
   }
   
-  deleteMemberUpdate(proxy, { data: { deleteMember: { member } } }) {
-    const query = QueryGetAccount;
-    const variables = { id: member.account.id };
-    const data = proxy.readQuery({ query, variables });
-    data.getAccount.members = data.getAccount.members.filter(m => m.user.id !== member.user.id);
-    proxy.writeQuery({ query, data });
+  deleteMemberUpdate = (proxy, { data: { deleteMember: { member } } }) => {
+    const { account, setAccount } = this.props;
+    const { user: { id: userId } } = member;
+
+    const members = account.members.filter(m => m.user.id !== userId);
+    const newAccount = Object.assign({}, account);
+    newAccount.members = members;
+    setAccount(newAccount);
   }
 
   toTitleCase(phrase) {
@@ -60,22 +59,28 @@ class AccountMembers extends Component {
         <div className="content">
           <div className="text">
             <b>{member.user.name}</b>
-          </div>
-        </div>
-        <div className="content">
-          <div className="text">
-            {this.toTitleCase(member.role)}
+            {this.props.user.id === member.user.id && " (you)"}
+            <br/>{this.toTitleCase(member.role)}
+            <br/>{this.props.account.ownerId === member.user.id && "Account Owner"}
           </div>
         </div>
       </div>
-      <button className="ui bottom attached button" onClick={this.handleDeleteClick.bind(this, member)}>
-        <i className="trash icon"></i>
-      </button>
+      {(this.props.user.id === member.user.id) ? // Provide profile link to everyone
+        <button className="ui bottom attached button" onClick={() => this.props.history.push('/profile')}>
+          <i className="setting icon" />
+        </button>
+        :
+        (this.props.user.id === this.props.account.ownerId) ? // Owner can delete others
+        <button className="ui bottom attached button" onClick={this.handleDeleteClick.bind(this, member)}>
+          <i className="trash icon"></i>
+        </button>
+        : null
+      }
     </div>);
   }
 
   render() {
-    const { members } = this.props;
+    const { members } = this.props.account;
 
     return (<div className="ui items">
       <div className="item">

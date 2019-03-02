@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import { Link } from "react-router-dom";
 import { Mutation, Query } from "react-apollo";
 
 import './../CSS/Style.css';
@@ -7,7 +6,6 @@ import BtnSubmit from './BtnSubmit';
 import S3PhotoAlbum from './S3PhotoAlbum';
 import QueryPictures from "../GraphQL/QueryPictures";
 import MutationUpdatePictures from "../GraphQL/MutationUpdatePictures";
-import heart from './../heart.svg';
 
 class MyPictures extends Component {
   handleDone = () => {
@@ -55,23 +53,16 @@ class MyPictures extends Component {
     const { me, s3Opts } = this.props;
 
     return me ? (
-      <div>
-        <header className="App-header">
-          <Link to={'/signin'}>
-            <img className="App-logo" src={heart} alt="heart" />
-          </Link>
-        </header>
-        <div className="ui container raised very padded segment">
-          <h1 className="ui header">Your Pictures</h1>
-          <div className="field twelve wide">
-            <div className="album">
-              <S3PhotoAlbum {...s3Opts} level="protected"
-               onLoad={this.handleUpload} onDelete={this.handleDelete} />
-            </div>
+      <div className="ui container raised very padded segment">
+        <h1 className="ui header">Your Pictures</h1>
+        <div className="field twelve wide">
+          <div className="album">
+            <S3PhotoAlbum {...s3Opts} level="protected"
+             onLoad={this.handleUpload} onDelete={this.handleDelete} />
           </div>
-          <div className="ui buttons myPictures">
-            <BtnSubmit text="Done" customClass='link' onClick={this.handleDone}/>
-          </div>
+        </div>
+        <div className="ui buttons myPictures">
+          <BtnSubmit text="Done" customClass='link' onClick={this.handleDone}/>
         </div>
       </div>
     ) : null;

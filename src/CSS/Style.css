@@ -1,7 +1,6 @@
 .App-logo{
   float: left;
-  margin
-  -left: 1em;
+  margin-left: 1em;
   margin-top: 0.8em;
 }
 
@@ -14,13 +13,17 @@
   padding-top : 0px !important;
 }
 
+h1.ui.header{
+  font-size: 1.8rem;
+}
+
 .ui.header{
-  margin-top: -3.5em !important;
+  margin-top: .4em !important;
   margin-bottom: 1.5em;
 }
 
 .ui.header.viewAccount{
-  margin-top: -1.5em !important;
+  /* margin-top: -1.5em !important; */
   margin-bottom: 0px !important;
 }
 

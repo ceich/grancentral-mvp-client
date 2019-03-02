@@ -13,7 +13,6 @@ import 'react-widgets/dist/css/react-widgets.css'
 import './../CSS/Style.css';
 import imgvoice from './../img/imgvoice.png';
 import BtnSubmit from './BtnSubmit';
-import heart from './../heart.svg';
 
 Moment.locale('en');
 momentLocalizer(Moment);
@@ -83,12 +82,13 @@ class NewAccount extends Component {
     e.stopPropagation();
     e.preventDefault();
 
-    const { createAccount, history, user, location } = this.props;
+    const { createAccount, setAccount, history, user, location } = this.props;
     const { account } = this.state;
+    const role = location.state ? location.state.role : user.members[0].role;
     const variables = {
       name: account.name,
       ownerId: user.id,
-      role: location.state.role,
+      role: role,
       birthday: account.birthday
     };
 
@@ -97,10 +97,9 @@ class NewAccount extends Component {
       refetchQueries: [{query: QueryMyAccounts}]
     });
 
-    history.push({
-      pathname: '/createFamilyAlbum',
-      state: { account: newAccount }
-    });
+    setAccount(newAccount);
+
+    history.replace('/familyAlbum');
   }
 
   render() {
@@ -109,44 +108,39 @@ class NewAccount extends Component {
     let newDateStr = (defaultDate.getMonth() + 1) + '/' + defaultDate.getDate() + '/' + defaultDate.getFullYear();
 
     return (
-      <div>
-        <header className="App-header">
-          <img className="App-logo" src={heart} alt="heart" />
-        </header>
-        <div className="ui container raised very padded segment">
-          <h1 className="ui header">About your elder...</h1>
-          <div className="ui form">
-            <div className="field twelve wide">
-              <label htmlFor="name">Elder's Name</label>
-              <input type="text" placeholder="Enter Elder's Full Name" id="name" value={account.name} onChange={this.handleChange.bind(this, 'name')}/>
-            </div>
-            <div className="field twelve wide">
-              <input id="nameSound" className="nameSound" type="image" alt="Name Pronunciation" src={imgvoice} onClick={() => this.handleClickVoice(true)}/>
-              <label htmlFor="nameSound">Tap to hear how GranCentral will say "{this.state.account.name}"</label>
-              {
-                (voicePlayed) ?
-                    <VoicePlayer
-                      play
-                      onEnd={() => this.handleClickVoice(false)}
-                      text={account.name} /> :
-                    ""
+      <div className="ui container raised very padded segment">
+        <h1 className="ui header">About your elder...</h1>
+        <div className="ui form">
+          <div className="field twelve wide">
+            <label htmlFor="name">Elder's Name</label>
+            <input type="text" placeholder="Enter Elder's Full Name" id="name" value={account.name} onChange={this.handleChange.bind(this, 'name')}/>
+          </div>
+          <div className="field twelve wide">
+            <input id="nameSound" className="nameSound" type="image" alt="Name Pronunciation" src={imgvoice} onClick={() => this.handleClickVoice(true)}/>
+            <label htmlFor="nameSound">Tap to hear how GranCentral will say "{this.state.account.name}"</label>
+            {
+              (voicePlayed) ?
+                  <VoicePlayer
+                    play
+                    onEnd={() => this.handleClickVoice(false)}
+                    text={account.name} /> :
+                  ""
 
-              }
-            </div>
-            <div className="field twelve wide">
-              <label htmlFor="name">Birthday</label>
-              <DateTimePicker
-                dateFormat={dt => String(dt.getDate())}
-                placeholder={newDateStr}
-                defaultCurrentDate={defaultDate}
-                onChange={(value) => this.handleBirthdayChange(value)}
-                format="M/D/YYYY"
-                time={false}
-              />
-            </div>
-            <div className="ui buttons">
-              <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
-            </div>
+            }
+          </div>
+          <div className="field twelve wide">
+            <label htmlFor="name">Birthday</label>
+            <DateTimePicker
+              dateFormat={dt => String(dt.getDate())}
+              placeholder={newDateStr}
+              defaultCurrentDate={defaultDate}
+              onChange={(value) => this.handleBirthdayChange(value)}
+              format="M/D/YYYY"
+              time={false}
+            />
+          </div>
+          <div className="ui buttons">
+            <BtnSubmit text="Next" disabled={isDisabled} onClick={this.handleSave}/>
           </div>
         </div>
       </div>

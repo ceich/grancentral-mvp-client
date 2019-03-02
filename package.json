@@ -11,6 +11,7 @@
     "moment": "^2.22.2",
     "react": "^16.4.1",
     "react-apollo": "^2.1.6",
+    "react-burger-menu": "^2.6.4",
     "react-dom": "^16.4.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.3",
