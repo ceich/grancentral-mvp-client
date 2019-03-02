@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Query, Mutation } from "react-apollo";
+import { Mutation } from "react-apollo";
 
-import QueryGetAccount from "../GraphQL/QueryGetAccount";
 import MutationFindOrCreateUser from '../GraphQL/MutationFindOrCreateUser';
 import MutationCreateMember from "../GraphQL/MutationCreateMember";
 
@@ -94,26 +93,24 @@ class NewMember extends Component {
 
       await createMember({ variables, update: this.createMemberUpdate });
       
-      history.push("/account/" + account.id);
+      history.push("/caringCircle");
     } // else remain on this page
   }
   
   createMemberUpdate = (proxy, { data: { createMember: { member } } }) => {
-    const { account: { id }, user: { id: userId } } = member;
+    const { account, setAccount } = this.props;
+    const { user: { id: userId } } = member;
 
-    const query = QueryGetAccount;
-    const variables = { id };
-    const data = proxy.readQuery({ query, variables });
-
-    const members = data.getAccount.members;
+    const members = Array.from(account.members);
     // Guard against multiple calls with optimisticResponse:
     // https://github.com/awslabs/aws-mobile-appsync-sdk-js/issues/65
     if (members.length === 0 ||
         members[members.length-1].user.id !== userId) {
       members.push(member);
     }
-
-    proxy.writeQuery({ query, data });
+    const newAccount = Object.assign({}, account);
+    newAccount.members = members;
+    setAccount(newAccount);
   }
 
   render() {
@@ -154,21 +151,21 @@ class NewMember extends Component {
 }
 
 export default (props) => (
-  <Query query={QueryGetAccount} variables={{ id: props.match.params.id }}>
-    {({ data: { getAccount }, loading, error }) => (
-      (loading) ? "Loading..." :
-      (error) ? "Error:" + error :
+  // <Query query={QueryGetAccount} variables={{ id: props.account.id }}>
+  //   {({ data: { getAccount }, loading, error }) => (
+  //     (loading) ? "Loading..." :
+  //     (error) ? "Error:" + error :
       <Mutation mutation={MutationFindOrCreateUser} ignoreResults={true}>
         {(findOrCreateUser) => (
           <Mutation mutation={MutationCreateMember} ignoreResults={true}>
             {(createMember) => (
-              <NewMember {...props} account={getAccount}
+              <NewMember {...props} getAccount={"getAccount"}
                 findOrCreateUser={findOrCreateUser}
                 createMember={createMember} />
             )}
           </Mutation>
         )}
       </Mutation>
-    )}
-  </Query>
+  //   )}
+  // </Query>
 );

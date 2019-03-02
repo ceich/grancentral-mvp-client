@@ -13,6 +13,21 @@ mutation FindOrCreateUser($id: ID! $name: String! $email: AWSEmail!) {
       id
       name
       email
+      avatar { key bucket region }
+      members {
+  			role
+        account {
+          id
+          createdAt
+          name
+          ownerId
+          elders { name birthday }
+          members {
+            role
+            user { id name email avatar { region bucket key } }
+          }
+        }
+      }
     }
   }
 }`);

@@ -1,6 +1,5 @@
 import React from "react";
 import { Mutation, Query } from "react-apollo";
-import { Link } from "react-router-dom";
 import { v4 as uuid } from 'uuid';
 import { Auth } from "aws-amplify";
 
@@ -8,16 +7,14 @@ import { Auth } from "aws-amplify";
 import awsmobile from './../aws-exports';
 
 import Moment from 'moment'
-import QueryGetListEvents from "../GraphQL/QueryGetListEvents";
+import QueryListEvents from "../GraphQL/QueryListEvents";
 import MutationCreateEvent from "../GraphQL/MutationCreateEvent";
 
 import BtnSubmit from './BtnSubmit';
 import ItemImg from './ItemImg';
 import "semantic-ui-css/semantic.min.css";
 import './../CSS/Style.css';
-import plus from './../img/plus1.png';
 import video from './../img/video1.png';
-import gear from './../img/gear1.png';
 
 class Timeline extends React.Component{
   constructor(props) {
@@ -46,9 +43,8 @@ class Timeline extends React.Component{
     event.preventDefault();
 
     const { history } = this.props;
-    const { account } = this.props.location.state;
 
-    history.push({pathname : '/timelineDetail', state : {imgURL : imgURL, account : account}});
+    history.push({pathname : '/timelineDetail', state : {imgURL : imgURL}});
   }
 
   handleUpload(event) {
@@ -68,9 +64,7 @@ class Timeline extends React.Component{
 
   async handleSend() {
     const { msgText } = this.state;
-    const { createEvent, user } = this.props;
-    const { account } = this.props.location.state;
-
+    const { createEvent, user, account } = this.props;
 
     let input = {
         accountId : account.id,
@@ -78,7 +72,10 @@ class Timeline extends React.Component{
         userId: user.id
     };
 
-    await createEvent(input);
+    await createEvent({
+      variables: input,
+      update: this.createEventUpdate
+    });
 
     this.setState({msgText : ""});
   }
@@ -119,7 +116,7 @@ class Timeline extends React.Component{
   createEventUpdate(proxy, { data: { createEvent } }) {
     const { accountId, id } = createEvent.event;
 
-    const query = QueryGetListEvents;
+    const query = QueryListEvents;
     const variables = { accountId };
     const data = proxy.readQuery({ query, variables });
     
@@ -133,17 +130,25 @@ class Timeline extends React.Component{
     proxy.writeQuery({ query, variables, data });
   }
 
+  userNames = {}
+  userName = (userId) => {
+    if (!this.userNames[userId]) {
+      const member = this.props.account.members.find((m) => m.user.id === userId)
+      this.userNames[userId] = member ? member.user.name : 'Unknown User'
+    }
+    return this.userNames[userId]
+  }
+
   render() {
-    const { account } = this.props.history.location.state;
-    const { listEvents } = this.props;
+    const { account, listEvents } = this.props;
     const { msgText } = this.state;
 
     const statusDisplay = (listEvents) ? listEvents.items.length : -1;
-
+    const firstName = account ? account.name.split(' ')[0] : 'Gran'
 
     return(
       <div className="ui container raised very padded segment containerClass">
-        <h1 className="ui header">{ account.name + " Central" }</h1>
+        <h1 className="ui header">{ firstName + " Central" }</h1>
         <div className="ui form centralContainer">
           <div className="centralContent">
             <div className={"centralContentInner " + ((statusDisplay === 0) ? "tableShape" : "") }>
@@ -151,27 +156,27 @@ class Timeline extends React.Component{
                 (statusDisplay === -1) ?
                     "Loading..." :
                     ((statusDisplay > 0) ?
-                        listEvents.items.map((mydata, index) =>
-                          <div key={mydata.id} className="eventsItem">
-                            <b>User</b>
+                        listEvents.items.slice(0).reverse().map((event, index) =>
+                          <div key={event.id} className="eventsItem">
+                            <b>{this.userName(event.userId)}</b>
                             {
-                              "  " + Moment.unix(mydata.createdAt).format('h:mm A')
+                              "  " + Moment(Number(event.createdAt)).fromNow() //format('h:mm A')
                             }
                             <br/>
-                            {mydata.text}
+                            {event.text}
                             {
-                              (!mydata.media) ?
+                              (!event.media) ?
                                   "" :
-                                  <ItemImg key={index} propType="video" propsClick={this.handleRedirect} propImgKey={mydata.media.key} />
+                                  <ItemImg key={index} propType="video" propsClick={this.handleRedirect} propImgKey={event.media.key} />
                             }
                           </div>
                         ) :
                         <div className="noContent">
                           <b>Nothing here yet ... here's some things to try</b>
                           <br/><br/>
-                          Add a new photo to {account.name}'s' Family Album by tapping "+" below
+                          Add a new photo to {firstName}'s' Family Album by tapping "+" below
                           <br/><br/>
-                          Send a message to @{account.name}
+                          Send a message to {firstName}
                         </div>)
               }
             </div>
@@ -184,16 +189,7 @@ class Timeline extends React.Component{
               <form onSubmit={this.handleSubmit} ref={this.formRef}>
                 <input type="image" src={video} alt="upload new media" onClick={this.handleClick}/>
                 <input className="fileUpload" label="File to upload" type="file" onChange={this.handleUpload} ref={this.myRef}/>
-
-                <Link to={{pathname : '/myPictures', state : {account : account}}}>
-                  <img src={plus} alt="add to family album"/>
-                </Link>
-
-
               </form>
-            </div>
-            <div className="rightSection">
-              <img src={gear} alt="setting"/>
             </div>
           </div>
         </div>
@@ -203,8 +199,9 @@ class Timeline extends React.Component{
 }
 
 export default (props) => (
-  <Query query={QueryGetListEvents}
-    variables={{ accountId: props.location.state.account.id }}>
+  !props.account ? null :
+  <Query query={QueryListEvents}
+    variables={{ accountId: props.account.id }}>
     {({ data, loading, error }) => (
       (loading) ? "Loading..." :
       (error) ? error :

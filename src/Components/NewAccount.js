@@ -82,12 +82,13 @@ class NewAccount extends Component {
     e.stopPropagation();
     e.preventDefault();
 
-    const { createAccount, history, user, location } = this.props;
+    const { createAccount, setAccount, history, user, location } = this.props;
     const { account } = this.state;
+    const role = location.state ? location.state.role : user.members[0].role;
     const variables = {
       name: account.name,
       ownerId: user.id,
-      role: location.state.role,
+      role: role,
       birthday: account.birthday
     };
 
@@ -96,10 +97,9 @@ class NewAccount extends Component {
       refetchQueries: [{query: QueryMyAccounts}]
     });
 
-    history.push({
-      pathname: '/createFamilyAlbum',
-      state: { account: newAccount }
-    });
+    setAccount(newAccount);
+
+    history.replace('/familyAlbum');
   }
 
   render() {

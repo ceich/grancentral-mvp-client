@@ -1,5 +1,4 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { ApolloProvider, Mutation } from 'react-apollo';
 import Amplify, { Auth } from 'aws-amplify';
 import { withOAuth, withAuthenticator } from 'aws-amplify-react';
@@ -12,8 +11,8 @@ import './CSS/App.css';
 
 import MutationFindOrCreateUser from './GraphQL/MutationFindOrCreateUser';
 
-import Menu from './Components/Menu';
-import Routes from './Routes';
+import ErrorBoundary from './Components/ErrorBoundary';
+import Router from './Components/Router';
 import Redirector from './Components/Redirector';
 
 Amplify.configure(aws_exports);
@@ -39,6 +38,7 @@ class App extends React.Component {
       bucket: aws_exports.aws_user_files_s3_bucket,
       region: aws_exports.aws_user_files_s3_bucket_region
     },
+    account: null, // UI assumes one account "selected", if multiple
     user: null // NB: AppSync user, not Cognito user
   };
 
@@ -70,32 +70,27 @@ class App extends React.Component {
 
     await findOrCreateUser({
       variables: input,
-      optimisticResponse: {
-        // First approximation to server response
-        findOrCreateUser: {
-          __typename: 'FindOrCreateUserResult',
-          user: { __typename: 'User', ...input }
-        }
-      },
       update: (proxy, { data: { findOrCreateUser: { user } } }) => {
         if (!user) return;
         logger.debug('Setting user to', user);
         // Update the state with the server response
-        this.setState({ user });
+        const account = (user.members && user.members.length > 0)
+                         ? user.members[0].account
+                         : null
+        this.setState({ user, account });
       }
     });
   }
-
-  render() {
-    return (
-      <div className="App">
-        <Menu />
-        <Router>
-          <Routes {...this.state} />
-        </Router>
-      </div>
-    );
+  
+  setAccount = (account) => {
+    this.setState({account});
   }
+
+  render = () => (
+    <ErrorBoundary>
+      <Router {...this.state} setAccount={this.setAccount} />
+    </ErrorBoundary>
+  )
 }
 
 // Wrap the app in:
