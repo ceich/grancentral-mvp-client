@@ -1,48 +1,28 @@
-type Account {
-	id: ID!
-	createdAt: String!
-	name: String!
-	ownerId: ID!
-	elders: [Elder!]!
-	members: [Member!]!
+schema {
+	query: Query
+	mutation: Mutation
 }
 
-input CreateAccountInput {
+type Account {
+	album: [S3Object!]
+	createdAt: String!
+	elders: [Elder!]!
+	id: ID!
+	members: [Member!]!
 	name: String!
 	ownerId: ID!
-	elders: [ElderInput!]!
-	role: String!
 }
 
 type CreateAccountResult {
 	account: Account
 }
 
-input CreateEventInput {
-	accountId: ID!
-	text: String
-	userId: ID
-	referenceId: ID
-	media: S3ObjectInput
-}
-
 type CreateEventResult {
 	event: Event
 }
 
-input CreateMemberInput {
-	accountId: ID!
-	userId: ID!
-	role: String!
-}
-
 type CreateMemberResult {
 	member: Member
-}
-
-input DeleteMemberInput {
-	accountId: ID!
-	userId: ID!
 }
 
 type DeleteMemberResult {
@@ -50,34 +30,23 @@ type DeleteMemberResult {
 }
 
 type Elder {
-	name: String!
 	birthday: AWSDate!
-}
-
-input ElderInput {
 	name: String!
-	birthday: AWSDate!
 }
 
 type Event {
 	accountId: ID!
 	createdAt: String!
 	id: ID!
+	media: S3Object
+	referenceId: ID
 	text: String
 	userId: ID
-	referenceId: ID
-	media: S3Object
 }
 
 type EventConnection {
 	items: [Event]
 	nextToken: String
-}
-
-input FindOrCreateUserInput {
-	id: ID!
-	name: String!
-	email: AWSEmail!
 }
 
 type FindOrCreateUserResult {
@@ -86,8 +55,8 @@ type FindOrCreateUserResult {
 
 type Member {
 	account: Account
-	user: User
 	role: String
+	user: User
 }
 
 type Mutation {
@@ -105,6 +74,33 @@ type Query {
 	getEvent(id: ID!): Event
 	listEvents(accountId: ID!, limit: Int, nextToken: String): EventConnection
 	me: User
+}
+
+# AWS AppSync has special support for S3 objects; see the documentation here:
+## https://docs.aws.amazon.com/appsync/latest/devguide/building-a-client-app-react.html#complex-objects
+type S3Object {
+	bucket: String!
+	key: String!
+	region: String!
+}
+
+type UpdateMemberResult {
+	member: Member
+}
+
+type UpdateUserResult {
+	user: User
+}
+
+type User {
+	avatar: S3Object
+	createdAt: String!
+	email: AWSEmail!
+	id: ID!
+	members: [Member!]
+	name: String!
+	phone: AWSPhone
+	pictures: [S3Object!]
 }
 
 # Not used directly in schema, but see "role" field in type Member above. The
@@ -129,12 +125,41 @@ enum Role {
 	OTHER
 }
 
-# AWS AppSync has special support for S3 objects; see the documentation here:
-## https://docs.aws.amazon.com/appsync/latest/devguide/building-a-client-app-react.html#complex-objects
-type S3Object {
-	bucket: String!
-	region: String!
-	key: String!
+input CreateAccountInput {
+	elders: [ElderInput!]!
+	name: String!
+	ownerId: ID!
+	role: String!
+}
+
+input CreateEventInput {
+	accountId: ID!
+	media: S3ObjectInput
+	referenceId: ID
+	text: String
+	userId: ID
+}
+
+input CreateMemberInput {
+	accountId: ID!
+	role: String!
+	userId: ID!
+}
+
+input DeleteMemberInput {
+	accountId: ID!
+	userId: ID!
+}
+
+input ElderInput {
+	birthday: AWSDate!
+	name: String!
+}
+
+input FindOrCreateUserInput {
+	email: AWSEmail!
+	id: ID!
+	name: String!
 }
 
 # S3ObjectInput is used for two purposes: uploading new objects and
@@ -142,47 +167,23 @@ type S3Object {
 ## For the latter case, localUri and mimeType will be null.
 input S3ObjectInput {
 	bucket: String!
-	region: String!
 	key: String!
 	localUri: String
 	mimeType: String
+	region: String!
 }
 
 input UpdateMemberInput {
 	accountId: ID!
-	userId: ID!
 	role: String!
-}
-
-type UpdateMemberResult {
-	member: Member
+	userId: ID!
 }
 
 input UpdateUserInput {
+	avatar: S3ObjectInput
+	email: AWSEmail
 	id: ID!
 	name: String
-	email: AWSEmail
 	phone: AWSPhone
-	avatar: S3ObjectInput
 	pictures: [S3ObjectInput!]
-}
-
-type UpdateUserResult {
-	user: User
-}
-
-type User {
-	id: ID!
-	createdAt: String!
-	name: String!
-	email: AWSEmail!
-	phone: AWSPhone
-	avatar: S3Object
-	pictures: [S3Object!]
-	members: [Member!]
-}
-
-schema {
-	query: Query
-	mutation: Mutation
 }

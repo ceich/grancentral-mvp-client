@@ -1,0 +1,24 @@
+{
+    "functions": [
+        {
+            "dataSourceName": "MemberTable", 
+            "description": "Get all members of the source account.", 
+            "requestMappingTemplate": "function-mappings/getMembers.request", 
+            "functionArn": "arn:aws:appsync:us-west-2:305905853980:apis/eqsy3qtavnhuxkwcnvunhwzvyq/functions/cs47qkxdfnc6jllaoeniqtreuu", 
+            "functionVersion": "2018-05-29", 
+            "responseMappingTemplate": "function-mappings/getMembers.response", 
+            "functionId": "cs47qkxdfnc6jllaoeniqtreuu", 
+            "name": "getMembers"
+        }, 
+        {
+            "dataSourceName": "UserTable", 
+            "description": "Get the pictures list for each user", 
+            "requestMappingTemplate": "function-mappings/getUserPictures.request", 
+            "functionArn": "arn:aws:appsync:us-west-2:305905853980:apis/eqsy3qtavnhuxkwcnvunhwzvyq/functions/ohhhoktahbglxaqleo5uepiooq", 
+            "functionVersion": "2018-05-29", 
+            "responseMappingTemplate": "function-mappings/getUserPictures.response", 
+            "functionId": "ohhhoktahbglxaqleo5uepiooq", 
+            "name": "getUserPictures"
+        }
+    ]
+}
