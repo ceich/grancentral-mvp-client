@@ -1,0 +1,17 @@
+## Raise a GraphQL field error in case of a datasource invocation error
+#if($ctx.error)
+  $util.error($ctx.error.message, $ctx.error.type)
+#end
+## Combine each user's pictures into one album, converting each from DDB format
+#set($album = [])
+#foreach( $item in $ctx.result.data.UserTable )
+	#if( ! $util.isNull($item) )
+    	#foreach( $picture in $item.pictures )
+        	$util.qr($album.add($util.dynamodb.fromS3ObjectJson($picture)))
+        #end
+    #end
+#end
+#**
+    Return a flat list of results from a Query or Scan operation.
+*#
+$util.toJson($album)

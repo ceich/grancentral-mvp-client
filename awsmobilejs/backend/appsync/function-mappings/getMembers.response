@@ -1,0 +1,12 @@
+## Raise a GraphQL field error in case of a datasource invocation error
+#if($ctx.error)
+  $util.error($ctx.error.message, $ctx.error.type)
+#end
+#**
+    Return a flat list of results from a Query or Scan operation.
+*#
+#set($userIds = [])
+#foreach( $item in $ctx.result.items )
+	$util.qr($userIds.add($item.userId))
+#end
+$util.toJson($userIds)
