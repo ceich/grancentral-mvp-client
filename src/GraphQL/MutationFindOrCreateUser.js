@@ -22,6 +22,7 @@ mutation FindOrCreateUser($id: ID! $name: String! $email: AWSEmail!) {
           name
           ownerId
           elders { name birthday }
+          album { region bucket key }
           members {
             role
             user { id name email avatar { region bucket key } }
