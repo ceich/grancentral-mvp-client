@@ -4,11 +4,14 @@ import { Link } from "react-router-dom";
 import './../CSS/Style.css';
 // import imgupload from './../img/imgupload.png';
 import plus from './../img/plus1.png';
+import S3Photo from './S3Photo';
 
 const FamilyAlbum = (props) => {
-  const { account, album } = props;
+  const { account } = props;
+  if (!account) return null;
+  const { album } = account;
   
-  if (!account || !album) {
+  if (!album) {
     return (
       <div className="ui container raised very padded segment">
         <h1 className="ui header">Create Family Album</h1>
@@ -21,7 +24,7 @@ const FamilyAlbum = (props) => {
           <div className="field twelve wide">
             <Link to="/myPictures">
               <img id="imgUpload" src={plus} alt="add to family album"/>
-              <label htmlFor="imgUpload">Upload a few images now to get started</label>
+              <label htmlFor="imgUpload">Upload some photos now to get started</label>
             </Link>
           </div>
           <div className="field twelve wide link">
@@ -34,13 +37,13 @@ const FamilyAlbum = (props) => {
     return (
       <div className="ui container raised very padded segment">
         <h1 className="ui header">Family Album</h1>
-        <div className="field twelve wide">
-          {"TODO: render account.album"}
+        <div className="field twelve wide album">
+          {album.map((p) => <S3Photo key={p.key} photo={p} />)}
         </div>
         <div className="field twelve wide">
           <Link to="/myPictures">
             <img id="imgUpload" src={plus} alt="add to family album"/>
-            <label htmlFor="imgUpload">Upload a few images now to get started</label>
+            <label htmlFor="imgUpload">Manage your photos</label>
           </Link>
         </div>
       </div>
